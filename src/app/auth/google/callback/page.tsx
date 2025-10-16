@@ -1,11 +1,11 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuthStore } from '@/store/auth.store';
 import { Box, CircularProgress, Typography } from '@mui/material';
 
-export default function GoogleCallbackPage() {
+function GoogleCallbackContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { setUser } = useAuthStore();
@@ -53,5 +53,29 @@ export default function GoogleCallbackPage() {
       <CircularProgress />
       <Typography variant="h6">Processing Google Login...</Typography>
     </Box>
+  );
+}
+
+export default function GoogleCallbackPage() {
+  return (
+    <Suspense
+      fallback={
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            minHeight: '100vh',
+            gap: 2,
+          }}
+        >
+          <CircularProgress />
+          <Typography variant="h6">Loading...</Typography>
+        </Box>
+      }
+    >
+      <GoogleCallbackContent />
+    </Suspense>
   );
 }
