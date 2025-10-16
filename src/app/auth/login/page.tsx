@@ -486,39 +486,6 @@ function LoginContent() {
                   {isLoading ? auth.login.loggingIn : auth.login.loginButton}
                 </Button>
 
-                <Box sx={{ display: 'flex', alignItems: 'center', my: 2 }}>
-                  <Box sx={{ flex: 1, height: '1px', bgcolor: 'divider' }} />
-                  <Typography variant="body2" sx={{ px: 2, color: 'text.secondary' }}>
-                    OR
-                  </Typography>
-                  <Box sx={{ flex: 1, height: '1px', bgcolor: 'divider' }} />
-                </Box>
-
-                <Button
-                  fullWidth
-                  variant="outlined"
-                  size="large"
-                  onClick={() => {
-                    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
-                    window.location.href = `${apiUrl}/auth/google`;
-                  }}
-                  sx={{
-                    py: 1.5,
-                    borderRadius: 2,
-                    fontSize: '1rem',
-                    fontWeight: 'bold',
-                    borderColor: '#4285f4',
-                    color: '#4285f4',
-                    '&:hover': {
-                      borderColor: '#357ae8',
-                      bgcolor: 'rgba(66, 133, 244, 0.04)',
-                    },
-                  }}
-                >
-                  <Box component="img" src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" sx={{ width: 20, height: 20, mr: 1 }} />
-                  Continue with Google
-                </Button>
-
                 <Box sx={{ textAlign: 'center', mt: 3 }}>
                   <Typography variant="body2" color="text.secondary">
                     {auth.login.noAccount}{' '}
