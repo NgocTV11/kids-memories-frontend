@@ -2,7 +2,7 @@ import axios, { AxiosError, AxiosInstance, InternalAxiosRequestConfig } from 'ax
 import Cookies from 'js-cookie';
 
 // Constants
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api/v1';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
 const ACCESS_TOKEN_KEY = 'access_token';
 const REFRESH_TOKEN_KEY = 'refresh_token';
 
