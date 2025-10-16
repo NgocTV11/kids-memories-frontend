@@ -98,8 +98,18 @@ export default function FamiliesPage() {
         familiesService.getMyInvitations(),
       ]);
 
+      console.log('Families data:', familiesData);
+      console.log('Invitations data:', invitationsData);
+
       // Separate active families from pending invitations
+      // Owner của family luôn được xem là active
       const activeFamilies = familiesData.filter((f: Family) => {
+        // Nếu user là owner, luôn hiển thị
+        if (f.owner?.id === user?.id) {
+          return true;
+        }
+        
+        // Nếu không phải owner, check status
         const userMembership = f.members?.find((m: FamilyMember) => m.user?.id === user?.id);
         return userMembership?.status === 'active';
       });
@@ -109,9 +119,13 @@ export default function FamiliesPage() {
         return userMembership?.status === 'pending';
       });
 
+      console.log('Active families:', activeFamilies);
+      console.log('Pending invites:', pendingInvites);
+
       setFamilies(activeFamilies);
       setInvitations(pendingInvites);
     } catch (err: any) {
+      console.error('Load data error:', err);
       setError(err.message || 'Không thể tải danh sách families');
     } finally {
       setLoading(false);
