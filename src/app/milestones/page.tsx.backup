@@ -1,0 +1,219 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { ProtectedRoute } from '@/components/ProtectedRoute';
+import { milestonesService, Milestone } from '@/services/milestones.service';
+import { kidsService, Kid } from '@/services/kids.service';
+import {
+  Container,
+  Box,
+  Typography,
+  Button,
+  CircularProgress,
+  Alert,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Fab,
+} from '@mui/material';
+import {
+  Add,
+  Celebration,
+} from '@mui/icons-material';
+import { TimelineItem } from '@/components/milestones/TimelineItem';
+import { AddMilestoneModal } from '@/components/milestones/AddMilestoneModal';
+
+export default function MilestonesPage() {
+  const [milestones, setMilestones] = useState<Milestone[]>([]);
+  const [kids, setKids] = useState<Kid[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [openModal, setOpenModal] = useState(false);
+  const [selectedMilestone, setSelectedMilestone] = useState<Milestone | undefined>(undefined);
+  const [selectedKidId, setSelectedKidId] = useState<string>('all');
+
+  useEffect(() => {
+    loadData();
+  }, [selectedKidId]);
+
+  const loadData = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const [milestonesData, kidsData] = await Promise.all([
+        milestonesService.getAll(selectedKidId === 'all' ? undefined : selectedKidId),
+        kidsService.getAll(),
+      ]);
+
+      // Sort milestones by date descending (newest first)
+      const sorted = milestonesData.sort((a, b) => {
+        return new Date(b.milestone_date).getTime() - new Date(a.milestone_date).getTime();
+      });
+
+      setMilestones(sorted);
+      setKids(kidsData);
+    } catch (err: any) {
+      console.error('Error loading data:', err);
+      setError(err.response?.data?.message || 'Failed to load milestones');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleAddClick = () => {
+    setSelectedMilestone(undefined);
+    setOpenModal(true);
+  };
+
+  const handleEditClick = (milestone: Milestone) => {
+    setSelectedMilestone(milestone);
+    setOpenModal(true);
+  };
+
+  const handleDeleteClick = async (milestoneId: string) => {
+    if (!confirm('Bạn có chắc muốn xóa milestone này?')) return;
+
+    try {
+      await milestonesService.delete(milestoneId);
+      setMilestones(milestones.filter((m) => m.id !== milestoneId));
+    } catch (err: any) {
+      console.error('Error deleting milestone:', err);
+      alert(err.response?.data?.message || 'Failed to delete milestone');
+    }
+  };
+
+  const handleModalClose = () => {
+    setOpenModal(false);
+    setSelectedMilestone(undefined);
+  };
+
+  const handleModalSuccess = () => {
+    setOpenModal(false);
+    setSelectedMilestone(undefined);
+    loadData();
+  };
+
+  return (
+    <ProtectedRoute>
+      <Container maxWidth="md" sx={{ py: 4 }}>
+        {/* Header */}
+        <Box sx={{ mb: 4 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+            <Box>
+              <Typography variant="h4" fontWeight="bold" gutterBottom>
+                <Celebration sx={{ mr: 1, verticalAlign: 'middle' }} />
+                Milestones
+              </Typography>
+              <Typography variant="body1" color="text.secondary">
+                Ghi lại những khoảnh khắc đặc biệt của bé
+              </Typography>
+            </Box>
+            <Button
+              variant="contained"
+              size="large"
+              startIcon={<Add />}
+              onClick={handleAddClick}
+            >
+              Thêm milestone
+            </Button>
+          </Box>
+
+          {/* Filter */}
+          {kids.length > 0 && (
+            <FormControl sx={{ minWidth: 200 }}>
+              <InputLabel>Lọc theo bé</InputLabel>
+              <Select
+                value={selectedKidId}
+                label="Lọc theo bé"
+                onChange={(e) => setSelectedKidId(e.target.value)}
+              >
+                <MenuItem value="all">Tất cả</MenuItem>
+                {kids.map((kid) => (
+                  <MenuItem key={kid.id} value={kid.id}>
+                    {kid.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          )}
+        </Box>
+
+        {/* Error Display */}
+        {error && (
+          <Alert severity="error" sx={{ mb: 3 }} onClose={() => setError(null)}>
+            {error}
+          </Alert>
+        )}
+
+        {/* Loading State */}
+        {loading ? (
+          <Box sx={{ display: 'flex', justifyContent: 'center', py: 8 }}>
+            <CircularProgress />
+          </Box>
+        ) : milestones.length === 0 ? (
+          /* Empty State */
+          <Box sx={{ textAlign: 'center', py: 8 }}>
+            <Celebration sx={{ fontSize: 80, color: 'text.disabled', mb: 2 }} />
+            <Typography variant="h6" color="text.secondary" gutterBottom>
+              {selectedKidId === 'all' ? 'Chưa có milestone nào' : 'Bé này chưa có milestone nào'}
+            </Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+              Thêm milestone đầu tiên để ghi lại khoảnh khắc đặc biệt
+            </Typography>
+            <Button variant="contained" startIcon={<Add />} onClick={handleAddClick}>
+              Thêm milestone đầu tiên
+            </Button>
+          </Box>
+        ) : (
+          /* Timeline */
+          <Box sx={{ position: 'relative' }}>
+            {/* Vertical Line */}
+            <Box
+              sx={{
+                position: 'absolute',
+                left: 20,
+                top: 0,
+                bottom: 0,
+                width: 2,
+                bgcolor: 'divider',
+              }}
+            />
+
+            {/* Timeline Items */}
+            <Box>
+              {milestones.map((milestone, index) => (
+                <TimelineItem
+                  key={milestone.id}
+                  milestone={milestone}
+                  isLast={index === milestones.length - 1}
+                  onEdit={handleEditClick}
+                  onDelete={handleDeleteClick}
+                />
+              ))}
+            </Box>
+          </Box>
+        )}
+
+        {/* Floating Action Button */}
+        <Fab
+          color="primary"
+          sx={{ position: 'fixed', bottom: 24, right: 24 }}
+          onClick={handleAddClick}
+        >
+          <Add />
+        </Fab>
+
+        {/* Add/Edit Modal */}
+        <AddMilestoneModal
+          open={openModal}
+          milestone={selectedMilestone}
+          kids={kids}
+          onClose={handleModalClose}
+          onSuccess={handleModalSuccess}
+        />
+      </Container>
+    </ProtectedRoute>
+  );
+}

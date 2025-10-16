@@ -1,0 +1,70 @@
+﻿'use client';
+
+import { Box, Container, Typography, Button, Card, CardContent } from '@mui/material';
+import { PhotoLibrary, Timeline, ChildCare } from '@mui/icons-material';
+
+export default function Home() {
+  return (
+    <Container maxWidth="lg">
+      <Box sx={{ py: 8, textAlign: 'center' }}>
+        <Typography variant="h2" component="h1" gutterBottom>
+          Kids Memories
+        </Typography>
+        <Typography variant="h5" color="text.secondary" paragraph>
+          Preserve precious moments of your children
+        </Typography>
+        
+        <Box sx={{ mt: 6, display: 'flex', gap: 3, justifyContent: 'center', flexWrap: 'wrap' }}>
+          <Card sx={{ width: 300 }}>
+            <CardContent>
+              <PhotoLibrary sx={{ fontSize: 60, color: 'primary.main', mb: 2 }} />
+              <Typography variant="h6" gutterBottom>
+                Photo Albums
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Organize photos into beautiful albums for each special moment
+              </Typography>
+            </CardContent>
+          </Card>
+          
+          <Card sx={{ width: 300 }}>
+            <CardContent>
+              <Timeline sx={{ fontSize: 60, color: 'secondary.main', mb: 2 }} />
+              <Typography variant="h6" gutterBottom>
+                Timeline
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                View memories chronologically as your kids grow
+              </Typography>
+            </CardContent>
+          </Card>
+          
+          <Card sx={{ width: 300 }}>
+            <CardContent>
+              <ChildCare sx={{ fontSize: 60, color: 'success.main', mb: 2 }} />
+              <Typography variant="h6" gutterBottom>
+                Milestones
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Track important developmental milestones
+              </Typography>
+            </CardContent>
+          </Card>
+        </Box>
+        
+        <Box sx={{ mt: 6 }}>
+          <Button variant="contained" size="large" sx={{ mr: 2 }}>
+            Get Started
+          </Button>
+          <Button variant="outlined" size="large">
+            Learn More
+          </Button>
+        </Box>
+        
+        <Typography variant="body2" color="text.secondary" sx={{ mt: 8 }}>
+          Built with Next.js 15, Material-UI, and NestJS
+        </Typography>
+      </Box>
+    </Container>
+  );
+}

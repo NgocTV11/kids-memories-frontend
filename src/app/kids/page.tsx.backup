@@ -1,0 +1,254 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { ProtectedRoute } from '@/components/ProtectedRoute';
+import { kidsService, Kid } from '@/services/kids.service';
+import {
+  Container,
+  Box,
+  Typography,
+  Button,
+  Grid,
+  Card,
+  CardContent,
+  CardActions,
+  Avatar,
+  IconButton,
+  CircularProgress,
+  Alert,
+  Chip,
+} from '@mui/material';
+import {
+  Add,
+  Edit,
+  Delete,
+  ChildCare,
+  Cake,
+  TrendingUp,
+} from '@mui/icons-material';
+import { useRouter } from 'next/navigation';
+import dayjs from 'dayjs';
+import { AddKidModal } from '@/components/kids/AddKidModal';
+
+export default function KidsPage() {
+  const router = useRouter();
+  const [kids, setKids] = useState<Kid[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [openModal, setOpenModal] = useState(false);
+  const [selectedKid, setSelectedKid] = useState<Kid | undefined>(undefined);
+
+  useEffect(() => {
+    loadKids();
+  }, []);
+
+  const loadKids = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const data = await kidsService.getAll();
+      setKids(data);
+    } catch (err: any) {
+      console.error('Error loading kids:', err);
+      setError(err.response?.data?.message || 'Failed to load kids');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleAddClick = () => {
+    setSelectedKid(undefined);
+    setOpenModal(true);
+  };
+
+  const handleEditClick = (kid: Kid) => {
+    setSelectedKid(kid);
+    setOpenModal(true);
+  };
+
+  const handleDeleteClick = async (kid: Kid) => {
+    if (!confirm(`Bạn có chắc muốn xóa ${kid.name}?`)) return;
+
+    try {
+      await kidsService.delete(kid.id);
+      setKids(kids.filter((k) => k.id !== kid.id));
+    } catch (err: any) {
+      console.error('Error deleting kid:', err);
+      alert(err.response?.data?.message || 'Failed to delete kid');
+    }
+  };
+
+  const handleModalClose = () => {
+    setOpenModal(false);
+    setSelectedKid(undefined);
+  };
+
+  const handleModalSuccess = () => {
+    setOpenModal(false);
+    setSelectedKid(undefined);
+    loadKids();
+  };
+
+  const handleCardClick = (kidId: string) => {
+    router.push(`/kids/${kidId}`);
+  };
+
+  const getGenderColor = (gender: string) => {
+    return gender === 'male' ? '#2196f3' : gender === 'female' ? '#e91e63' : '#9e9e9e';
+  };
+
+  const getGenderLabel = (gender: string) => {
+    return gender === 'male' ? 'Bé trai' : gender === 'female' ? 'Bé gái' : 'Khác';
+  };
+
+  return (
+    <ProtectedRoute>
+      <Container maxWidth="lg" sx={{ py: 4 }}>
+        {/* Header */}
+        <Box sx={{ mb: 4, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Box>
+            <Typography variant="h4" fontWeight="bold" gutterBottom>
+              <ChildCare sx={{ mr: 1, verticalAlign: 'middle' }} />
+              Quản lý bé
+            </Typography>
+            <Typography variant="body1" color="text.secondary">
+              Theo dõi sự phát triển của các bé yêu
+            </Typography>
+          </Box>
+          <Button
+            variant="contained"
+            size="large"
+            startIcon={<Add />}
+            onClick={handleAddClick}
+          >
+            Thêm bé
+          </Button>
+        </Box>
+
+        {/* Error Display */}
+        {error && (
+          <Alert severity="error" sx={{ mb: 3 }} onClose={() => setError(null)}>
+            {error}
+          </Alert>
+        )}
+
+        {/* Loading State */}
+        {loading ? (
+          <Box sx={{ display: 'flex', justifyContent: 'center', py: 8 }}>
+            <CircularProgress />
+          </Box>
+        ) : kids.length === 0 ? (
+          /* Empty State */
+          <Box sx={{ textAlign: 'center', py: 8 }}>
+            <ChildCare sx={{ fontSize: 80, color: 'text.disabled', mb: 2 }} />
+            <Typography variant="h6" color="text.secondary" gutterBottom>
+              Chưa có thông tin bé nào
+            </Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+              Thêm thông tin bé để bắt đầu lưu trữ kỷ niệm
+            </Typography>
+            <Button variant="contained" startIcon={<Add />} onClick={handleAddClick}>
+              Thêm bé đầu tiên
+            </Button>
+          </Box>
+        ) : (
+          /* Kids Grid */
+          <Grid container spacing={3}>
+            {kids.map((kid) => (
+              <Grid size={{ xs: 12, sm: 6, md: 4 }} key={kid.id}>
+                <Card
+                  sx={{
+                    height: '100%',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s',
+                    '&:hover': {
+                      transform: 'translateY(-4px)',
+                      boxShadow: 4,
+                    },
+                  }}
+                >
+                  <CardContent onClick={() => handleCardClick(kid.id)}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                      <Avatar
+                        sx={{
+                          width: 60,
+                          height: 60,
+                          bgcolor: getGenderColor(kid.gender),
+                          mr: 2,
+                        }}
+                      >
+                        <ChildCare sx={{ fontSize: 32 }} />
+                      </Avatar>
+                      <Box sx={{ flex: 1 }}>
+                        <Typography variant="h6" fontWeight="bold">
+                          {kid.name}
+                        </Typography>
+                        <Chip
+                          label={getGenderLabel(kid.gender)}
+                          size="small"
+                          sx={{
+                            bgcolor: getGenderColor(kid.gender),
+                            color: 'white',
+                            fontWeight: 'bold',
+                          }}
+                        />
+                      </Box>
+                    </Box>
+
+                    <Box sx={{ mb: 2 }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                        <Cake sx={{ fontSize: 18, mr: 1, color: 'text.secondary' }} />
+                        <Typography variant="body2" color="text.secondary">
+                          {dayjs(kid.date_of_birth).format('DD/MM/YYYY')}
+                          {kid.age && ` (${kid.age})`}
+                        </Typography>
+                      </Box>
+                      {kid.growth_data && kid.growth_data.length > 0 && (
+                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                          <TrendingUp sx={{ fontSize: 18, mr: 1, color: 'text.secondary' }} />
+                          <Typography variant="body2" color="text.secondary">
+                            {kid.growth_data.length} bản ghi phát triển
+                          </Typography>
+                        </Box>
+                      )}
+                    </Box>
+                  </CardContent>
+
+                  <CardActions sx={{ justifyContent: 'flex-end', px: 2, pb: 2 }}>
+                    <IconButton
+                      size="small"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleEditClick(kid);
+                      }}
+                    >
+                      <Edit fontSize="small" />
+                    </IconButton>
+                    <IconButton
+                      size="small"
+                      color="error"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeleteClick(kid);
+                      }}
+                    >
+                      <Delete fontSize="small" />
+                    </IconButton>
+                  </CardActions>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        )}
+
+        {/* Add/Edit Modal */}
+        <AddKidModal
+          open={openModal}
+          kid={selectedKid}
+          onClose={handleModalClose}
+          onSuccess={handleModalSuccess}
+        />
+      </Container>
+    </ProtectedRoute>
+  );
+}

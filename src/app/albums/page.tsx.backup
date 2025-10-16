@@ -1,0 +1,372 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { ProtectedRoute } from '@/components/ProtectedRoute';
+import { albumsService, Album } from '@/services/albums.service';
+import { kidsService, Kid } from '@/services/kids.service';
+import {
+  Container,
+  Box,
+  Typography,
+  Button,
+  Grid,
+  Card,
+  CardContent,
+  CardMedia,
+  CardActions,
+  IconButton,
+  CircularProgress,
+  Alert,
+  Chip,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+} from '@mui/material';
+import {
+  Add,
+  Edit,
+  Delete,
+  PhotoAlbum as AlbumIcon,
+  Photo,
+  Share,
+  Lock,
+  Public,
+  People,
+} from '@mui/icons-material';
+import dayjs from 'dayjs';
+import { AddAlbumModal } from '@/components/albums/AddAlbumModal';
+import { ShareAlbumDialog } from '@/components/albums/ShareAlbumDialog';
+
+export default function AlbumsPage() {
+  const router = useRouter();
+  const [albums, setAlbums] = useState<Album[]>([]);
+  const [kids, setKids] = useState<Kid[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [openModal, setOpenModal] = useState(false);
+  const [openShareDialog, setOpenShareDialog] = useState(false);
+  const [selectedAlbum, setSelectedAlbum] = useState<Album | undefined>(undefined);
+  const [selectedKidId, setSelectedKidId] = useState<string>('all');
+
+  useEffect(() => {
+    loadData();
+  }, [selectedKidId]);
+
+  const loadData = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const [albumsData, kidsData] = await Promise.all([
+        albumsService.getAll(selectedKidId === 'all' ? undefined : selectedKidId),
+        kidsService.getAll(),
+      ]);
+
+      setAlbums(albumsData);
+      setKids(kidsData);
+    } catch (err: any) {
+      console.error('Error loading data:', err);
+      setError(err.response?.data?.message || 'Failed to load albums');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleAddClick = () => {
+    setSelectedAlbum(undefined);
+    setOpenModal(true);
+  };
+
+  const handleEditClick = (album: Album) => {
+    setSelectedAlbum(album);
+    setOpenModal(true);
+  };
+
+  const handleShareClick = (album: Album) => {
+    setSelectedAlbum(album);
+    setOpenShareDialog(true);
+  };
+
+  const handleDeleteClick = async (album: Album) => {
+    if (!confirm(`Bạn có chắc muốn xóa album "${album.title}"?`)) return;
+
+    try {
+      await albumsService.delete(album.id);
+      setAlbums(albums.filter((a) => a.id !== album.id));
+    } catch (err: any) {
+      console.error('Error deleting album:', err);
+      alert(err.response?.data?.message || 'Failed to delete album');
+    }
+  };
+
+  const handleModalClose = () => {
+    setOpenModal(false);
+    setSelectedAlbum(undefined);
+  };
+
+  const handleModalSuccess = () => {
+    setOpenModal(false);
+    setSelectedAlbum(undefined);
+    loadData();
+  };
+
+  const handleShareDialogClose = () => {
+    setOpenShareDialog(false);
+    setSelectedAlbum(undefined);
+  };
+
+  const handleCardClick = (albumId: string) => {
+    router.push(`/albums/${albumId}`);
+  };
+
+  const getPrivacyIcon = (privacy: string) => {
+    switch (privacy) {
+      case 'private':
+        return <Lock fontSize="small" />;
+      case 'family':
+        return <People fontSize="small" />;
+      case 'public':
+        return <Public fontSize="small" />;
+      default:
+        return <Lock fontSize="small" />;
+    }
+  };
+
+  const getPrivacyLabel = (privacy: string) => {
+    switch (privacy) {
+      case 'private':
+        return 'Riêng tư';
+      case 'family':
+        return 'Gia đình';
+      case 'public':
+        return 'Công khai';
+      default:
+        return 'Riêng tư';
+    }
+  };
+
+  const getPrivacyColor = (privacy: string) => {
+    switch (privacy) {
+      case 'private':
+        return 'error';
+      case 'family':
+        return 'warning';
+      case 'public':
+        return 'success';
+      default:
+        return 'default';
+    }
+  };
+
+  return (
+    <ProtectedRoute>
+      <Container maxWidth="lg" sx={{ py: 4 }}>
+        {/* Header */}
+        <Box sx={{ mb: 4 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+            <Box>
+              <Typography variant="h4" fontWeight="bold" gutterBottom>
+                <AlbumIcon sx={{ mr: 1, verticalAlign: 'middle' }} />
+                Quản lý Albums
+              </Typography>
+              <Typography variant="body1" color="text.secondary">
+                Tổ chức ảnh của bé theo albums
+              </Typography>
+            </Box>
+            <Button variant="contained" size="large" startIcon={<Add />} onClick={handleAddClick}>
+              Tạo album
+            </Button>
+          </Box>
+
+          {/* Filter */}
+          {kids.length > 0 && (
+            <FormControl sx={{ minWidth: 200 }}>
+              <InputLabel>Lọc theo bé</InputLabel>
+              <Select
+                value={selectedKidId}
+                label="Lọc theo bé"
+                onChange={(e) => setSelectedKidId(e.target.value)}
+              >
+                <MenuItem value="all">Tất cả</MenuItem>
+                {kids.map((kid) => (
+                  <MenuItem key={kid.id} value={kid.id}>
+                    {kid.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          )}
+        </Box>
+
+        {/* Error Display */}
+        {error && (
+          <Alert severity="error" sx={{ mb: 3 }} onClose={() => setError(null)}>
+            {error}
+          </Alert>
+        )}
+
+        {/* Loading State */}
+        {loading ? (
+          <Box sx={{ display: 'flex', justifyContent: 'center', py: 8 }}>
+            <CircularProgress />
+          </Box>
+        ) : albums.length === 0 ? (
+          /* Empty State */
+          <Box sx={{ textAlign: 'center', py: 8 }}>
+            <AlbumIcon sx={{ fontSize: 80, color: 'text.disabled', mb: 2 }} />
+            <Typography variant="h6" color="text.secondary" gutterBottom>
+              {selectedKidId === 'all' ? 'Chưa có album nào' : 'Bé này chưa có album nào'}
+            </Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+              Tạo album để bắt đầu tổ chức ảnh
+            </Typography>
+            <Button variant="contained" startIcon={<Add />} onClick={handleAddClick}>
+              Tạo album đầu tiên
+            </Button>
+          </Box>
+        ) : (
+          /* Albums Grid */
+          <Grid container spacing={3}>
+            {albums.map((album) => (
+              <Grid size={{ xs: 12, sm: 6, md: 4 }} key={album.id}>
+                <Card
+                  sx={{
+                    height: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s',
+                    '&:hover': {
+                      transform: 'translateY(-4px)',
+                      boxShadow: 4,
+                    },
+                  }}
+                >
+                  <CardMedia
+                    component="div"
+                    sx={{
+                      height: 200,
+                      bgcolor: 'grey.200',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                    onClick={() => handleCardClick(album.id)}
+                  >
+                    {album.cover_photo_url ? (
+                      <img
+                        src={album.cover_photo_url}
+                        alt={album.title}
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover',
+                        }}
+                      />
+                    ) : (
+                      <Photo sx={{ fontSize: 60, color: 'grey.400' }} />
+                    )}
+                  </CardMedia>
+
+                  <CardContent sx={{ flex: 1 }} onClick={() => handleCardClick(album.id)}>
+                    <Typography variant="h6" fontWeight="bold" gutterBottom>
+                      {album.title}
+                    </Typography>
+
+                    <Box sx={{ display: 'flex', gap: 1, mb: 1, flexWrap: 'wrap' }}>
+                      <Chip
+                        icon={getPrivacyIcon(album.privacy_level)}
+                        label={getPrivacyLabel(album.privacy_level)}
+                        size="small"
+                        color={getPrivacyColor(album.privacy_level) as any}
+                      />
+                      {album.kid && (
+                        <Chip label={album.kid.name} size="small" variant="outlined" />
+                      )}
+                    </Box>
+
+                    {album.description && (
+                      <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        sx={{
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          display: '-webkit-box',
+                          WebkitLineClamp: 2,
+                          WebkitBoxOrient: 'vertical',
+                          mb: 1,
+                        }}
+                      >
+                        {album.description}
+                      </Typography>
+                    )}
+
+                    <Typography variant="caption" color="text.secondary">
+                      {album.photos_count || 0} ảnh •{' '}
+                      {dayjs(album.created_at).format('DD/MM/YYYY')}
+                    </Typography>
+                  </CardContent>
+
+                  <CardActions sx={{ justifyContent: 'space-between', px: 2, pb: 2 }}>
+                    <Box>
+                      <IconButton
+                        size="small"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleShareClick(album);
+                        }}
+                      >
+                        <Share fontSize="small" />
+                      </IconButton>
+                    </Box>
+                    <Box>
+                      <IconButton
+                        size="small"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleEditClick(album);
+                        }}
+                      >
+                        <Edit fontSize="small" />
+                      </IconButton>
+                      <IconButton
+                        size="small"
+                        color="error"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDeleteClick(album);
+                        }}
+                      >
+                        <Delete fontSize="small" />
+                      </IconButton>
+                    </Box>
+                  </CardActions>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        )}
+
+        {/* Modals */}
+        <AddAlbumModal
+          open={openModal}
+          album={selectedAlbum}
+          kids={kids}
+          onClose={handleModalClose}
+          onSuccess={handleModalSuccess}
+        />
+
+        {selectedAlbum && (
+          <ShareAlbumDialog
+            open={openShareDialog}
+            album={selectedAlbum}
+            onClose={handleShareDialogClose}
+          />
+        )}
+      </Container>
+    </ProtectedRoute>
+  );
+}
