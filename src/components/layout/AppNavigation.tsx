@@ -189,6 +189,16 @@ export function AppNavigation() {
                     {user.email}
                   </Typography>
                 </MenuItem>
+                <Divider />
+                <MenuItem
+                  onClick={() => {
+                    router.push('/profile');
+                    handleMenuClose();
+                  }}
+                >
+                  <AccountCircle sx={{ mr: 1 }} fontSize="small" />
+                  Thông tin cá nhân
+                </MenuItem>
                 <MenuItem onClick={handleLogout}>
                   <Logout sx={{ mr: 1 }} fontSize="small" />
                   {t.logout}
@@ -300,6 +310,19 @@ export function AppNavigation() {
 
           {/* Logout Button */}
           <List>
+            <ListItem disablePadding>
+              <ListItemButton
+                onClick={() => {
+                  router.push('/profile');
+                  setDrawerOpen(false);
+                }}
+              >
+                <ListItemIcon sx={{ minWidth: 40 }}>
+                  <AccountCircle />
+                </ListItemIcon>
+                <ListItemText primary="Thông tin cá nhân" />
+              </ListItemButton>
+            </ListItem>
             <ListItem disablePadding>
               <ListItemButton onClick={handleLogout}>
                 <ListItemIcon sx={{ minWidth: 40 }}>
