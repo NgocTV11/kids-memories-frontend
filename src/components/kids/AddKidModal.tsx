@@ -15,7 +15,11 @@ import {
   Radio,
   Box,
   Alert,
+  useTheme,
+  useMediaQuery,
+  IconButton,
 } from '@mui/material';
+import { Close } from '@mui/icons-material';
 import { kidsService, Kid, CreateKidDto, UpdateKidDto } from '@/services/kids.service';
 import dayjs from 'dayjs';
 
@@ -28,6 +32,8 @@ interface AddKidModalProps {
 
 export function AddKidModal({ open, kid, onClose, onSuccess }: AddKidModalProps) {
   const isEdit = !!kid;
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const [formData, setFormData] = useState({
     name: '',
@@ -117,8 +123,21 @@ export function AddKidModal({ open, kid, onClose, onSuccess }: AddKidModalProps)
   };
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
-      <DialogTitle>{isEdit ? 'Chỉnh sửa thông tin bé' : 'Thêm bé mới'}</DialogTitle>
+    <Dialog 
+      open={open} 
+      onClose={onClose} 
+      maxWidth="sm" 
+      fullWidth
+      fullScreen={isMobile}
+    >
+      <DialogTitle sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        {isEdit ? 'Chỉnh sửa thông tin bé' : 'Thêm bé mới'}
+        {isMobile && (
+          <IconButton edge="end" onClick={onClose} disabled={loading}>
+            <Close />
+          </IconButton>
+        )}
+      </DialogTitle>
       <DialogContent>
         <Box sx={{ pt: 2 }}>
           {error && (
@@ -135,6 +154,7 @@ export function AddKidModal({ open, kid, onClose, onSuccess }: AddKidModalProps)
             error={!!errors.name}
             helperText={errors.name}
             sx={{ mb: 2 }}
+            size={isMobile ? "small" : "medium"}
             required
           />
 
@@ -148,13 +168,14 @@ export function AddKidModal({ open, kid, onClose, onSuccess }: AddKidModalProps)
             helperText={errors.date_of_birth}
             InputLabelProps={{ shrink: true }}
             sx={{ mb: 2 }}
+            size={isMobile ? "small" : "medium"}
             required
           />
 
           <FormControl component="fieldset">
             <FormLabel component="legend">Giới tính</FormLabel>
             <RadioGroup
-              row
+              row={!isMobile}
               value={formData.gender}
               onChange={(e) => handleChange('gender', e.target.value)}
             >
@@ -165,11 +186,16 @@ export function AddKidModal({ open, kid, onClose, onSuccess }: AddKidModalProps)
           </FormControl>
         </Box>
       </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose} disabled={loading}>
+      <DialogActions sx={{ p: { xs: 2, sm: 1.5 } }}>
+        <Button onClick={onClose} disabled={loading} size={isMobile ? "medium" : "large"}>
           Hủy
         </Button>
-        <Button onClick={handleSubmit} variant="contained" disabled={loading}>
+        <Button 
+          onClick={handleSubmit} 
+          variant="contained" 
+          disabled={loading}
+          size={isMobile ? "medium" : "large"}
+        >
           {loading ? 'Đang lưu...' : isEdit ? 'Cập nhật' : 'Thêm'}
         </Button>
       </DialogActions>

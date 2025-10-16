@@ -23,6 +23,8 @@ import {
   Stepper,
   Step,
   StepLabel,
+  useTheme,
+  useMediaQuery,
 } from '@mui/material';
 import {
   Visibility,
@@ -42,6 +44,8 @@ export default function RegisterPage() {
   const router = useRouter();
   const { register, isLoading, error, clearError, isAuthenticated } = useAuthStore();
   const { auth, t } = useI18nStore();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const [formData, setFormData] = useState({
     email: '',
@@ -328,7 +332,7 @@ export default function RegisterPage() {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              p: { xs: 2, sm: 4 },
+              p: { xs: 2, sm: 3, md: 4 },
               position: 'relative',
               zIndex: 1,
             }}
@@ -336,13 +340,13 @@ export default function RegisterPage() {
             <Paper
               elevation={24}
               sx={{
-                p: { xs: 3, sm: 5 },
+                p: { xs: 2.5, sm: 4, md: 5 },
                 width: '100%',
                 maxWidth: 450,
-                borderRadius: 4,
+                borderRadius: { xs: 3, md: 4 },
                 bgcolor: 'background.paper',
                 boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
-                position: 'relative', // For absolute positioning of language switcher
+                position: 'relative',
                 animation: 'slideIn 0.6s ease-out',
                 '@keyframes slideIn': {
                   from: {
@@ -357,26 +361,26 @@ export default function RegisterPage() {
               }}
             >
               {/* Language Switcher - Top Right inside form */}
-              <Box sx={{ position: 'absolute', top: 16, right: 16, zIndex: 10 }}>
+              <Box sx={{ position: 'absolute', top: { xs: 12, md: 16 }, right: { xs: 12, md: 16 }, zIndex: 10 }}>
                 <LanguageSwitcher />
               </Box>
 
               {/* Mobile Logo */}
-              <Box sx={{ display: { xs: 'block', md: 'none' }, textAlign: 'center', mb: 3 }}>
-                <ChildCare sx={{ fontSize: 60, color: 'secondary.main', mb: 1 }} />
-                <Typography variant="h5" fontWeight="bold" color="secondary">
+              <Box sx={{ display: { xs: 'block', md: 'none' }, textAlign: 'center', mb: { xs: 2, sm: 3 } }}>
+                <ChildCare sx={{ fontSize: { xs: 50, sm: 60 }, color: 'secondary.main', mb: 1 }} />
+                <Typography variant="h5" fontWeight="bold" color="secondary" sx={{ fontSize: { xs: '1.25rem', sm: '1.5rem' } }}>
                   Kids Memories
                 </Typography>
               </Box>
 
-              <Box sx={{ textAlign: 'center', mb: 4 }}>
+              <Box sx={{ textAlign: 'center', mb: { xs: 3, md: 4 } }}>
                 <Typography variant="h4" component="h1" gutterBottom fontWeight="bold" sx={{ display: { xs: 'none', md: 'block' } }}>
                   {auth.register.title}
                 </Typography>
-                <Typography variant="h5" component="h1" gutterBottom fontWeight="bold" sx={{ display: { xs: 'block', md: 'none' } }}>
+                <Typography variant="h5" component="h1" gutterBottom fontWeight="bold" sx={{ display: { xs: 'block', md: 'none' }, fontSize: { xs: '1.25rem', sm: '1.5rem' } }}>
                   {auth.register.title}
                 </Typography>
-                <Typography variant="body1" color="text.secondary">
+                <Typography variant="body1" color="text.secondary" sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}>
                   {auth.register.subtitle} 🎉
                 </Typography>
               </Box>
@@ -385,8 +389,9 @@ export default function RegisterPage() {
                 <Alert
                   severity="error"
                   sx={{
-                    mb: 3,
+                    mb: { xs: 2, md: 3 },
                     borderRadius: 2,
+                    fontSize: { xs: '0.875rem', sm: '1rem' },
                     animation: 'shake 0.5s ease',
                     '@keyframes shake': {
                       '0%, 100%': { transform: 'translateX(0)' },
@@ -411,9 +416,10 @@ export default function RegisterPage() {
                   helperText={validationErrors.display_name}
                   margin="normal"
                   autoComplete="name"
-                  autoFocus
+                  autoFocus={!isMobile}
                   disabled={isLoading}
                   placeholder={auth.register.fullNamePlaceholder}
+                  size={isMobile ? "small" : "medium"}
                   sx={{
                     '& .MuiOutlinedInput-root': {
                       borderRadius: 2,
@@ -422,7 +428,6 @@ export default function RegisterPage() {
                         boxShadow: '0 4px 12px rgba(245, 87, 108, 0.15)',
                       },
                     },
-                    // Fix autofill styling
                     '& input:-webkit-autofill': {
                       WebkitBoxShadow: '0 0 0 100px #fff inset !important',
                       WebkitTextFillColor: '#000 !important',
@@ -451,6 +456,7 @@ export default function RegisterPage() {
                   autoComplete="email"
                   disabled={isLoading}
                   placeholder={auth.register.emailPlaceholder}
+                  size={isMobile ? "small" : "medium"}
                   sx={{
                     '& .MuiOutlinedInput-root': {
                       borderRadius: 2,
@@ -459,7 +465,6 @@ export default function RegisterPage() {
                         boxShadow: '0 4px 12px rgba(245, 87, 108, 0.15)',
                       },
                     },
-                    // Fix autofill styling
                     '& input:-webkit-autofill': {
                       WebkitBoxShadow: '0 0 0 100px #fff inset !important',
                       WebkitTextFillColor: '#000 !important',
@@ -487,6 +492,7 @@ export default function RegisterPage() {
                   margin="normal"
                   autoComplete="new-password"
                   disabled={isLoading}
+                  size={isMobile ? "small" : "medium"}
                   sx={{
                     '& .MuiOutlinedInput-root': {
                       borderRadius: 2,
@@ -495,7 +501,6 @@ export default function RegisterPage() {
                         boxShadow: '0 4px 12px rgba(245, 87, 108, 0.15)',
                       },
                     },
-                    // Fix autofill styling
                     '& input:-webkit-autofill': {
                       WebkitBoxShadow: '0 0 0 100px #fff inset !important',
                       WebkitTextFillColor: '#000 !important',
@@ -516,6 +521,7 @@ export default function RegisterPage() {
                           onClick={() => setShowPassword(!showPassword)}
                           edge="end"
                           disabled={isLoading}
+                          size={isMobile ? "small" : "medium"}
                         >
                           {showPassword ? <VisibilityOff /> : <Visibility />}
                         </IconButton>
@@ -536,6 +542,7 @@ export default function RegisterPage() {
                   margin="normal"
                   autoComplete="new-password"
                   disabled={isLoading}
+                  size={isMobile ? "small" : "medium"}
                   sx={{
                     '& .MuiOutlinedInput-root': {
                       borderRadius: 2,
@@ -544,7 +551,6 @@ export default function RegisterPage() {
                         boxShadow: '0 4px 12px rgba(245, 87, 108, 0.15)',
                       },
                     },
-                    // Fix autofill styling
                     '& input:-webkit-autofill': {
                       WebkitBoxShadow: '0 0 0 100px #fff inset !important',
                       WebkitTextFillColor: '#000 !important',
@@ -565,6 +571,7 @@ export default function RegisterPage() {
                           onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                           edge="end"
                           disabled={isLoading}
+                          size={isMobile ? "small" : "medium"}
                         >
                           {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
                         </IconButton>
@@ -577,23 +584,26 @@ export default function RegisterPage() {
                   fullWidth
                   type="submit"
                   variant="contained"
-                  size="large"
+                  size={isMobile ? "medium" : "large"}
                   disabled={isLoading}
-                  startIcon={isLoading ? <CircularProgress size={20} color="inherit" /> : <RegisterIcon />}
+                  startIcon={isLoading ? <CircularProgress size={isMobile ? 18 : 20} color="inherit" /> : <RegisterIcon />}
                   sx={{
-                    mt: 3,
+                    mt: { xs: 2, md: 3 },
                     mb: 2,
-                    py: 1.5,
+                    py: { xs: 1.25, md: 1.5 },
                     borderRadius: 2,
-                    fontSize: '1.1rem',
+                    fontSize: { xs: '1rem', md: '1.1rem' },
                     fontWeight: 'bold',
                     background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
                     boxShadow: '0 4px 20px rgba(245, 87, 108, 0.4)',
                     transition: 'all 0.3s ease',
                     '&:hover': {
-                      transform: 'translateY(-2px)',
+                      transform: isMobile ? 'scale(0.98)' : 'translateY(-2px)',
                       boxShadow: '0 6px 25px rgba(245, 87, 108, 0.5)',
                       background: 'linear-gradient(135deg, #f5576c 0%, #f093fb 100%)',
+                    },
+                    '&:active': {
+                      transform: 'scale(0.97)',
                     },
                     '&:disabled': {
                       background: 'rgba(0, 0, 0, 0.12)',
@@ -603,8 +613,8 @@ export default function RegisterPage() {
                   {isLoading ? auth.register.registering : auth.register.registerButton}
                 </Button>
 
-                <Box sx={{ textAlign: 'center', mt: 3 }}>
-                  <Typography variant="body2" color="text.secondary">
+                <Box sx={{ textAlign: 'center', mt: { xs: 2, md: 3 } }}>
+                  <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: '0.875rem', sm: '0.875rem' } }}>
                     {auth.register.haveAccount}{' '}
                     <Link
                       component={NextLink}

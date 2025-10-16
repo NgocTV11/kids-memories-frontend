@@ -27,6 +27,8 @@ import {
   Fab,
   Tooltip,
   Badge,
+  useTheme,
+  useMediaQuery,
 } from '@mui/material';
 import {
   Add,
@@ -47,6 +49,9 @@ import { AddAlbumModal } from '@/components/albums/AddAlbumModal';
 import { ShareAlbumDialog } from '@/components/albums/ShareAlbumDialog';
 
 export default function AlbumsPage() {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'md'));
   const router = useRouter();
   const [albums, setAlbums] = useState<Album[]>([]);
   const [kids, setKids] = useState<Kid[]>([]);
@@ -209,14 +214,14 @@ export default function AlbumsPage() {
           }}
         />
 
-        <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1, pt: 3 }}>
+        <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1, pt: { xs: 2, sm: 3 }, px: { xs: 2, sm: 3 } }}>
           {/* Header */}
           <Paper
             elevation={0}
             sx={{
-              p: 4,
-              mb: 3,
-              borderRadius: 4,
+              p: { xs: 2, sm: 3, md: 4 },
+              mb: { xs: 2, sm: 3 },
+              borderRadius: { xs: 3, md: 4 },
               background: 'rgba(255, 255, 255, 0.95)',
               backdropFilter: 'blur(10px)',
               border: '1px solid rgba(255, 255, 255, 0.3)',
@@ -227,12 +232,19 @@ export default function AlbumsPage() {
               },
             }}
           >
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2, mb: 3 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <Box sx={{ 
+              display: 'flex', 
+              justifyContent: 'space-between', 
+              alignItems: isMobile ? 'flex-start' : 'center',
+              flexDirection: isMobile ? 'column' : 'row',
+              gap: 2, 
+              mb: kids.length > 0 ? (isMobile ? 2 : 3) : 0 
+            }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 1.5, sm: 2 } }}>
                 <Box
                   sx={{
-                    width: 64,
-                    height: 64,
+                    width: { xs: 48, sm: 56, md: 64 },
+                    height: { xs: 48, sm: 56, md: 64 },
                     borderRadius: 3,
                     background: 'linear-gradient(135deg, #FFA500 0%, #FF8C00 100%)',
                     display: 'flex',
@@ -245,28 +257,30 @@ export default function AlbumsPage() {
                     },
                   }}
                 >
-                  <Collections sx={{ fontSize: 36, color: 'white' }} />
+                  <Collections sx={{ fontSize: { xs: 28, sm: 32, md: 36 }, color: 'white' }} />
                 </Box>
                 <Box>
-                  <Typography variant="h4" fontWeight="bold" gutterBottom sx={{ mb: 0.5 }}>
+                  <Typography variant={isMobile ? "h6" : "h4"} fontWeight="bold" gutterBottom sx={{ mb: 0.5 }}>
                     Albums của bé 📸
                   </Typography>
-                  <Typography variant="body1" color="text.secondary">
-                    Tổ chức và lưu giữ những khoảnh khắc đẹp
+                  <Typography variant={isMobile ? "caption" : "body1"} color="text.secondary">
+                    {isMobile ? `${albums.length} albums` : 'Tổ chức và lưu giữ những khoảnh khắc đẹp'}
                   </Typography>
                 </Box>
               </Box>
               <Button
                 variant="contained"
-                size="large"
-                startIcon={<Add />}
+                size={isMobile ? "medium" : "large"}
+                startIcon={!isMobile && <Add />}
                 onClick={handleAddClick}
+                fullWidth={isMobile}
                 sx={{
                   background: 'linear-gradient(45deg, #FFA500 30%, #FF8C00 90%)',
                   boxShadow: '0 4px 12px rgba(255, 165, 0, 0.3)',
-                  px: 4,
-                  py: 1.5,
+                  px: { xs: 3, sm: 4 },
+                  py: { xs: 1.2, sm: 1.5 },
                   fontWeight: 'bold',
+                  fontSize: { xs: '0.875rem', sm: '1rem' },
                   '&:hover': {
                     background: 'linear-gradient(45deg, #FF8C00 30%, #FFA500 90%)',
                     transform: 'scale(1.05)',
@@ -274,15 +288,15 @@ export default function AlbumsPage() {
                   transition: 'all 0.3s ease',
                 }}
               >
-                Tạo album
+                {isMobile ? '➕ Tạo album' : 'Tạo album'}
               </Button>
             </Box>
 
             {/* Filter */}
             {kids.length > 0 && (
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                <FilterList sx={{ color: 'text.secondary' }} />
-                <FormControl sx={{ minWidth: 250 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 1, sm: 2 } }}>
+                {!isMobile && <FilterList sx={{ color: 'text.secondary' }} />}
+                <FormControl fullWidth={isMobile} sx={{ minWidth: isMobile ? 'auto' : 250 }} size={isMobile ? "small" : "medium"}>
                   <InputLabel>Lọc theo bé</InputLabel>
                   <Select
                     value={selectedKidId}
@@ -298,12 +312,12 @@ export default function AlbumsPage() {
                     <MenuItem value="all">
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                         <Collections fontSize="small" />
-                        Tất cả albums
+                        {isMobile ? 'Tất cả' : 'Tất cả albums'}
                       </Box>
                     </MenuItem>
                     {kids.map((kid) => (
                       <MenuItem key={kid.id} value={kid.id}>
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, width: '100%' }}>
                           {kid.name}
                           <Chip
                             label={albums.filter(a => a.kid_id === kid.id).length}
@@ -321,15 +335,15 @@ export default function AlbumsPage() {
 
           {/* Stats Row */}
           {!loading && albums.length > 0 && (
-            <Grid container spacing={2} sx={{ mb: 4 }}>
+            <Grid container spacing={{ xs: 1.5, sm: 2 }} sx={{ mb: { xs: 2, sm: 3, md: 4 } }}>
               <Grid size={{ xs: 4 }}>
                 <Paper
                   sx={{
-                    p: 2,
+                    p: { xs: 1.5, sm: 2 },
                     textAlign: 'center',
                     background: 'rgba(255, 255, 255, 0.9)',
                     backdropFilter: 'blur(10px)',
-                    borderRadius: 3,
+                    borderRadius: { xs: 2, md: 3 },
                     animation: 'fadeIn 0.5s ease-out 0.1s both',
                     '@keyframes fadeIn': {
                       from: { opacity: 0, transform: 'scale(0.9)' },
@@ -337,11 +351,11 @@ export default function AlbumsPage() {
                     },
                   }}
                 >
-                  <Collections sx={{ fontSize: 28, color: '#FFA500', mb: 0.5 }} />
-                  <Typography variant="h5" fontWeight="bold" color="#FFA500">
+                  <Collections sx={{ fontSize: { xs: 24, sm: 28 }, color: '#FFA500', mb: 0.5 }} />
+                  <Typography variant={isMobile ? "h6" : "h5"} fontWeight="bold" color="#FFA500">
                     {albums.length}
                   </Typography>
-                  <Typography variant="caption" color="text.secondary">
+                  <Typography variant="caption" color="text.secondary" sx={{ fontSize: { xs: '0.65rem', sm: '0.75rem' } }}>
                     Albums
                   </Typography>
                 </Paper>
@@ -349,19 +363,19 @@ export default function AlbumsPage() {
               <Grid size={{ xs: 4 }}>
                 <Paper
                   sx={{
-                    p: 2,
+                    p: { xs: 1.5, sm: 2 },
                     textAlign: 'center',
                     background: 'rgba(255, 255, 255, 0.9)',
                     backdropFilter: 'blur(10px)',
-                    borderRadius: 3,
+                    borderRadius: { xs: 2, md: 3 },
                     animation: 'fadeIn 0.5s ease-out 0.2s both',
                   }}
                 >
-                  <Photo sx={{ fontSize: 28, color: '#FF8C00', mb: 0.5 }} />
-                  <Typography variant="h5" fontWeight="bold" color="#FF8C00">
+                  <Photo sx={{ fontSize: { xs: 24, sm: 28 }, color: '#FF8C00', mb: 0.5 }} />
+                  <Typography variant={isMobile ? "h6" : "h5"} fontWeight="bold" color="#FF8C00">
                     {albums.reduce((sum, a) => sum + (a.photos_count || 0), 0)}
                   </Typography>
-                  <Typography variant="caption" color="text.secondary">
+                  <Typography variant="caption" color="text.secondary" sx={{ fontSize: { xs: '0.65rem', sm: '0.75rem' } }}>
                     Ảnh
                   </Typography>
                 </Paper>
@@ -369,20 +383,20 @@ export default function AlbumsPage() {
               <Grid size={{ xs: 4 }}>
                 <Paper
                   sx={{
-                    p: 2,
+                    p: { xs: 1.5, sm: 2 },
                     textAlign: 'center',
                     background: 'rgba(255, 255, 255, 0.9)',
                     backdropFilter: 'blur(10px)',
-                    borderRadius: 3,
+                    borderRadius: { xs: 2, md: 3 },
                     animation: 'fadeIn 0.5s ease-out 0.3s both',
                   }}
                 >
-                  <Lock sx={{ fontSize: 28, color: '#FF6347', mb: 0.5 }} />
-                  <Typography variant="h5" fontWeight="bold" color="#FF6347">
+                  <Lock sx={{ fontSize: { xs: 24, sm: 28 }, color: '#FF6347', mb: 0.5 }} />
+                  <Typography variant={isMobile ? "h6" : "h5"} fontWeight="bold" color="#FF6347">
                     {albums.filter(a => a.privacy_level === 'private').length}
                   </Typography>
-                  <Typography variant="caption" color="text.secondary">
-                    Riêng tư
+                  <Typography variant="caption" color="text.secondary" sx={{ fontSize: { xs: '0.65rem', sm: '0.75rem' } }}>
+                    {isMobile ? 'Riêng' : 'Riêng tư'}
                   </Typography>
                 </Paper>
               </Grid>
@@ -419,9 +433,9 @@ export default function AlbumsPage() {
               elevation={0}
               sx={{
                 textAlign: 'center',
-                py: 8,
-                px: 4,
-                borderRadius: 4,
+                py: { xs: 6, sm: 8 },
+                px: { xs: 3, sm: 4 },
+                borderRadius: { xs: 3, md: 4 },
                 background: 'rgba(255, 255, 255, 0.95)',
                 backdropFilter: 'blur(10px)',
                 border: '1px solid rgba(255, 255, 255, 0.3)',
@@ -429,8 +443,8 @@ export default function AlbumsPage() {
             >
               <Box
                 sx={{
-                  width: 120,
-                  height: 120,
+                  width: { xs: 80, sm: 100, md: 120 },
+                  height: { xs: 80, sm: 100, md: 120 },
                   borderRadius: '50%',
                   background: 'linear-gradient(135deg, #FFA500 0%, #FF8C00 100%)',
                   display: 'flex',
@@ -444,35 +458,41 @@ export default function AlbumsPage() {
                   },
                 }}
               >
-                <Collections sx={{ fontSize: 60, color: 'white' }} />
+                <Collections sx={{ fontSize: { xs: 40, sm: 50, md: 60 }, color: 'white' }} />
               </Box>
-              <Typography variant="h5" fontWeight="bold" gutterBottom>
+              <Typography variant={isMobile ? "h6" : "h5"} fontWeight="bold" gutterBottom>
                 {selectedKidId === 'all' ? 'Chưa có album nào 📔' : 'Bé này chưa có album nào'}
               </Typography>
-              <Typography variant="body1" color="text.secondary" sx={{ mb: 3, maxWidth: 400, mx: 'auto' }}>
+              <Typography 
+                variant={isMobile ? "body2" : "body1"} 
+                color="text.secondary" 
+                sx={{ mb: 3, maxWidth: 400, mx: 'auto' }}
+              >
                 Tạo album đầu tiên để bắt đầu tổ chức và lưu trữ những khoảnh khắc đáng nhớ
               </Typography>
               <Button
                 variant="contained"
-                size="large"
-                startIcon={<Add />}
+                size={isMobile ? "medium" : "large"}
+                startIcon={!isMobile && <Add />}
                 onClick={handleAddClick}
+                fullWidth={isMobile}
                 sx={{
                   background: 'linear-gradient(45deg, #FFA500 30%, #FF8C00 90%)',
                   px: 4,
                   py: 1.5,
                   fontWeight: 'bold',
+                  maxWidth: isMobile ? '100%' : 'auto',
                   '&:hover': {
                     background: 'linear-gradient(45deg, #FF8C00 30%, #FFA500 90%)',
                   },
                 }}
               >
-                Tạo album đầu tiên
+                {isMobile ? '➕ Tạo album đầu tiên' : 'Tạo album đầu tiên'}
               </Button>
             </Paper>
           ) : (
             /* Albums Masonry Grid */
-            <Grid container spacing={3}>
+            <Grid container spacing={{ xs: 2, sm: 2.5, md: 3 }}>
               {albums.map((album, index) => (
                 <Grid size={{ xs: 12, sm: 6, md: 4 }} key={album.id}>
                   <Card
@@ -480,7 +500,7 @@ export default function AlbumsPage() {
                       height: '100%',
                       display: 'flex',
                       flexDirection: 'column',
-                      borderRadius: 4,
+                      borderRadius: { xs: 3, md: 4 },
                       cursor: 'pointer',
                       transition: 'all 0.3s ease',
                       background: 'rgba(255, 255, 255, 0.95)',
@@ -489,11 +509,14 @@ export default function AlbumsPage() {
                       overflow: 'hidden',
                       animation: `slideUp 0.5s ease-out ${index * 0.1}s both`,
                       '&:hover': {
-                        transform: 'translateY(-12px) scale(1.02)',
-                        boxShadow: '0 16px 32px rgba(255, 165, 0, 0.3)',
+                        transform: isMobile ? 'scale(0.98)' : 'translateY(-12px) scale(1.02)',
+                        boxShadow: isMobile ? 2 : '0 16px 32px rgba(255, 165, 0, 0.3)',
                         '& .album-cover': {
-                          transform: 'scale(1.1)',
+                          transform: isMobile ? 'scale(1.05)' : 'scale(1.1)',
                         },
+                      },
+                      '&:active': {
+                        transform: 'scale(0.97)',
                       },
                       '@keyframes slideUp': {
                         from: { opacity: 0, transform: 'translateY(30px)' },
@@ -505,7 +528,7 @@ export default function AlbumsPage() {
                       sx={{
                         position: 'relative',
                         overflow: 'hidden',
-                        height: 220,
+                        height: { xs: 180, sm: 200, md: 220 },
                         bgcolor: 'grey.200',
                       }}
                       onClick={() => handleCardClick(album.id)}
@@ -534,7 +557,7 @@ export default function AlbumsPage() {
                             transition: 'transform 0.3s ease',
                           }}
                         >
-                          <Photo sx={{ fontSize: 60, color: 'grey.400' }} />
+                          <Photo sx={{ fontSize: { xs: 48, sm: 60 }, color: 'grey.400' }} />
                         </Box>
                       )}
                       
@@ -542,20 +565,24 @@ export default function AlbumsPage() {
                       <Box
                         sx={{
                           position: 'absolute',
-                          top: 12,
-                          right: 12,
+                          top: { xs: 8, sm: 12 },
+                          right: { xs: 8, sm: 12 },
                           display: 'flex',
                           gap: 1,
                         }}
                       >
                         <Chip
                           icon={getPrivacyIcon(album.privacy_level)}
-                          label={getPrivacyLabel(album.privacy_level)}
+                          label={isMobile ? '' : getPrivacyLabel(album.privacy_level)}
                           size="small"
                           sx={{
                             background: 'rgba(255, 255, 255, 0.9)',
                             backdropFilter: 'blur(10px)',
                             fontWeight: 'bold',
+                            minWidth: isMobile ? 32 : 'auto',
+                            '& .MuiChip-label': {
+                              px: isMobile ? 0 : 1,
+                            },
                           }}
                         />
                       </Box>
@@ -563,9 +590,9 @@ export default function AlbumsPage() {
                       <Box
                         sx={{
                           position: 'absolute',
-                          bottom: 12,
-                          left: 12,
-                          right: 12,
+                          bottom: { xs: 8, sm: 12 },
+                          left: { xs: 8, sm: 12 },
+                          right: { xs: 8, sm: 12 },
                           display: 'flex',
                           justifyContent: 'space-between',
                           alignItems: 'center',
@@ -573,24 +600,31 @@ export default function AlbumsPage() {
                       >
                         <Chip
                           icon={<Photo />}
-                          label={`${album.photos_count || 0} ảnh`}
+                          label={`${album.photos_count || 0}${isMobile ? '' : ' ảnh'}`}
                           size="small"
                           sx={{
                             background: 'rgba(0, 0, 0, 0.6)',
                             backdropFilter: 'blur(10px)',
                             color: 'white',
                             fontWeight: 'bold',
+                            fontSize: { xs: '0.7rem', sm: '0.75rem' },
                           }}
                         />
                       </Box>
                     </Box>
 
-                    <CardContent sx={{ flex: 1, p: 3 }} onClick={() => handleCardClick(album.id)}>
-                      <Typography variant="h6" fontWeight="bold" gutterBottom sx={{ mb: 2 }}>
+                    <CardContent sx={{ flex: 1, p: { xs: 2, sm: 2.5, md: 3 } }} onClick={() => handleCardClick(album.id)}>
+                      <Typography 
+                        variant={isMobile ? "subtitle1" : "h6"} 
+                        fontWeight="bold" 
+                        gutterBottom 
+                        sx={{ mb: { xs: 1.5, sm: 2 } }}
+                        noWrap
+                      >
                         {album.title}
                       </Typography>
 
-                      {album.kid && (
+                      {album.kid && !isMobile && (
                         <Chip
                           label={album.kid.name}
                           size="small"
@@ -600,11 +634,12 @@ export default function AlbumsPage() {
                             borderColor: '#FFA500',
                             color: '#FFA500',
                             fontWeight: 'bold',
+                            fontSize: '0.7rem',
                           }}
                         />
                       )}
 
-                      {album.description && (
+                      {album.description && !isMobile && (
                         <Typography
                           variant="body2"
                           color="text.secondary"
@@ -622,33 +657,37 @@ export default function AlbumsPage() {
                         </Typography>
                       )}
 
-                      <Typography variant="caption" color="text.secondary" sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                        📅 {dayjs(album.created_at).format('DD/MM/YYYY')}
+                      <Typography variant="caption" color="text.secondary" sx={{ display: 'flex', alignItems: 'center', gap: 0.5, fontSize: { xs: '0.7rem', sm: '0.75rem' } }}>
+                        📅 {dayjs(album.created_at).format(isMobile ? 'DD/MM/YY' : 'DD/MM/YYYY')}
                       </Typography>
                     </CardContent>
 
                     {/* Action Buttons */}
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', px: 2, pb: 2 }}>
-                      <Box sx={{ display: 'flex', gap: 1 }}>
-                        <Tooltip title="Xem">
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', px: { xs: 1.5, sm: 2 }, pb: { xs: 1.5, sm: 2 } }}>
+                      <Box sx={{ display: 'flex', gap: 0.5 }}>
+                        <Tooltip title={isMobile ? "" : "Xem"}>
                           <IconButton
                             size="small"
                             sx={{
                               border: '1px solid',
                               borderColor: 'divider',
+                              width: { xs: 32, sm: 36 },
+                              height: { xs: 32, sm: 36 },
                               '&:hover': { bgcolor: 'action.hover' },
                             }}
                             onClick={() => handleCardClick(album.id)}
                           >
-                            <Visibility fontSize="small" />
+                            <Visibility fontSize="small" sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }} />
                           </IconButton>
                         </Tooltip>
-                        <Tooltip title="Chia sẻ">
+                        <Tooltip title={isMobile ? "" : "Chia sẻ"}>
                           <IconButton
                             size="small"
                             sx={{
                               border: '1px solid',
                               borderColor: 'divider',
+                              width: { xs: 32, sm: 36 },
+                              height: { xs: 32, sm: 36 },
                               '&:hover': { bgcolor: 'action.hover' },
                             }}
                             onClick={(e) => {
@@ -656,17 +695,19 @@ export default function AlbumsPage() {
                               handleShareClick(album);
                             }}
                           >
-                            <Share fontSize="small" />
+                            <Share fontSize="small" sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }} />
                           </IconButton>
                         </Tooltip>
                       </Box>
-                      <Box sx={{ display: 'flex', gap: 1 }}>
-                        <Tooltip title="Chỉnh sửa">
+                      <Box sx={{ display: 'flex', gap: 0.5 }}>
+                        <Tooltip title={isMobile ? "" : "Chỉnh sửa"}>
                           <IconButton
                             size="small"
                             sx={{
                               border: '1px solid',
                               borderColor: 'divider',
+                              width: { xs: 32, sm: 36 },
+                              height: { xs: 32, sm: 36 },
                               '&:hover': { bgcolor: 'action.hover' },
                             }}
                             onClick={(e) => {
@@ -674,16 +715,18 @@ export default function AlbumsPage() {
                               handleEditClick(album);
                             }}
                           >
-                            <Edit fontSize="small" />
+                            <Edit fontSize="small" sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }} />
                           </IconButton>
                         </Tooltip>
-                        <Tooltip title="Xóa">
+                        <Tooltip title={isMobile ? "" : "Xóa"}>
                           <IconButton
                             size="small"
                             sx={{
                               border: '1px solid',
                               borderColor: 'error.main',
                               color: 'error.main',
+                              width: { xs: 32, sm: 36 },
+                              height: { xs: 32, sm: 36 },
                               '&:hover': { bgcolor: 'error.lighter' },
                             }}
                             onClick={(e) => {
@@ -691,7 +734,7 @@ export default function AlbumsPage() {
                               handleDeleteClick(album);
                             }}
                           >
-                            <Delete fontSize="small" />
+                            <Delete fontSize="small" sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }} />
                           </IconButton>
                         </Tooltip>
                       </Box>
@@ -703,7 +746,7 @@ export default function AlbumsPage() {
           )}
 
           {/* Floating Action Button */}
-          {!loading && albums.length > 0 && (
+          {!loading && albums.length > 0 && !isMobile && (
             <Fab
               color="primary"
               aria-label="add"

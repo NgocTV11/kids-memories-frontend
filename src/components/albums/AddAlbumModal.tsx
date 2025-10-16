@@ -14,7 +14,11 @@ import {
   MenuItem,
   Box,
   Alert,
+  useTheme,
+  useMediaQuery,
+  IconButton,
 } from '@mui/material';
+import { Close } from '@mui/icons-material';
 import { albumsService, Album, CreateAlbumDto, UpdateAlbumDto } from '@/services/albums.service';
 import { Kid } from '@/services/kids.service';
 
@@ -28,6 +32,8 @@ interface AddAlbumModalProps {
 
 export function AddAlbumModal({ open, album, kids, onClose, onSuccess }: AddAlbumModalProps) {
   const isEdit = !!album;
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const [formData, setFormData] = useState({
     title: '',
@@ -113,8 +119,21 @@ export function AddAlbumModal({ open, album, kids, onClose, onSuccess }: AddAlbu
   };
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
-      <DialogTitle>{isEdit ? 'Chỉnh sửa album' : 'Tạo album mới'}</DialogTitle>
+    <Dialog 
+      open={open} 
+      onClose={onClose} 
+      maxWidth="sm" 
+      fullWidth
+      fullScreen={isMobile}
+    >
+      <DialogTitle sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        {isEdit ? 'Chỉnh sửa album' : 'Tạo album mới'}
+        {isMobile && (
+          <IconButton edge="end" onClick={onClose} disabled={loading}>
+            <Close />
+          </IconButton>
+        )}
+      </DialogTitle>
       <DialogContent>
         <Box sx={{ pt: 2 }}>
           {error && (
@@ -131,6 +150,7 @@ export function AddAlbumModal({ open, album, kids, onClose, onSuccess }: AddAlbu
             error={!!errors.title}
             helperText={errors.title}
             sx={{ mb: 2 }}
+            size={isMobile ? "small" : "medium"}
             required
           />
 
@@ -142,9 +162,10 @@ export function AddAlbumModal({ open, album, kids, onClose, onSuccess }: AddAlbu
             value={formData.description}
             onChange={(e) => handleChange('description', e.target.value)}
             sx={{ mb: 2 }}
+            size={isMobile ? "small" : "medium"}
           />
 
-          <FormControl fullWidth sx={{ mb: 2 }}>
+          <FormControl fullWidth sx={{ mb: 2 }} size={isMobile ? "small" : "medium"}>
             <InputLabel>Chọn bé (tùy chọn)</InputLabel>
             <Select
               value={formData.kid_id}
@@ -160,7 +181,7 @@ export function AddAlbumModal({ open, album, kids, onClose, onSuccess }: AddAlbu
             </Select>
           </FormControl>
 
-          <FormControl fullWidth required>
+          <FormControl fullWidth required size={isMobile ? "small" : "medium"}>
             <InputLabel>Mức độ riêng tư</InputLabel>
             <Select
               value={formData.privacy_level}
@@ -174,11 +195,16 @@ export function AddAlbumModal({ open, album, kids, onClose, onSuccess }: AddAlbu
           </FormControl>
         </Box>
       </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose} disabled={loading}>
+      <DialogActions sx={{ p: { xs: 2, sm: 1.5 } }}>
+        <Button onClick={onClose} disabled={loading} size={isMobile ? "medium" : "large"}>
           Hủy
         </Button>
-        <Button onClick={handleSubmit} variant="contained" disabled={loading}>
+        <Button 
+          onClick={handleSubmit} 
+          variant="contained" 
+          disabled={loading}
+          size={isMobile ? "medium" : "large"}
+        >
           {loading ? 'Đang lưu...' : isEdit ? 'Cập nhật' : 'Tạo'}
         </Button>
       </DialogActions>

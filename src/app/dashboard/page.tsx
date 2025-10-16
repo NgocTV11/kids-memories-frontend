@@ -20,6 +20,10 @@ import {
   Alert,
   Chip,
   Divider,
+  Grid,
+  useTheme,
+  useMediaQuery,
+  IconButton,
 } from '@mui/material';
 import {
   ChildCare,
@@ -36,6 +40,9 @@ import dayjs from 'dayjs';
 
 export default function DashboardPage() {
   const router = useRouter();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'md'));
   const { user, logout } = useAuthStore();
   
   const [stats, setStats] = useState({
@@ -170,122 +177,179 @@ export default function DashboardPage() {
           }}
         />
 
-      <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1, pt: 3 }}>
+      <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1, pt: { xs: 2, sm: 3 }, px: { xs: 2, sm: 3 } }}>
         {/* Header */}
         <Paper 
           elevation={4} 
           sx={{ 
-            mb: 3, 
-            p: 3, 
+            mb: { xs: 2, sm: 3 }, 
+            p: { xs: 2, sm: 3 }, 
             background: 'rgba(255, 255, 255, 0.95)',
             backdropFilter: 'blur(10px)',
-            borderRadius: 3,
+            borderRadius: { xs: 2, sm: 3 },
             border: '1px solid rgba(255, 255, 255, 0.3)',
             boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
           }}
         >
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+          <Box sx={{ 
+            display: 'flex', 
+            flexDirection: { xs: 'column', sm: 'row' },
+            justifyContent: 'space-between', 
+            alignItems: { xs: 'flex-start', sm: 'center' }, 
+            gap: 2 
+          }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, width: { xs: '100%', sm: 'auto' } }}>
               <Avatar
                 sx={{ 
-                  width: 64, 
-                  height: 64, 
+                  width: { xs: 48, sm: 64 }, 
+                  height: { xs: 48, sm: 64 }, 
                   background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                   color: 'white',
                   fontWeight: 'bold',
-                  fontSize: '1.5rem',
+                  fontSize: { xs: '1.2rem', sm: '1.5rem' },
                   boxShadow: '0 4px 12px rgba(102, 126, 234, 0.4)',
                 }}
                 src={user?.avatar_url || undefined}
               >
                 {user?.display_name?.charAt(0).toUpperCase()}
               </Avatar>
-              <Box>
-                <Typography variant="h4" fontWeight="bold" sx={{ mb: 0.5 }}>
+              <Box sx={{ flex: 1, minWidth: 0 }}>
+                <Typography 
+                  variant={isMobile ? "h6" : "h4"} 
+                  fontWeight="bold" 
+                  sx={{ mb: 0.5 }}
+                  noWrap={isMobile}
+                >
                   👋 Xin chào, {user?.display_name}!
                 </Typography>
-                <Typography variant="body1" color="text.secondary">
+                <Typography 
+                  variant={isMobile ? "caption" : "body1"} 
+                  color="text.secondary"
+                  noWrap
+                >
                   {user?.email}
                 </Typography>
               </Box>
             </Box>
-            <Button
-              variant="contained"
-              startIcon={<Logout />}
-              onClick={handleLogout}
-              sx={{ 
-                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                color: 'white',
-                '&:hover': {
-                  background: 'linear-gradient(135deg, #5568d3 0%, #653a8b 100%)',
-                },
-              }}
-            >
-              Đăng xuất
-            </Button>
+            {isMobile ? (
+              <IconButton
+                onClick={handleLogout}
+                sx={{ 
+                  background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                  color: 'white',
+                  alignSelf: 'flex-end',
+                  '&:hover': {
+                    background: 'linear-gradient(135deg, #5568d3 0%, #653a8b 100%)',
+                  },
+                }}
+              >
+                <Logout />
+              </IconButton>
+            ) : (
+              <Button
+                variant="contained"
+                startIcon={<Logout />}
+                onClick={handleLogout}
+                sx={{ 
+                  background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                  color: 'white',
+                  '&:hover': {
+                    background: 'linear-gradient(135deg, #5568d3 0%, #653a8b 100%)',
+                  },
+                }}
+              >
+                Đăng xuất
+              </Button>
+            )}
           </Box>
         </Paper>
 
         {/* Error Display */}
         {error && (
-          <Alert severity="error" sx={{ mb: 3 }}>
+          <Alert severity="error" sx={{ mb: { xs: 2, sm: 3 } }}>
             {error}
           </Alert>
         )}
 
-        {/* Stats Grid */}
+        {/* Stats Grid - Responsive */}
         {loading ? (
           <Box sx={{ display: 'flex', justifyContent: 'center', py: 8 }}>
             <CircularProgress />
           </Box>
         ) : (
-          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }, gap: 3, mb: 4 }}>
-            {statsCards.map((stat, index) => (
+          <Box sx={{ 
+            display: 'grid', 
+            gridTemplateColumns: { 
+              xs: 'repeat(2, 1fr)',  // Mobile: 2 columns
+              sm: 'repeat(2, 1fr)',  // Tablet portrait: 2 columns
+              md: 'repeat(5, 1fr)'   // Desktop: 5 columns
+            }, 
+            gap: { xs: 2, sm: 2.5, md: 3 }, 
+            mb: { xs: 3, sm: 4 } 
+          }}>
+            {statsCards.slice(0, isMobile ? 4 : 5).map((stat, index) => (
               <Card
                 key={index}
                 elevation={6}
                 sx={{
                   cursor: 'pointer',
+                  height: '100%',
                   transition: 'all 0.3s ease',
                   background: 'rgba(255, 255, 255, 0.95)',
                   backdropFilter: 'blur(10px)',
                   border: `3px solid ${stat.color}`,
-                  borderRadius: 3,
+                  borderRadius: { xs: 2, sm: 3 },
                   '&:hover': {
-                    transform: 'translateY(-8px)',
-                    boxShadow: `0 16px 32px ${stat.color}60`,
+                    transform: { xs: 'scale(1.02)', sm: 'translateY(-8px)' },
+                    boxShadow: `0 ${isMobile ? '8' : '16'}px ${isMobile ? '16' : '32'}px ${stat.color}60`,
                     border: `3px solid ${stat.color}`,
                     background: 'rgba(255, 255, 255, 1)',
                   },
                 }}
                 onClick={stat.action}
               >
-                <CardContent sx={{ p: 4 }}>
-                  <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: 2 }}>
+                <CardContent sx={{ p: { xs: 2, sm: 3, md: 4 } }}>
+                  <Box sx={{ 
+                    display: 'flex', 
+                    flexDirection: 'column', 
+                    alignItems: 'center', 
+                    textAlign: 'center', 
+                    gap: { xs: 1.5, sm: 2 } 
+                  }}>
                     <Box 
                       sx={{ 
                         color: 'white',
                         background: `linear-gradient(135deg, ${stat.color} 0%, ${stat.color}DD 100%)`,
                         borderRadius: '50%',
-                        p: 2.5,
+                        p: { xs: 1.5, sm: 2, md: 2.5 },
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
                         boxShadow: `0 4px 12px ${stat.color}50`,
-                        width: 72,
-                        height: 72,
+                        width: { xs: 56, sm: 64, md: 72 },
+                        height: { xs: 56, sm: 64, md: 72 },
                         '& > svg': {
-                          fontSize: '2rem',
+                          fontSize: { xs: '1.5rem', sm: '1.8rem', md: '2rem' },
                         },
                       }}
                     >
                       {stat.icon}
                     </Box>
                     <Box>
-                      <Typography variant="h2" fontWeight="bold" color={stat.color} sx={{ mb: 0.5 }}>
+                      <Typography 
+                        variant={isMobile ? "h4" : "h2"} 
+                        fontWeight="bold" 
+                        color={stat.color} 
+                        sx={{ mb: 0.5 }}
+                      >
                         {stat.value}
                       </Typography>
-                      <Typography variant="h6" fontWeight="600" color="text.primary">
+                      <Typography 
+                        variant={isMobile ? "body2" : "h6"} 
+                        fontWeight="600" 
+                        color="text.primary"
+                        noWrap={isMobile}
+                      >
                         {stat.title}
                       </Typography>
                     </Box>
@@ -301,17 +365,17 @@ export default function DashboardPage() {
           <Paper 
             elevation={4}
             sx={{ 
-              p: 4, 
-              mb: 3, 
+              p: { xs: 3, sm: 4 }, 
+              mb: { xs: 2, sm: 3 }, 
               background: 'rgba(255, 255, 255, 0.95)',
               backdropFilter: 'blur(10px)',
-              borderRadius: 3,
+              borderRadius: { xs: 2, sm: 3 },
               border: '1px solid rgba(255, 255, 255, 0.3)',
               boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
             }}
           >
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-              <Typography variant="h5" fontWeight="bold" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: { xs: 2, sm: 3 } }}>
+              <Typography variant={isMobile ? "subtitle1" : "h5"} fontWeight="bold" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                 👶 Bé yêu của bạn
               </Typography>
               <Button
@@ -321,13 +385,18 @@ export default function DashboardPage() {
                 onClick={() => router.push('/kids')}
                 sx={{
                   background: 'linear-gradient(135deg, #2196f3 0%, #1976d2 100%)',
+                  fontSize: { xs: '0.75rem', sm: '0.875rem' },
                 }}
               >
-                Xem tất cả
+                {isMobile ? 'Tất cả' : 'Xem tất cả'}
               </Button>
             </Box>
-            <Divider sx={{ mb: 3 }} />
-            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)' }, gap: 3 }}>
+            <Divider sx={{ mb: { xs: 2, sm: 3 } }} />
+            <Box sx={{ 
+              display: 'grid', 
+              gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)' }, 
+              gap: { xs: 2, sm: 2.5, md: 3 } 
+            }}>
               {recentKids.map((kid) => (
                 <Card
                   key={kid.id}
@@ -337,28 +406,28 @@ export default function DashboardPage() {
                     transition: 'all 0.3s ease',
                     border: '2px solid transparent',
                     '&:hover': {
-                      transform: 'translateY(-8px)',
+                      transform: { xs: 'scale(1.02)', sm: 'translateY(-8px)' },
                       boxShadow: '0 12px 24px rgba(33, 150, 243, 0.3)',
                       border: '2px solid #2196f3',
                     },
                   }}
                   onClick={() => router.push('/kids')}
                 >
-                  <CardContent sx={{ p: 3 }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                  <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 1.5, sm: 2 } }}>
                       <Avatar
                         src={kid.profile_picture || undefined}
-                        sx={{ width: 56, height: 56, bgcolor: 'primary.main' }}
+                        sx={{ width: { xs: 48, sm: 56 }, height: { xs: 48, sm: 56 }, bgcolor: 'primary.main' }}
                       >
                         {kid.name.charAt(0).toUpperCase()}
                       </Avatar>
-                      <Box sx={{ flex: 1 }}>
-                        <Typography variant="h6" fontWeight="bold">
+                      <Box sx={{ flex: 1, minWidth: 0 }}>
+                        <Typography variant={isMobile ? "body1" : "h6"} fontWeight="bold" noWrap>
                           {kid.name}
                         </Typography>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mt: 0.5 }}>
                           <Cake fontSize="small" color="action" />
-                          <Typography variant="caption" color="text.secondary">
+                          <Typography variant="caption" color="text.secondary" noWrap>
                             {dayjs(kid.date_of_birth).format('DD/MM/YYYY')}
                           </Typography>
                         </Box>
@@ -383,17 +452,17 @@ export default function DashboardPage() {
           <Paper 
             elevation={4}
             sx={{ 
-              p: 4, 
-              mb: 3, 
+              p: { xs: 3, sm: 4 }, 
+              mb: { xs: 2, sm: 3 }, 
               background: 'rgba(255, 255, 255, 0.95)',
               backdropFilter: 'blur(10px)',
-              borderRadius: 3,
+              borderRadius: { xs: 2, sm: 3 },
               border: '1px solid rgba(255, 255, 255, 0.3)',
               boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
             }}
           >
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-              <Typography variant="h5" fontWeight="bold" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: { xs: 2, sm: 3 } }}>
+              <Typography variant={isMobile ? "subtitle1" : "h5"} fontWeight="bold" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                 🎉 Milestones gần đây
               </Typography>
               <Button
@@ -403,13 +472,14 @@ export default function DashboardPage() {
                 onClick={() => router.push('/milestones')}
                 sx={{
                   background: 'linear-gradient(135deg, #9c27b0 0%, #7b1fa2 100%)',
+                  fontSize: { xs: '0.75rem', sm: '0.875rem' },
                 }}
               >
-                Xem tất cả
+                {isMobile ? 'Tất cả' : 'Xem tất cả'}
               </Button>
             </Box>
-            <Divider sx={{ mb: 3 }} />
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}>
+            <Divider sx={{ mb: { xs: 2, sm: 3 } }} />
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: { xs: 2, sm: 2.5 } }}>
               {recentMilestones.map((milestone) => (
                 <Card
                   key={milestone.id}
@@ -419,20 +489,20 @@ export default function DashboardPage() {
                     transition: 'all 0.3s ease',
                     border: '2px solid transparent',
                     '&:hover': {
-                      transform: 'translateX(8px)',
+                      transform: { xs: 'scale(1.01)', sm: 'translateX(8px)' },
                       boxShadow: '0 12px 24px rgba(156, 39, 176, 0.3)',
                       border: '2px solid #9c27b0',
                     },
                   }}
                   onClick={() => router.push('/milestones')}
                 >
-                  <CardContent sx={{ p: 3 }}>
+                  <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                      <Box sx={{ flex: 1 }}>
-                        <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
+                      <Box sx={{ flex: 1, minWidth: 0 }}>
+                        <Typography variant={isMobile ? "body1" : "subtitle1"} fontWeight="bold" gutterBottom noWrap>
                           {milestone.title}
                         </Typography>
-                        {milestone.description && (
+                        {milestone.description && !isMobile && (
                           <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
                             {milestone.description.length > 100
                               ? `${milestone.description.substring(0, 100)}...`
@@ -472,32 +542,46 @@ export default function DashboardPage() {
         <Paper 
           elevation={4}
           sx={{ 
-            p: 4,
+            p: { xs: 3, sm: 4 },
             background: 'rgba(255, 255, 255, 0.95)',
             backdropFilter: 'blur(10px)',
-            borderRadius: 3,
+            borderRadius: { xs: 2, sm: 3 },
             border: '1px solid rgba(255, 255, 255, 0.3)',
             boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
           }}
         >
-          <Typography variant="h4" gutterBottom sx={{ textAlign: 'center', mb: 1, fontWeight: 'bold' }}>
+          <Typography 
+            variant={isMobile ? "h6" : "h4"} 
+            gutterBottom 
+            sx={{ textAlign: 'center', mb: 1, fontWeight: 'bold' }}
+          >
             🎉 Chào mừng đến với Kids Memories!
           </Typography>
-          <Typography variant="body1" color="text.secondary" sx={{ textAlign: 'center', mb: 4 }}>
+          <Typography 
+            variant={isMobile ? "caption" : "body1"} 
+            color="text.secondary" 
+            sx={{ textAlign: 'center', mb: { xs: 3, sm: 4 }, display: 'block' }}
+          >
             Bắt đầu lưu giữ những kỷ niệm đáng nhớ của bé yêu
           </Typography>
           
-          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }, gap: 3 }}>
+          <Box sx={{ 
+            display: 'grid', 
+            gridTemplateColumns: { xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }, 
+            gap: { xs: 2, sm: 2.5, md: 3 } 
+          }}>
             <Button
               variant="contained"
-              size="large"
+              size={isMobile ? "medium" : "large"}
               startIcon={<Add />}
               onClick={() => router.push('/kids')}
+              fullWidth
               sx={{ 
-                py: 2.5, 
+                py: { xs: 2, sm: 2.5 },
                 background: 'linear-gradient(135deg, #2196f3 0%, #1976d2 100%)',
                 boxShadow: '0 4px 12px rgba(33, 150, 243, 0.4)',
                 fontWeight: 'bold',
+                fontSize: { xs: '0.875rem', sm: '1rem' },
                 '&:hover': { 
                   background: 'linear-gradient(135deg, #1976d2 0%, #1565c0 100%)',
                   transform: 'translateY(-2px)',
@@ -506,18 +590,20 @@ export default function DashboardPage() {
                 transition: 'all 0.3s ease',
               }}
             >
-              Thêm bé
+              {isMobile ? 'Thêm bé' : 'Thêm bé'}
             </Button>
             <Button
               variant="contained"
-              size="large"
+              size={isMobile ? "medium" : "large"}
               startIcon={<Add />}
               onClick={() => router.push('/albums')}
+              fullWidth
               sx={{ 
-                py: 2.5,
+                py: { xs: 2, sm: 2.5 },
                 background: 'linear-gradient(135deg, #4caf50 0%, #388e3c 100%)',
                 boxShadow: '0 4px 12px rgba(76, 175, 80, 0.4)',
                 fontWeight: 'bold',
+                fontSize: { xs: '0.875rem', sm: '1rem' },
                 '&:hover': { 
                   background: 'linear-gradient(135deg, #388e3c 0%, #2e7d32 100%)',
                   transform: 'translateY(-2px)',
@@ -526,18 +612,20 @@ export default function DashboardPage() {
                 transition: 'all 0.3s ease',
               }}
             >
-              Tạo album
+              {isMobile ? 'Album' : 'Tạo album'}
             </Button>
             <Button
               variant="contained"
-              size="large"
+              size={isMobile ? "medium" : "large"}
               startIcon={<Add />}
               onClick={() => router.push('/photos')}
+              fullWidth
               sx={{ 
-                py: 2.5,
+                py: { xs: 2, sm: 2.5 },
                 background: 'linear-gradient(135deg, #ff9800 0%, #f57c00 100%)',
                 boxShadow: '0 4px 12px rgba(255, 152, 0, 0.4)',
                 fontWeight: 'bold',
+                fontSize: { xs: '0.875rem', sm: '1rem' },
                 '&:hover': { 
                   background: 'linear-gradient(135deg, #f57c00 0%, #ef6c00 100%)',
                   transform: 'translateY(-2px)',
@@ -546,18 +634,20 @@ export default function DashboardPage() {
                 transition: 'all 0.3s ease',
               }}
             >
-              Upload ảnh
+              {isMobile ? 'Ảnh' : 'Upload ảnh'}
             </Button>
             <Button
               variant="contained"
-              size="large"
+              size={isMobile ? "medium" : "large"}
               startIcon={<Add />}
               onClick={() => router.push('/milestones')}
+              fullWidth
               sx={{ 
-                py: 2.5,
+                py: { xs: 2, sm: 2.5 },
                 background: 'linear-gradient(135deg, #9c27b0 0%, #7b1fa2 100%)',
                 boxShadow: '0 4px 12px rgba(156, 39, 176, 0.4)',
                 fontWeight: 'bold',
+                fontSize: { xs: '0.875rem', sm: '1rem' },
                 '&:hover': { 
                   background: 'linear-gradient(135deg, #7b1fa2 0%, #6a1b9a 100%)',
                   transform: 'translateY(-2px)',
@@ -566,7 +656,7 @@ export default function DashboardPage() {
                 transition: 'all 0.3s ease',
               }}
             >
-              Thêm milestone
+              {isMobile ? 'Mốc' : 'Thêm milestone'}
             </Button>
           </Box>
         </Paper>

@@ -18,6 +18,8 @@ import {
   Chip,
   Grid,
   IconButton,
+  useTheme,
+  useMediaQuery,
 } from '@mui/material';
 import { Close, Photo } from '@mui/icons-material';
 import {
@@ -49,6 +51,8 @@ const MILESTONE_CATEGORIES = [
 
 export function AddMilestoneModal({ open, milestone, kids, onClose, onSuccess }: AddMilestoneModalProps) {
   const isEdit = !!milestone;
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const [formData, setFormData] = useState({
     title: '',
@@ -208,8 +212,21 @@ export function AddMilestoneModal({ open, milestone, kids, onClose, onSuccess }:
   };
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle>{isEdit ? 'Chỉnh sửa milestone' : 'Thêm milestone mới'}</DialogTitle>
+    <Dialog 
+      open={open} 
+      onClose={onClose} 
+      maxWidth="md" 
+      fullWidth
+      fullScreen={isMobile}
+    >
+      <DialogTitle sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        {isEdit ? 'Chỉnh sửa milestone' : 'Thêm milestone mới'}
+        {isMobile && (
+          <IconButton edge="end" onClick={onClose} disabled={loading}>
+            <Close />
+          </IconButton>
+        )}
+      </DialogTitle>
       <DialogContent>
         <Box sx={{ pt: 2 }}>
           {error && (
@@ -226,6 +243,7 @@ export function AddMilestoneModal({ open, milestone, kids, onClose, onSuccess }:
             error={!!errors.title}
             helperText={errors.title}
             sx={{ mb: 2 }}
+            size={isMobile ? "small" : "medium"}
             required
           />
 
@@ -237,6 +255,7 @@ export function AddMilestoneModal({ open, milestone, kids, onClose, onSuccess }:
             value={formData.description}
             onChange={(e) => handleChange('description', e.target.value)}
             sx={{ mb: 2 }}
+            size={isMobile ? "small" : "medium"}
           />
 
           <TextField
@@ -249,10 +268,11 @@ export function AddMilestoneModal({ open, milestone, kids, onClose, onSuccess }:
             helperText={errors.milestone_date}
             InputLabelProps={{ shrink: true }}
             sx={{ mb: 2 }}
+            size={isMobile ? "small" : "medium"}
             required
           />
 
-          <FormControl fullWidth sx={{ mb: 2 }}>
+          <FormControl fullWidth sx={{ mb: 2 }} size={isMobile ? "small" : "medium"}>
             <InputLabel>Danh mục</InputLabel>
             <Select
               value={formData.category}
@@ -267,7 +287,7 @@ export function AddMilestoneModal({ open, milestone, kids, onClose, onSuccess }:
             </Select>
           </FormControl>
 
-          <FormControl fullWidth sx={{ mb: 2 }} error={!!errors.kid_id} required>
+          <FormControl fullWidth sx={{ mb: 2 }} error={!!errors.kid_id} required size={isMobile ? "small" : "medium"}>
             <InputLabel>Chọn bé</InputLabel>
             <Select
               value={formData.kid_id}
@@ -293,7 +313,7 @@ export function AddMilestoneModal({ open, milestone, kids, onClose, onSuccess }:
           {/* Photo Picker */}
           <Box sx={{ mb: 2 }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
-              <Typography variant="subtitle2">
+              <Typography variant="subtitle2" sx={{ fontSize: { xs: '0.875rem', sm: '0.875rem' } }}>
                 Ảnh đính kèm ({selectedPhotoIds.length})
               </Typography>
               {formData.kid_id && (
@@ -314,7 +334,7 @@ export function AddMilestoneModal({ open, milestone, kids, onClose, onSuccess }:
             {showPhotoPicker && (
               <Box
                 sx={{
-                  maxHeight: 300,
+                  maxHeight: { xs: 250, sm: 300 },
                   overflow: 'auto',
                   border: 1,
                   borderColor: 'divider',
@@ -370,11 +390,16 @@ export function AddMilestoneModal({ open, milestone, kids, onClose, onSuccess }:
           </Box>
         </Box>
       </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose} disabled={loading}>
+      <DialogActions sx={{ p: { xs: 2, sm: 1.5 } }}>
+        <Button onClick={onClose} disabled={loading} size={isMobile ? "medium" : "large"}>
           Hủy
         </Button>
-        <Button onClick={handleSubmit} variant="contained" disabled={loading}>
+        <Button 
+          onClick={handleSubmit} 
+          variant="contained" 
+          disabled={loading}
+          size={isMobile ? "medium" : "large"}
+        >
           {loading ? 'Đang lưu...' : isEdit ? 'Cập nhật' : 'Thêm'}
         </Button>
       </DialogActions>

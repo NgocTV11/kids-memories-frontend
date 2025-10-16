@@ -20,6 +20,9 @@ import {
   Fab,
   Paper,
   Chip,
+  useTheme,
+  useMediaQuery,
+  IconButton,
 } from '@mui/material';
 import {
   Add,
@@ -35,6 +38,9 @@ import { PhotoGallery } from '@/components/photos/PhotoGallery';
 import { PhotoDetail } from '@/components/photos/PhotoDetail';
 
 export default function PhotosPage() {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'md'));
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [albums, setAlbums] = useState<Album[]>([]);
   const [kids, setKids] = useState<Kid[]>([]);
@@ -154,14 +160,14 @@ export default function PhotosPage() {
           }}
         />
 
-        <Container maxWidth="xl" sx={{ position: 'relative', zIndex: 1, pt: 3 }}>
+        <Container maxWidth="xl" sx={{ position: 'relative', zIndex: 1, pt: { xs: 2, sm: 3 }, px: { xs: 2, sm: 3 } }}>
           {/* Header */}
           <Paper
             elevation={0}
             sx={{
-              p: 4,
-              mb: 3,
-              borderRadius: 4,
+              p: { xs: 2, sm: 3, md: 4 },
+              mb: { xs: 2, sm: 3 },
+              borderRadius: { xs: 3, md: 4 },
               background: 'rgba(255, 255, 255, 0.95)',
               backdropFilter: 'blur(10px)',
               border: '1px solid rgba(255, 255, 255, 0.3)',
@@ -172,12 +178,19 @@ export default function PhotosPage() {
               },
             }}
           >
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2, mb: 3 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <Box sx={{ 
+              display: 'flex', 
+              justifyContent: 'space-between', 
+              alignItems: isMobile ? 'flex-start' : 'center', 
+              flexDirection: isMobile ? 'column' : 'row',
+              gap: 2, 
+              mb: { xs: 2, sm: 3 } 
+            }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 1.5, sm: 2 } }}>
                 <Box
                   sx={{
-                    width: 64,
-                    height: 64,
+                    width: { xs: 48, sm: 56, md: 64 },
+                    height: { xs: 48, sm: 56, md: 64 },
                     borderRadius: 3,
                     background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                     display: 'flex',
@@ -190,28 +203,30 @@ export default function PhotosPage() {
                     },
                   }}
                 >
-                  <Image sx={{ fontSize: 36, color: 'white' }} />
+                  <Image sx={{ fontSize: { xs: 28, sm: 32, md: 36 }, color: 'white' }} />
                 </Box>
                 <Box>
-                  <Typography variant="h4" fontWeight="bold" gutterBottom sx={{ mb: 0.5 }}>
+                  <Typography variant={isMobile ? "h6" : "h4"} fontWeight="bold" gutterBottom sx={{ mb: 0.5 }}>
                     Thư viện ảnh 🖼️
                   </Typography>
-                  <Typography variant="body1" color="text.secondary">
-                    {total} ảnh đã lưu • Lưu giữ từng khoảnh khắc đáng nhớ
+                  <Typography variant={isMobile ? "caption" : "body1"} color="text.secondary">
+                    {total} ảnh {!isMobile && "đã lưu • Lưu giữ từng khoảnh khắc đáng nhớ"}
                   </Typography>
                 </Box>
               </Box>
               <Button
                 variant="contained"
-                size="large"
-                startIcon={<CloudUpload />}
+                size={isMobile ? "medium" : "large"}
+                startIcon={!isMobile && <CloudUpload />}
                 onClick={() => setOpenUpload(true)}
+                fullWidth={isMobile}
                 sx={{
                   background: 'linear-gradient(45deg, #667eea 30%, #764ba2 90%)',
                   boxShadow: '0 4px 12px rgba(102, 126, 234, 0.3)',
-                  px: 4,
-                  py: 1.5,
+                  px: { xs: 3, sm: 4 },
+                  py: { xs: 1.2, sm: 1.5 },
                   fontWeight: 'bold',
+                  fontSize: { xs: '0.875rem', sm: '1rem' },
                   '&:hover': {
                     background: 'linear-gradient(45deg, #764ba2 30%, #667eea 90%)',
                     transform: 'scale(1.05)',
@@ -219,16 +234,21 @@ export default function PhotosPage() {
                   transition: 'all 0.3s ease',
                 }}
               >
-                Tải ảnh lên
+                {isMobile ? '📤 Tải ảnh lên' : 'Tải ảnh lên'}
               </Button>
             </Box>
 
             {/* Filters */}
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}>
-              <FilterList sx={{ color: 'text.secondary' }} />
-              <Grid container spacing={2} sx={{ flex: 1 }}>
+            <Box sx={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: { xs: 1, sm: 2 }, 
+              flexWrap: 'wrap' 
+            }}>
+              {!isMobile && <FilterList sx={{ color: 'text.secondary' }} />}
+              <Grid container spacing={{ xs: 1, sm: 2 }} sx={{ flex: 1 }}>
                 <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-                  <FormControl fullWidth>
+                  <FormControl fullWidth size={isMobile ? "small" : "medium"}>
                     <InputLabel>Album</InputLabel>
                     <Select
                       value={selectedAlbumId}
@@ -247,7 +267,7 @@ export default function PhotosPage() {
                       <MenuItem value="all">
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                           <Collections fontSize="small" />
-                          Tất cả albums
+                          {isMobile ? 'Tất cả' : 'Tất cả albums'}
                         </Box>
                       </MenuItem>
                       {albums.map((album) => (
@@ -259,7 +279,7 @@ export default function PhotosPage() {
                   </FormControl>
                 </Grid>
                 <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-                  <FormControl fullWidth>
+                  <FormControl fullWidth size={isMobile ? "small" : "medium"}>
                     <InputLabel>Bé yêu</InputLabel>
                     <Select
                       value={selectedKidId}
@@ -284,17 +304,17 @@ export default function PhotosPage() {
                     </Select>
                   </FormControl>
                 </Grid>
-                <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+                <Grid size={{ xs: 12, sm: 12, md: 4 }}>
                   <Box
                     sx={{
-                      p: 2,
+                      p: { xs: 1.5, sm: 2 },
                       borderRadius: 2,
                       background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1))',
                       border: '1px solid rgba(102, 126, 234, 0.2)',
                       textAlign: 'center',
                     }}
                   >
-                    <Typography variant="h5" fontWeight="bold" color="primary">
+                    <Typography variant={isMobile ? "h6" : "h5"} fontWeight="bold" color="primary">
                       {photos.length}
                     </Typography>
                     <Typography variant="caption" color="text.secondary">
@@ -308,15 +328,15 @@ export default function PhotosPage() {
 
           {/* Stats Row */}
           {!loading && photos.length > 0 && (
-            <Grid container spacing={2} sx={{ mb: 4 }}>
-              <Grid size={{ xs: 6, md: 3 }}>
+            <Grid container spacing={{ xs: 1, sm: 2 }} sx={{ mb: { xs: 2, sm: 3, md: 4 } }}>
+              <Grid size={{ xs: 6, sm: 6, md: 3 }}>
                 <Paper
                   sx={{
-                    p: 2,
+                    p: { xs: 1.5, sm: 2 },
                     textAlign: 'center',
                     background: 'rgba(255, 255, 255, 0.9)',
                     backdropFilter: 'blur(10px)',
-                    borderRadius: 3,
+                    borderRadius: { xs: 2, md: 3 },
                     animation: 'fadeIn 0.5s ease-out 0.1s both',
                     '@keyframes fadeIn': {
                       from: { opacity: 0, transform: 'scale(0.9)' },
@@ -324,71 +344,71 @@ export default function PhotosPage() {
                     },
                   }}
                 >
-                  <PhotoIcon sx={{ fontSize: 28, color: '#667eea', mb: 0.5 }} />
-                  <Typography variant="h5" fontWeight="bold" color="#667eea">
+                  <PhotoIcon sx={{ fontSize: { xs: 24, sm: 28 }, color: '#667eea', mb: 0.5 }} />
+                  <Typography variant={isMobile ? "h6" : "h5"} fontWeight="bold" color="#667eea">
                     {total}
                   </Typography>
-                  <Typography variant="caption" color="text.secondary">
-                    Tổng số ảnh
+                  <Typography variant="caption" color="text.secondary" sx={{ fontSize: { xs: '0.7rem', sm: '0.75rem' } }}>
+                    {isMobile ? 'Ảnh' : 'Tổng số ảnh'}
                   </Typography>
                 </Paper>
               </Grid>
-              <Grid size={{ xs: 6, md: 3 }}>
+              <Grid size={{ xs: 6, sm: 6, md: 3 }}>
                 <Paper
                   sx={{
-                    p: 2,
+                    p: { xs: 1.5, sm: 2 },
                     textAlign: 'center',
                     background: 'rgba(255, 255, 255, 0.9)',
                     backdropFilter: 'blur(10px)',
-                    borderRadius: 3,
+                    borderRadius: { xs: 2, md: 3 },
                     animation: 'fadeIn 0.5s ease-out 0.2s both',
                   }}
                 >
-                  <Collections sx={{ fontSize: 28, color: '#764ba2', mb: 0.5 }} />
-                  <Typography variant="h5" fontWeight="bold" color="#764ba2">
+                  <Collections sx={{ fontSize: { xs: 24, sm: 28 }, color: '#764ba2', mb: 0.5 }} />
+                  <Typography variant={isMobile ? "h6" : "h5"} fontWeight="bold" color="#764ba2">
                     {albums.length}
                   </Typography>
-                  <Typography variant="caption" color="text.secondary">
+                  <Typography variant="caption" color="text.secondary" sx={{ fontSize: { xs: '0.7rem', sm: '0.75rem' } }}>
                     Albums
                   </Typography>
                 </Paper>
               </Grid>
-              <Grid size={{ xs: 6, md: 3 }}>
+              <Grid size={{ xs: 6, sm: 6, md: 3 }}>
                 <Paper
                   sx={{
-                    p: 2,
+                    p: { xs: 1.5, sm: 2 },
                     textAlign: 'center',
                     background: 'rgba(255, 255, 255, 0.9)',
                     backdropFilter: 'blur(10px)',
-                    borderRadius: 3,
+                    borderRadius: { xs: 2, md: 3 },
                     animation: 'fadeIn 0.5s ease-out 0.3s both',
                   }}
                 >
-                  <Image sx={{ fontSize: 28, color: '#8B5CF6', mb: 0.5 }} />
-                  <Typography variant="h5" fontWeight="bold" color="#8B5CF6">
+                  <Image sx={{ fontSize: { xs: 24, sm: 28 }, color: '#8B5CF6', mb: 0.5 }} />
+                  <Typography variant={isMobile ? "h6" : "h5"} fontWeight="bold" color="#8B5CF6">
                     {Math.round((photos.length / total) * 100)}%
                   </Typography>
-                  <Typography variant="caption" color="text.secondary">
+                  <Typography variant="caption" color="text.secondary" sx={{ fontSize: { xs: '0.7rem', sm: '0.75rem' } }}>
                     Hiển thị
                   </Typography>
                 </Paper>
               </Grid>
-              <Grid size={{ xs: 6, md: 3 }}>
+              <Grid size={{ xs: 6, sm: 6, md: 3 }}>
                 <Paper
                   sx={{
-                    p: 2,
+                    p: { xs: 1.5, sm: 2 },
                     textAlign: 'center',
                     background: 'rgba(255, 255, 255, 0.9)',
                     backdropFilter: 'blur(10px)',
-                    borderRadius: 3,
+                    borderRadius: { xs: 2, md: 3 },
                     animation: 'fadeIn 0.5s ease-out 0.4s both',
                   }}
                 >
-                  <CloudUpload sx={{ fontSize: 28, color: '#9333EA', mb: 0.5 }} />
-                  <Typography variant="h5" fontWeight="bold" color="#9333EA">
+                  <CloudUpload sx={{ fontSize: { xs: 24, sm: 28 }, color: '#9333EA', mb: 0.5 }} />
+                  <Typography variant={isMobile ? "h6" : "h5"} fontWeight="bold" color="#9333EA">
                     {kids.length}
                   </Typography>
-                  <Typography variant="caption" color="text.secondary">
+                  <Typography variant="caption" color="text.secondary" sx={{ fontSize: { xs: '0.7rem', sm: '0.75rem' } }}>
                     Bé yêu
                   </Typography>
                 </Paper>
@@ -426,9 +446,9 @@ export default function PhotosPage() {
               elevation={0}
               sx={{
                 textAlign: 'center',
-                py: 8,
-                px: 4,
-                borderRadius: 4,
+                py: { xs: 6, sm: 8 },
+                px: { xs: 3, sm: 4 },
+                borderRadius: { xs: 3, md: 4 },
                 background: 'rgba(255, 255, 255, 0.95)',
                 backdropFilter: 'blur(10px)',
                 border: '1px solid rgba(255, 255, 255, 0.3)',
@@ -436,8 +456,8 @@ export default function PhotosPage() {
             >
               <Box
                 sx={{
-                  width: 120,
-                  height: 120,
+                  width: { xs: 80, sm: 100, md: 120 },
+                  height: { xs: 80, sm: 100, md: 120 },
                   borderRadius: '50%',
                   background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                   display: 'flex',
@@ -451,30 +471,36 @@ export default function PhotosPage() {
                   },
                 }}
               >
-                <Image sx={{ fontSize: 60, color: 'white' }} />
+                <Image sx={{ fontSize: { xs: 40, sm: 50, md: 60 }, color: 'white' }} />
               </Box>
-              <Typography variant="h5" fontWeight="bold" gutterBottom>
+              <Typography variant={isMobile ? "h6" : "h5"} fontWeight="bold" gutterBottom>
                 Chưa có ảnh nào 📷
               </Typography>
-              <Typography variant="body1" color="text.secondary" sx={{ mb: 3, maxWidth: 400, mx: 'auto' }}>
+              <Typography 
+                variant={isMobile ? "body2" : "body1"} 
+                color="text.secondary" 
+                sx={{ mb: 3, maxWidth: 400, mx: 'auto' }}
+              >
                 Bắt đầu tải lên những khoảnh khắc đáng nhớ của bé yêu ngay hôm nay!
               </Typography>
               <Button
                 variant="contained"
-                size="large"
-                startIcon={<CloudUpload />}
+                size={isMobile ? "medium" : "large"}
+                startIcon={!isMobile && <CloudUpload />}
                 onClick={() => setOpenUpload(true)}
+                fullWidth={isMobile}
                 sx={{
                   background: 'linear-gradient(45deg, #667eea 30%, #764ba2 90%)',
                   px: 4,
                   py: 1.5,
                   fontWeight: 'bold',
+                  maxWidth: isMobile ? '100%' : 'auto',
                   '&:hover': {
                     background: 'linear-gradient(45deg, #764ba2 30%, #667eea 90%)',
                   },
                 }}
               >
-                Tải ảnh đầu tiên
+                {isMobile ? '📤 Tải ảnh đầu tiên' : 'Tải ảnh đầu tiên'}
               </Button>
             </Paper>
           ) : (
@@ -494,19 +520,21 @@ export default function PhotosPage() {
 
               {/* Load More */}
               {photos.length < total && (
-                <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'center', mt: { xs: 3, sm: 4 } }}>
                   <Button
                     variant="contained"
-                    size="large"
+                    size={isMobile ? "medium" : "large"}
                     onClick={handleLoadMore}
                     disabled={loading}
+                    fullWidth={isMobile}
                     sx={{
                       background: 'rgba(255, 255, 255, 0.9)',
                       backdropFilter: 'blur(10px)',
                       color: '#667eea',
                       fontWeight: 'bold',
-                      px: 4,
-                      py: 1.5,
+                      px: { xs: 3, sm: 4 },
+                      py: { xs: 1.2, sm: 1.5 },
+                      maxWidth: isMobile ? '100%' : 'auto',
                       '&:hover': {
                         background: 'rgba(255, 255, 255, 1)',
                         transform: 'scale(1.05)',
@@ -520,7 +548,7 @@ export default function PhotosPage() {
                         Đang tải...
                       </>
                     ) : (
-                      `Xem thêm (${total - photos.length} ảnh)`
+                      `${isMobile ? `+${total - photos.length}` : `Xem thêm (${total - photos.length} ảnh)`}`
                     )}
                   </Button>
                 </Box>
@@ -529,25 +557,27 @@ export default function PhotosPage() {
           )}
 
           {/* Floating Action Button for Upload */}
-          <Fab
-            color="primary"
-            aria-label="upload"
-            onClick={() => setOpenUpload(true)}
-            sx={{
-              position: 'fixed',
-              bottom: 32,
-              right: 32,
-              background: 'linear-gradient(45deg, #667eea 30%, #764ba2 90%)',
-              boxShadow: '0 8px 24px rgba(102, 126, 234, 0.4)',
-              animation: 'pulse 2s infinite',
-              '&:hover': {
-                background: 'linear-gradient(45deg, #764ba2 30%, #667eea 90%)',
-                transform: 'scale(1.1)',
-              },
-            }}
-          >
-            <Add sx={{ fontSize: 32 }} />
-          </Fab>
+          {!isMobile && (
+            <Fab
+              color="primary"
+              aria-label="upload"
+              onClick={() => setOpenUpload(true)}
+              sx={{
+                position: 'fixed',
+                bottom: 32,
+                right: 32,
+                background: 'linear-gradient(45deg, #667eea 30%, #764ba2 90%)',
+                boxShadow: '0 8px 24px rgba(102, 126, 234, 0.4)',
+                animation: 'pulse 2s infinite',
+                '&:hover': {
+                  background: 'linear-gradient(45deg, #764ba2 30%, #667eea 90%)',
+                  transform: 'scale(1.1)',
+                },
+              }}
+            >
+              <Add sx={{ fontSize: 32 }} />
+            </Fab>
+          )}
 
           {/* Upload Modal */}
           <PhotoUpload

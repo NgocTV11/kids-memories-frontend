@@ -19,6 +19,8 @@ import {
   Paper,
   Fab,
   Tooltip,
+  useTheme,
+  useMediaQuery,
 } from '@mui/material';
 import {
   Add,
@@ -37,6 +39,9 @@ import dayjs from 'dayjs';
 import { AddKidModal } from '@/components/kids/AddKidModal';
 
 export default function KidsPage() {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'md'));
   const router = useRouter();
   const [kids, setKids] = useState<Kid[]>([]);
   const [loading, setLoading] = useState(true);
@@ -162,14 +167,14 @@ export default function KidsPage() {
           }}
         />
 
-        <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1, pt: 3 }}>
+        <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1, pt: { xs: 2, sm: 3 }, px: { xs: 2, sm: 3 } }}>
           {/* Header */}
           <Paper
             elevation={0}
             sx={{
-              p: 4,
-              mb: 3,
-              borderRadius: 4,
+              p: { xs: 2, sm: 3, md: 4 },
+              mb: { xs: 2, sm: 3 },
+              borderRadius: { xs: 3, md: 4 },
               background: 'rgba(255, 255, 255, 0.95)',
               backdropFilter: 'blur(10px)',
               border: '1px solid rgba(255, 255, 255, 0.3)',
@@ -180,12 +185,18 @@ export default function KidsPage() {
               },
             }}
           >
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <Box sx={{ 
+              display: 'flex', 
+              justifyContent: 'space-between', 
+              alignItems: isMobile ? 'flex-start' : 'center',
+              flexDirection: isMobile ? 'column' : 'row',
+              gap: 2 
+            }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 1.5, sm: 2 } }}>
                 <Box
                   sx={{
-                    width: 64,
-                    height: 64,
+                    width: { xs: 48, sm: 56, md: 64 },
+                    height: { xs: 48, sm: 56, md: 64 },
                     borderRadius: 3,
                     background: 'linear-gradient(135deg, #FF6B9D 0%, #C06C84 100%)',
                     display: 'flex',
@@ -198,28 +209,30 @@ export default function KidsPage() {
                     },
                   }}
                 >
-                  <ChildCare sx={{ fontSize: 36, color: 'white' }} />
+                  <ChildCare sx={{ fontSize: { xs: 28, sm: 32, md: 36 }, color: 'white' }} />
                 </Box>
                 <Box>
-                  <Typography variant="h4" fontWeight="bold" gutterBottom sx={{ mb: 0.5 }}>
+                  <Typography variant={isMobile ? "h6" : "h4"} fontWeight="bold" gutterBottom sx={{ mb: 0.5 }}>
                     Bé yêu của tôi 💖
                   </Typography>
-                  <Typography variant="body1" color="text.secondary">
-                    Theo dõi sự phát triển và những khoảnh khắc đáng nhớ
+                  <Typography variant={isMobile ? "caption" : "body1"} color="text.secondary">
+                    {isMobile ? `${kids.length} bé yêu` : 'Theo dõi sự phát triển và những khoảnh khắc đáng nhớ'}
                   </Typography>
                 </Box>
               </Box>
               <Button
                 variant="contained"
-                size="large"
-                startIcon={<Add />}
+                size={isMobile ? "medium" : "large"}
+                startIcon={!isMobile && <Add />}
                 onClick={handleAddClick}
+                fullWidth={isMobile}
                 sx={{
                   background: 'linear-gradient(45deg, #FF6B9D 30%, #C06C84 90%)',
                   boxShadow: '0 4px 12px rgba(255, 107, 157, 0.3)',
-                  px: 4,
-                  py: 1.5,
+                  px: { xs: 3, sm: 4 },
+                  py: { xs: 1.2, sm: 1.5 },
                   fontWeight: 'bold',
+                  fontSize: { xs: '0.875rem', sm: '1rem' },
                   '&:hover': {
                     background: 'linear-gradient(45deg, #C06C84 30%, #FF6B9D 90%)',
                     transform: 'scale(1.05)',
@@ -227,22 +240,22 @@ export default function KidsPage() {
                   transition: 'all 0.3s ease',
                 }}
               >
-                Thêm bé
+                {isMobile ? '➕ Thêm bé' : 'Thêm bé'}
               </Button>
             </Box>
           </Paper>
 
           {/* Stats Summary */}
           {!loading && kids.length > 0 && (
-            <Grid container spacing={2} sx={{ mb: 4 }}>
-              <Grid size={{ xs: 6, md: 3 }}>
+            <Grid container spacing={{ xs: 1, sm: 2 }} sx={{ mb: { xs: 2, sm: 3, md: 4 } }}>
+              <Grid size={{ xs: 6, sm: 6, md: 3 }}>
                 <Paper
                   sx={{
-                    p: 2,
+                    p: { xs: 1.5, sm: 2 },
                     textAlign: 'center',
                     background: 'rgba(255, 255, 255, 0.9)',
                     backdropFilter: 'blur(10px)',
-                    borderRadius: 3,
+                    borderRadius: { xs: 2, md: 3 },
                     animation: 'fadeIn 0.5s ease-out 0.1s both',
                     '@keyframes fadeIn': {
                       from: { opacity: 0, transform: 'scale(0.9)' },
@@ -250,75 +263,75 @@ export default function KidsPage() {
                     },
                   }}
                 >
-                  <ChildCare sx={{ fontSize: 32, color: '#FF6B9D', mb: 1 }} />
-                  <Typography variant="h4" fontWeight="bold" color="#FF6B9D">
+                  <ChildCare sx={{ fontSize: { xs: 24, sm: 28, md: 32 }, color: '#FF6B9D', mb: { xs: 0.5, sm: 1 } }} />
+                  <Typography variant={isMobile ? "h6" : "h4"} fontWeight="bold" color="#FF6B9D">
                     {kids.length}
                   </Typography>
-                  <Typography variant="body2" color="text.secondary">
+                  <Typography variant={isMobile ? "caption" : "body2"} color="text.secondary" sx={{ fontSize: { xs: '0.7rem', sm: '0.875rem' } }}>
                     Bé yêu
                   </Typography>
                 </Paper>
               </Grid>
-              <Grid size={{ xs: 6, md: 3 }}>
+              <Grid size={{ xs: 6, sm: 6, md: 3 }}>
                 <Paper
                   sx={{
-                    p: 2,
+                    p: { xs: 1.5, sm: 2 },
                     textAlign: 'center',
                     background: 'rgba(255, 255, 255, 0.9)',
                     backdropFilter: 'blur(10px)',
-                    borderRadius: 3,
+                    borderRadius: { xs: 2, md: 3 },
                     animation: 'fadeIn 0.5s ease-out 0.2s both',
                   }}
                 >
-                  <TrendingUp sx={{ fontSize: 32, color: '#4CAF50', mb: 1 }} />
-                  <Typography variant="h4" fontWeight="bold" color="#4CAF50">
+                  <TrendingUp sx={{ fontSize: { xs: 24, sm: 28, md: 32 }, color: '#4CAF50', mb: { xs: 0.5, sm: 1 } }} />
+                  <Typography variant={isMobile ? "h6" : "h4"} fontWeight="bold" color="#4CAF50">
                     {kids.reduce((sum, kid) => sum + (kid.growth_data?.length || 0), 0)}
                   </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Bản ghi
+                  <Typography variant={isMobile ? "caption" : "body2"} color="text.secondary" sx={{ fontSize: { xs: '0.7rem', sm: '0.875rem' } }}>
+                    {isMobile ? 'Ghi chép' : 'Bản ghi'}
                   </Typography>
                 </Paper>
               </Grid>
-              <Grid size={{ xs: 6, md: 3 }}>
+              <Grid size={{ xs: 6, sm: 6, md: 3 }}>
                 <Paper
                   sx={{
-                    p: 2,
+                    p: { xs: 1.5, sm: 2 },
                     textAlign: 'center',
                     background: 'rgba(255, 255, 255, 0.9)',
                     backdropFilter: 'blur(10px)',
-                    borderRadius: 3,
+                    borderRadius: { xs: 2, md: 3 },
                     animation: 'fadeIn 0.5s ease-out 0.3s both',
                   }}
                 >
-                  <Cake sx={{ fontSize: 32, color: '#FF9800', mb: 1 }} />
-                  <Typography variant="h4" fontWeight="bold" color="#FF9800">
+                  <Cake sx={{ fontSize: { xs: 24, sm: 28, md: 32 }, color: '#FF9800', mb: { xs: 0.5, sm: 1 } }} />
+                  <Typography variant={isMobile ? "h6" : "h4"} fontWeight="bold" color="#FF9800">
                     {kids.filter(kid => {
                       const birthMonth = dayjs(kid.date_of_birth).month();
                       const currentMonth = dayjs().month();
                       return birthMonth === currentMonth;
                     }).length}
                   </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Sinh nhật tháng này
+                  <Typography variant={isMobile ? "caption" : "body2"} color="text.secondary" sx={{ fontSize: { xs: '0.7rem', sm: '0.875rem' } }}>
+                    {isMobile ? 'Sinh nhật' : 'Sinh nhật tháng này'}
                   </Typography>
                 </Paper>
               </Grid>
-              <Grid size={{ xs: 6, md: 3 }}>
+              <Grid size={{ xs: 6, sm: 6, md: 3 }}>
                 <Paper
                   sx={{
-                    p: 2,
+                    p: { xs: 1.5, sm: 2 },
                     textAlign: 'center',
                     background: 'rgba(255, 255, 255, 0.9)',
                     backdropFilter: 'blur(10px)',
-                    borderRadius: 3,
+                    borderRadius: { xs: 2, md: 3 },
                     animation: 'fadeIn 0.5s ease-out 0.4s both',
                   }}
                 >
-                  <Favorite sx={{ fontSize: 32, color: '#E91E63', mb: 1 }} />
-                  <Typography variant="h4" fontWeight="bold" color="#E91E63">
+                  <Favorite sx={{ fontSize: { xs: 24, sm: 28, md: 32 }, color: '#E91E63', mb: { xs: 0.5, sm: 1 } }} />
+                  <Typography variant={isMobile ? "h6" : "h4"} fontWeight="bold" color="#E91E63">
                     100%
                   </Typography>
-                  <Typography variant="body2" color="text.secondary">
+                  <Typography variant={isMobile ? "caption" : "body2"} color="text.secondary" sx={{ fontSize: { xs: '0.7rem', sm: '0.875rem' } }}>
                     Yêu thương
                   </Typography>
                 </Paper>
@@ -356,9 +369,9 @@ export default function KidsPage() {
               elevation={0}
               sx={{
                 textAlign: 'center',
-                py: 8,
-                px: 4,
-                borderRadius: 4,
+                py: { xs: 6, sm: 8 },
+                px: { xs: 3, sm: 4 },
+                borderRadius: { xs: 3, md: 4 },
                 background: 'rgba(255, 255, 255, 0.95)',
                 backdropFilter: 'blur(10px)',
                 border: '1px solid rgba(255, 255, 255, 0.3)',
@@ -366,8 +379,8 @@ export default function KidsPage() {
             >
               <Box
                 sx={{
-                  width: 120,
-                  height: 120,
+                  width: { xs: 80, sm: 100, md: 120 },
+                  height: { xs: 80, sm: 100, md: 120 },
                   borderRadius: '50%',
                   background: 'linear-gradient(135deg, #FF6B9D 0%, #C06C84 100%)',
                   display: 'flex',
@@ -381,41 +394,47 @@ export default function KidsPage() {
                   },
                 }}
               >
-                <ChildCare sx={{ fontSize: 60, color: 'white' }} />
+                <ChildCare sx={{ fontSize: { xs: 40, sm: 50, md: 60 }, color: 'white' }} />
               </Box>
-              <Typography variant="h5" fontWeight="bold" gutterBottom>
+              <Typography variant={isMobile ? "h6" : "h5"} fontWeight="bold" gutterBottom>
                 Chưa có thông tin bé nào 👶
               </Typography>
-              <Typography variant="body1" color="text.secondary" sx={{ mb: 3, maxWidth: 400, mx: 'auto' }}>
+              <Typography 
+                variant={isMobile ? "body2" : "body1"} 
+                color="text.secondary" 
+                sx={{ mb: 3, maxWidth: 400, mx: 'auto' }}
+              >
                 Bắt đầu hành trình ghi lại những kỷ niệm tuyệt vời của bé yêu ngay hôm nay!
               </Typography>
               <Button 
                 variant="contained" 
-                size="large"
-                startIcon={<Add />} 
+                size={isMobile ? "medium" : "large"}
+                startIcon={!isMobile && <Add />} 
                 onClick={handleAddClick}
+                fullWidth={isMobile}
                 sx={{
                   background: 'linear-gradient(45deg, #FF6B9D 30%, #C06C84 90%)',
                   px: 4,
                   py: 1.5,
                   fontWeight: 'bold',
+                  maxWidth: isMobile ? '100%' : 'auto',
                   '&:hover': {
                     background: 'linear-gradient(45deg, #C06C84 30%, #FF6B9D 90%)',
                   },
                 }}
               >
-                Thêm bé đầu tiên
+                {isMobile ? '➕ Thêm bé đầu tiên' : 'Thêm bé đầu tiên'}
               </Button>
             </Paper>
           ) : (
             /* Kids Grid */
-            <Grid container spacing={3}>
+            <Grid container spacing={{ xs: 2, sm: 2.5, md: 3 }}>
               {kids.map((kid, index) => (
                 <Grid size={{ xs: 12, sm: 6, md: 4 }} key={kid.id}>
                   <Card
                     sx={{
                       height: '100%',
-                      borderRadius: 4,
+                      borderRadius: { xs: 3, md: 4 },
                       cursor: 'pointer',
                       transition: 'all 0.3s ease',
                       background: 'rgba(255, 255, 255, 0.95)',
@@ -423,8 +442,11 @@ export default function KidsPage() {
                       border: '1px solid rgba(255, 255, 255, 0.3)',
                       animation: `slideUp 0.5s ease-out ${index * 0.1}s both`,
                       '&:hover': {
-                        transform: 'translateY(-8px) scale(1.02)',
+                        transform: isMobile ? 'scale(0.98)' : 'translateY(-8px) scale(1.02)',
                         boxShadow: `0 12px 24px ${getGenderColor(kid.gender)}40`,
+                      },
+                      '&:active': {
+                        transform: 'scale(0.97)',
                       },
                       '@keyframes slideUp': {
                         from: { opacity: 0, transform: 'translateY(30px)' },
@@ -432,22 +454,28 @@ export default function KidsPage() {
                       },
                     }}
                   >
-                    <CardContent sx={{ p: 3 }} onClick={() => handleCardClick(kid.id)}>
+                    <CardContent sx={{ p: { xs: 2, sm: 2.5, md: 3 } }} onClick={() => handleCardClick(kid.id)}>
                       {/* Avatar and Name */}
-                      <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', mb: { xs: 2, sm: 2.5, md: 3 } }}>
                         <Avatar
                           sx={{
-                            width: 70,
-                            height: 70,
+                            width: { xs: 56, sm: 64, md: 70 },
+                            height: { xs: 56, sm: 64, md: 70 },
                             background: `linear-gradient(135deg, ${getGenderColor(kid.gender)}, ${getGenderColor(kid.gender)}dd)`,
-                            mr: 2,
+                            mr: { xs: 1.5, sm: 2 },
                             boxShadow: `0 4px 12px ${getGenderColor(kid.gender)}40`,
                           }}
                         >
-                          <ChildCare sx={{ fontSize: 36 }} />
+                          <ChildCare sx={{ fontSize: { xs: 28, sm: 32, md: 36 } }} />
                         </Avatar>
                         <Box sx={{ flex: 1 }}>
-                          <Typography variant="h6" fontWeight="bold" gutterBottom sx={{ mb: 1 }}>
+                          <Typography 
+                            variant={isMobile ? "subtitle1" : "h6"} 
+                            fontWeight="bold" 
+                            gutterBottom 
+                            sx={{ mb: 1 }}
+                            noWrap
+                          >
                             {kid.name}
                           </Typography>
                           <Chip
@@ -458,29 +486,31 @@ export default function KidsPage() {
                               color: 'white',
                               fontWeight: 'bold',
                               borderRadius: 2,
+                              fontSize: { xs: '0.7rem', sm: '0.75rem' },
+                              height: { xs: 20, sm: 24 },
                             }}
                           />
                         </Box>
                       </Box>
 
                       {/* Info Grid */}
-                      <Box sx={{ mb: 2 }}>
+                      <Box sx={{ mb: { xs: 1.5, sm: 2 } }}>
                         <Box
                           sx={{
                             display: 'flex',
                             alignItems: 'center',
-                            p: 1.5,
+                            p: { xs: 1, sm: 1.5 },
                             borderRadius: 2,
                             bgcolor: 'rgba(255, 107, 157, 0.1)',
-                            mb: 1.5,
+                            mb: { xs: 1, sm: 1.5 },
                           }}
                         >
-                          <Cake sx={{ fontSize: 20, mr: 1.5, color: '#FF6B9D' }} />
+                          <Cake sx={{ fontSize: { xs: 18, sm: 20 }, mr: { xs: 1, sm: 1.5 }, color: '#FF6B9D' }} />
                           <Box>
-                            <Typography variant="caption" color="text.secondary" display="block">
-                              Sinh nhật
+                            <Typography variant="caption" color="text.secondary" display="block" sx={{ fontSize: { xs: '0.65rem', sm: '0.75rem' } }}>
+                              {isMobile ? 'Sinh' : 'Sinh nhật'}
                             </Typography>
-                            <Typography variant="body2" fontWeight="bold">
+                            <Typography variant="body2" fontWeight="bold" sx={{ fontSize: { xs: '0.8rem', sm: '0.875rem' } }}>
                               {dayjs(kid.date_of_birth).format('DD/MM/YYYY')}
                             </Typography>
                           </Box>
@@ -490,18 +520,18 @@ export default function KidsPage() {
                           sx={{
                             display: 'flex',
                             alignItems: 'center',
-                            p: 1.5,
+                            p: { xs: 1, sm: 1.5 },
                             borderRadius: 2,
                             bgcolor: 'rgba(76, 175, 80, 0.1)',
-                            mb: 1.5,
+                            mb: { xs: 1, sm: 1.5 },
                           }}
                         >
-                          <TrendingUp sx={{ fontSize: 20, mr: 1.5, color: '#4CAF50' }} />
+                          <TrendingUp sx={{ fontSize: { xs: 18, sm: 20 }, mr: { xs: 1, sm: 1.5 }, color: '#4CAF50' }} />
                           <Box>
-                            <Typography variant="caption" color="text.secondary" display="block">
+                            <Typography variant="caption" color="text.secondary" display="block" sx={{ fontSize: { xs: '0.65rem', sm: '0.75rem' } }}>
                               Tuổi
                             </Typography>
-                            <Typography variant="body2" fontWeight="bold">
+                            <Typography variant="body2" fontWeight="bold" sx={{ fontSize: { xs: '0.8rem', sm: '0.875rem' } }}>
                               {calculateAge(kid.date_of_birth)}
                             </Typography>
                           </Box>
@@ -512,18 +542,18 @@ export default function KidsPage() {
                             sx={{
                               display: 'flex',
                               alignItems: 'center',
-                              p: 1.5,
+                              p: { xs: 1, sm: 1.5 },
                               borderRadius: 2,
                               bgcolor: 'rgba(33, 150, 243, 0.1)',
                             }}
                           >
-                            <Height sx={{ fontSize: 20, mr: 1.5, color: '#2196F3' }} />
+                            <Height sx={{ fontSize: { xs: 18, sm: 20 }, mr: { xs: 1, sm: 1.5 }, color: '#2196F3' }} />
                             <Box>
-                              <Typography variant="caption" color="text.secondary" display="block">
-                                Phát triển
+                              <Typography variant="caption" color="text.secondary" display="block" sx={{ fontSize: { xs: '0.65rem', sm: '0.75rem' } }}>
+                                {isMobile ? 'Ghi chép' : 'Phát triển'}
                               </Typography>
-                              <Typography variant="body2" fontWeight="bold">
-                                {kid.growth_data.length} bản ghi
+                              <Typography variant="body2" fontWeight="bold" sx={{ fontSize: { xs: '0.8rem', sm: '0.875rem' } }}>
+                                {kid.growth_data.length} {isMobile ? '' : 'bản ghi'}
                               </Typography>
                             </Box>
                           </Box>
@@ -531,27 +561,29 @@ export default function KidsPage() {
                       </Box>
 
                       {/* Action Buttons */}
-                      <Box sx={{ display: 'flex', gap: 1, mt: 3 }}>
-                        <Tooltip title="Xem chi tiết">
+                      <Box sx={{ display: 'flex', gap: 1, mt: { xs: 2, sm: 3 } }}>
+                        <Tooltip title={isMobile ? "" : "Xem chi tiết"}>
                           <Button
                             fullWidth
                             variant="outlined"
                             size="small"
-                            startIcon={<Visibility />}
+                            startIcon={!isMobile && <Visibility />}
                             sx={{
                               borderColor: getGenderColor(kid.gender),
                               color: getGenderColor(kid.gender),
                               fontWeight: 'bold',
+                              fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                              py: { xs: 0.5, sm: 0.75 },
                               '&:hover': {
                                 borderColor: getGenderColor(kid.gender),
                                 bgcolor: `${getGenderColor(kid.gender)}10`,
                               },
                             }}
                           >
-                            Xem
+                            {isMobile ? '👁️' : 'Xem'}
                           </Button>
                         </Tooltip>
-                        <Tooltip title="Chỉnh sửa">
+                        <Tooltip title={isMobile ? "" : "Chỉnh sửa"}>
                           <IconButton
                             size="small"
                             onClick={(e) => {
@@ -561,13 +593,15 @@ export default function KidsPage() {
                             sx={{
                               border: '1px solid',
                               borderColor: 'divider',
+                              width: { xs: 32, sm: 36 },
+                              height: { xs: 32, sm: 36 },
                               '&:hover': { bgcolor: 'action.hover' },
                             }}
                           >
-                            <Edit fontSize="small" />
+                            <Edit fontSize="small" sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }} />
                           </IconButton>
                         </Tooltip>
-                        <Tooltip title="Xóa">
+                        <Tooltip title={isMobile ? "" : "Xóa"}>
                           <IconButton
                             size="small"
                             onClick={(e) => {
@@ -578,10 +612,12 @@ export default function KidsPage() {
                               border: '1px solid',
                               borderColor: 'error.main',
                               color: 'error.main',
+                              width: { xs: 32, sm: 36 },
+                              height: { xs: 32, sm: 36 },
                               '&:hover': { bgcolor: 'error.lighter' },
                             }}
                           >
-                            <Delete fontSize="small" />
+                            <Delete fontSize="small" sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }} />
                           </IconButton>
                         </Tooltip>
                       </Box>
@@ -593,7 +629,7 @@ export default function KidsPage() {
           )}
 
           {/* Floating Action Button */}
-          {!loading && kids.length > 0 && (
+          {!loading && kids.length > 0 && !isMobile && (
             <Fab
               color="primary"
               aria-label="add"

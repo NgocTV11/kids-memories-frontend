@@ -10,7 +10,11 @@ import {
   TextField,
   Box,
   Alert,
+  useTheme,
+  useMediaQuery,
+  IconButton,
 } from '@mui/material';
+import { Close } from '@mui/icons-material';
 import { kidsService, AddGrowthDataDto } from '@/services/kids.service';
 import dayjs from 'dayjs';
 
@@ -22,6 +26,9 @@ interface AddGrowthModalProps {
 }
 
 export function AddGrowthModal({ open, kidId, onClose, onSuccess }: AddGrowthModalProps) {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  
   const [formData, setFormData] = useState<AddGrowthDataDto>({
     date: dayjs().format('YYYY-MM-DD'),
     height: 0,
@@ -106,8 +113,21 @@ export function AddGrowthModal({ open, kidId, onClose, onSuccess }: AddGrowthMod
   };
 
   return (
-    <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
-      <DialogTitle>Thêm dữ liệu phát triển</DialogTitle>
+    <Dialog 
+      open={open} 
+      onClose={handleClose} 
+      maxWidth="sm" 
+      fullWidth
+      fullScreen={isMobile}
+    >
+      <DialogTitle sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        Thêm dữ liệu phát triển
+        {isMobile && (
+          <IconButton edge="end" onClick={handleClose} disabled={loading}>
+            <Close />
+          </IconButton>
+        )}
+      </DialogTitle>
       <DialogContent>
         <Box sx={{ pt: 2 }}>
           {error && (
@@ -126,6 +146,7 @@ export function AddGrowthModal({ open, kidId, onClose, onSuccess }: AddGrowthMod
             helperText={errors.date}
             InputLabelProps={{ shrink: true }}
             sx={{ mb: 2 }}
+            size={isMobile ? "small" : "medium"}
             required
           />
 
@@ -139,6 +160,7 @@ export function AddGrowthModal({ open, kidId, onClose, onSuccess }: AddGrowthMod
             helperText={errors.height}
             inputProps={{ step: 0.1, min: 0, max: 300 }}
             sx={{ mb: 2 }}
+            size={isMobile ? "small" : "medium"}
             required
           />
 
@@ -152,6 +174,7 @@ export function AddGrowthModal({ open, kidId, onClose, onSuccess }: AddGrowthMod
             helperText={errors.weight}
             inputProps={{ step: 0.1, min: 0, max: 200 }}
             sx={{ mb: 2 }}
+            size={isMobile ? "small" : "medium"}
             required
           />
 
@@ -163,14 +186,20 @@ export function AddGrowthModal({ open, kidId, onClose, onSuccess }: AddGrowthMod
             value={formData.note}
             onChange={(e) => handleChange('note', e.target.value)}
             placeholder="Ghi chú về sự phát triển..."
+            size={isMobile ? "small" : "medium"}
           />
         </Box>
       </DialogContent>
-      <DialogActions>
-        <Button onClick={handleClose} disabled={loading}>
+      <DialogActions sx={{ p: { xs: 2, sm: 1.5 } }}>
+        <Button onClick={handleClose} disabled={loading} size={isMobile ? "medium" : "large"}>
           Hủy
         </Button>
-        <Button onClick={handleSubmit} variant="contained" disabled={loading}>
+        <Button 
+          onClick={handleSubmit} 
+          variant="contained" 
+          disabled={loading}
+          size={isMobile ? "medium" : "large"}
+        >
           {loading ? 'Đang lưu...' : 'Thêm'}
         </Button>
       </DialogActions>
