@@ -240,7 +240,8 @@ export function AddMilestoneModal({ open, milestone, kids, onClose, onSuccess }:
 
           <TextField
             fullWidth
-            label="Tiêu đề"
+            label={milestonesT.milestoneModal.titleLabel}
+            placeholder={milestonesT.milestoneModal.titlePlaceholder}
             value={formData.title}
             onChange={(e) => handleChange('title', e.target.value)}
             error={!!errors.title}
@@ -254,7 +255,8 @@ export function AddMilestoneModal({ open, milestone, kids, onClose, onSuccess }:
             fullWidth
             multiline
             rows={3}
-            label="Mô tả"
+            label={milestonesT.milestoneModal.descriptionLabel}
+            placeholder={milestonesT.milestoneModal.descriptionPlaceholder}
             value={formData.description}
             onChange={(e) => handleChange('description', e.target.value)}
             sx={{ mb: 2 }}
@@ -264,7 +266,7 @@ export function AddMilestoneModal({ open, milestone, kids, onClose, onSuccess }:
           <TextField
             fullWidth
             type="date"
-            label="Ngày milestone"
+            label={milestonesT.milestoneModal.dateLabel}
             value={formData.milestone_date}
             onChange={(e) => handleChange('milestone_date', e.target.value)}
             error={!!errors.milestone_date}
@@ -276,10 +278,10 @@ export function AddMilestoneModal({ open, milestone, kids, onClose, onSuccess }:
           />
 
           <FormControl fullWidth sx={{ mb: 2 }} size={isMobile ? "small" : "medium"}>
-            <InputLabel>Danh mục</InputLabel>
+            <InputLabel>{milestonesT.milestoneModal.categoryLabel}</InputLabel>
             <Select
               value={formData.category}
-              label="Danh mục"
+              label={milestonesT.milestoneModal.categoryLabel}
               onChange={(e) => handleChange('category', e.target.value)}
             >
               {MILESTONE_CATEGORIES.map((cat) => (
@@ -291,14 +293,14 @@ export function AddMilestoneModal({ open, milestone, kids, onClose, onSuccess }:
           </FormControl>
 
           <FormControl fullWidth sx={{ mb: 2 }} error={!!errors.kid_id} required size={isMobile ? "small" : "medium"}>
-            <InputLabel>Chọn bé</InputLabel>
+            <InputLabel>{milestonesT.milestoneModal.kidLabel}</InputLabel>
             <Select
               value={formData.kid_id}
-              label="Chọn bé"
+              label={milestonesT.milestoneModal.kidLabel}
               onChange={(e) => handleKidChange(e.target.value)}
             >
               <MenuItem value="">
-                <em>Chọn một bé</em>
+                <em>{milestonesT.milestoneModal.selectKid}</em>
               </MenuItem>
               {kids.map((kid) => (
                 <MenuItem key={kid.id} value={kid.id}>
@@ -317,7 +319,7 @@ export function AddMilestoneModal({ open, milestone, kids, onClose, onSuccess }:
           <Box sx={{ mb: 2 }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
               <Typography variant="subtitle2" sx={{ fontSize: { xs: '0.875rem', sm: '0.875rem' } }}>
-                Ảnh đính kèm ({selectedPhotoIds.length})
+                {milestonesT.milestoneModal.photosLabel} ({selectedPhotoIds.length})
               </Typography>
               {formData.kid_id && (
                 <Button
@@ -329,7 +331,7 @@ export function AddMilestoneModal({ open, milestone, kids, onClose, onSuccess }:
                     }
                   }}
                 >
-                  {showPhotoPicker ? 'Đóng' : 'Chọn ảnh'}
+                  {showPhotoPicker ? milestonesT.milestoneModal.hidePhotos : milestonesT.milestoneModal.selectPhotos}
                 </Button>
               )}
             </Box>
@@ -347,11 +349,11 @@ export function AddMilestoneModal({ open, milestone, kids, onClose, onSuccess }:
               >
                 {loadingPhotos ? (
                   <Typography variant="body2" color="text.secondary" textAlign="center" py={2}>
-                    Đang tải ảnh...
+                    {milestonesT.milestoneModal.loading}
                   </Typography>
                 ) : availablePhotos.length === 0 ? (
                   <Typography variant="body2" color="text.secondary" textAlign="center" py={2}>
-                    Không có ảnh nào
+                    {milestonesT.milestoneModal.noPhotos}
                   </Typography>
                 ) : (
                   <Grid container spacing={1}>
@@ -395,7 +397,7 @@ export function AddMilestoneModal({ open, milestone, kids, onClose, onSuccess }:
       </DialogContent>
       <DialogActions sx={{ p: { xs: 2, sm: 1.5 } }}>
         <Button onClick={onClose} disabled={loading} size={isMobile ? "medium" : "large"}>
-          Hủy
+          {milestonesT.milestoneModal.cancel}
         </Button>
         <Button 
           onClick={handleSubmit} 
@@ -403,7 +405,7 @@ export function AddMilestoneModal({ open, milestone, kids, onClose, onSuccess }:
           disabled={loading}
           size={isMobile ? "medium" : "large"}
         >
-          {loading ? 'Đang lưu...' : isEdit ? 'Cập nhật' : 'Thêm'}
+          {loading ? milestonesT.milestoneModal.saving : isEdit ? milestonesT.milestoneModal.updateButton : milestonesT.milestoneModal.addButton}
         </Button>
       </DialogActions>
     </Dialog>

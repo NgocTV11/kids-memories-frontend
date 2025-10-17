@@ -135,6 +135,29 @@ export const milestonesTranslations = {
     deleteSuccess: 'Đã xóa mốc',
     deleteError: 'Không thể xóa mốc',
     
+    // Milestone modal
+    milestoneModal: {
+      titleLabel: 'Tiêu đề',
+      titlePlaceholder: 'Nhập tiêu đề mốc',
+      descriptionLabel: 'Mô tả',
+      descriptionPlaceholder: 'Mô tả chi tiết về mốc này...',
+      dateLabel: 'Ngày milestone',
+      categoryLabel: 'Danh mục',
+      kidLabel: 'Chọn bé',
+      selectKid: 'Chọn một bé',
+      photosLabel: 'Ảnh đính kèm',
+      photosCount: '{count} ảnh',
+      selectPhotos: 'Chọn ảnh',
+      hidePhotos: 'Ẩn ảnh',
+      noPhotos: 'Chưa có ảnh cho bé này',
+      uploadFirst: 'Tải ảnh lên trước',
+      loading: 'Đang tải...',
+      addButton: 'Thêm Mốc',
+      updateButton: 'Cập Nhật',
+      cancel: 'Hủy',
+      saving: 'Đang lưu...',
+    },
+    
     // Timeline
     photosCount: '{count} ảnh',
   },
@@ -272,6 +295,29 @@ export const milestonesTranslations = {
     deleteSuccess: 'Milestone deleted',
     deleteError: 'Failed to delete milestone',
     
+    // Milestone modal
+    milestoneModal: {
+      titleLabel: 'Title',
+      titlePlaceholder: 'Enter milestone title',
+      descriptionLabel: 'Description',
+      descriptionPlaceholder: 'Describe this milestone in detail...',
+      dateLabel: 'Milestone Date',
+      categoryLabel: 'Category',
+      kidLabel: 'Select Kid',
+      selectKid: 'Select a kid',
+      photosLabel: 'Attached Photos',
+      photosCount: '{count} photos',
+      selectPhotos: 'Select Photos',
+      hidePhotos: 'Hide Photos',
+      noPhotos: 'No photos for this kid yet',
+      uploadFirst: 'Upload photos first',
+      loading: 'Loading...',
+      addButton: 'Add Milestone',
+      updateButton: 'Update',
+      cancel: 'Cancel',
+      saving: 'Saving...',
+    },
+    
     // Timeline
     photosCount: '{count} photos',
   },
@@ -408,6 +454,29 @@ export const milestonesTranslations = {
     updateError: 'マイルストーンの更新に失敗しました',
     deleteSuccess: 'マイルストーンが削除されました',
     deleteError: 'マイルストーンの削除に失敗しました',
+    
+    // Milestone modal
+    milestoneModal: {
+      titleLabel: 'タイトル',
+      titlePlaceholder: 'マイルストーンのタイトルを入力',
+      descriptionLabel: '説明',
+      descriptionPlaceholder: 'このマイルストーンの詳細を記述...',
+      dateLabel: 'マイルストーン日付',
+      categoryLabel: 'カテゴリー',
+      kidLabel: '子供を選択',
+      selectKid: '子供を選択してください',
+      photosLabel: '添付写真',
+      photosCount: '{count}枚の写真',
+      selectPhotos: '写真を選択',
+      hidePhotos: '写真を非表示',
+      noPhotos: 'この子供の写真がまだありません',
+      uploadFirst: '先に写真をアップロード',
+      loading: '読み込み中...',
+      addButton: 'マイルストーンを追加',
+      updateButton: '更新',
+      cancel: 'キャンセル',
+      saving: '保存中...',
+    },
     
     // Timeline
     photosCount: '{count}枚の写真',
