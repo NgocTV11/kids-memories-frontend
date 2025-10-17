@@ -28,6 +28,34 @@ export const landingTranslations = {
       },
     },
 
+    // Slider Section
+    slider: {
+      title: 'Được tin dùng bởi hàng ngàn gia đình',
+      subtitle: 'Khám phá những khoảnh khắc đáng nhớ',
+      slides: [
+        {
+          title: 'Lưu giữ mọi khoảnh khắc đặc biệt',
+          description: 'Từ nụ cười đầu tiên đến những bước chân non trẻ, ghi lại tất cả những khoảnh khắc quý giá của con yêu.',
+          image: 'https://images.unsplash.com/photo-1476703993599-0035a21b17a9?w=1200&q=80',
+        },
+        {
+          title: 'Chia sẻ với cả gia đình',
+          description: 'Kết nối ông bà, cô dì chú bác với những khoảnh khắc đáng nhớ của cháu yêu, dù ở bất cứ đâu.',
+          image: 'https://images.unsplash.com/photo-1511895426328-dc8714191300?w=1200&q=80',
+        },
+        {
+          title: 'Theo dõi sự phát triển',
+          description: 'Ghi nhận từng cột mốc phát triển và xem con bạn lớn lên qua biểu đồ trực quan.',
+          image: 'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=1200&q=80',
+        },
+        {
+          title: 'An toàn và bảo mật',
+          description: 'Dữ liệu của bạn được mã hóa và bảo vệ với các tiêu chuẩn bảo mật cao nhất.',
+          image: 'https://images.unsplash.com/photo-1609220136736-443140cffec6?w=1200&q=80',
+        },
+      ],
+    },
+
     // Features Section
     features: {
       title: 'Tính năng nổi bật',
@@ -227,6 +255,34 @@ export const landingTranslations = {
       },
     },
 
+    // Slider Section
+    slider: {
+      title: 'Trusted by thousands of families',
+      subtitle: 'Discover memorable moments',
+      slides: [
+        {
+          title: 'Preserve every special moment',
+          description: 'From the first smile to those wobbly first steps, capture all of your child\'s precious moments.',
+          image: 'https://images.unsplash.com/photo-1476703993599-0035a21b17a9?w=1200&q=80',
+        },
+        {
+          title: 'Share with the whole family',
+          description: 'Connect grandparents, aunts, and uncles with your child\'s memorable moments, no matter where they are.',
+          image: 'https://images.unsplash.com/photo-1511895426328-dc8714191300?w=1200&q=80',
+        },
+        {
+          title: 'Track development',
+          description: 'Record each developmental milestone and watch your child grow through visual charts.',
+          image: 'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=1200&q=80',
+        },
+        {
+          title: 'Safe and secure',
+          description: 'Your data is encrypted and protected with the highest security standards.',
+          image: 'https://images.unsplash.com/photo-1609220136736-443140cffec6?w=1200&q=80',
+        },
+      ],
+    },
+
     // Features Section
     features: {
       title: 'Key Features',
@@ -424,6 +480,34 @@ export const landingTranslations = {
         memories: '思い出',
         countries: 'カ国',
       },
+    },
+
+    // Slider Section
+    slider: {
+      title: '何千もの家族に信頼されています',
+      subtitle: '思い出に残る瞬間を発見',
+      slides: [
+        {
+          title: '特別な瞬間をすべて保存',
+          description: '初めての笑顔からよちよち歩きまで、お子様の大切な瞬間をすべて記録します。',
+          image: 'https://images.unsplash.com/photo-1476703993599-0035a21b17a9?w=1200&q=80',
+        },
+        {
+          title: '家族全員で共有',
+          description: '祖父母や親戚と、どこにいてもお子様の思い出の瞬間を共有できます。',
+          image: 'https://images.unsplash.com/photo-1511895426328-dc8714191300?w=1200&q=80',
+        },
+        {
+          title: '成長を追跡',
+          description: '各発達マイルストーンを記録し、視覚的なチャートでお子様の成長を見守ります。',
+          image: 'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=1200&q=80',
+        },
+        {
+          title: '安全で安心',
+          description: 'お客様のデータは暗号化され、最高のセキュリティ基準で保護されています。',
+          image: 'https://images.unsplash.com/photo-1609220136736-443140cffec6?w=1200&q=80',
+        },
+      ],
     },
 
     // Features Section

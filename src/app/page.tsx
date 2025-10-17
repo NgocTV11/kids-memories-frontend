@@ -1,6 +1,6 @@
 ﻿'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   Box,
@@ -20,6 +20,7 @@ import {
   Divider,
   MenuItem,
   Menu,
+  Fade,
 } from '@mui/material';
 import {
   PhotoLibrary,
@@ -36,6 +37,8 @@ import {
   Twitter,
   Instagram,
   LinkedIn,
+  ArrowBackIos,
+  ArrowForwardIos,
 } from '@mui/icons-material';
 import { useI18nStore } from '@/store/i18n.store';
 import { Locale } from '@/config/i18n.config';
@@ -47,6 +50,8 @@ export default function LandingPage() {
   const { landing: t, locale, setLocale } = useI18nStore();
   const [langAnchor, setLangAnchor] = useState<null | HTMLElement>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [slideDirection, setSlideDirection] = useState<'left' | 'right'>('right');
 
   const features = [
     {
@@ -99,6 +104,31 @@ export default function LandingPage() {
       element.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   };
+
+  // Slider functions
+  const nextSlide = () => {
+    setSlideDirection('right');
+    setCurrentSlide((prev) => (prev + 1) % t.slider.slides.length);
+  };
+
+  const prevSlide = () => {
+    setSlideDirection('left');
+    setCurrentSlide((prev) => (prev - 1 + t.slider.slides.length) % t.slider.slides.length);
+  };
+
+  const goToSlide = (index: number) => {
+    setSlideDirection(index > currentSlide ? 'right' : 'left');
+    setCurrentSlide(index);
+  };
+
+  // Auto-play slider
+  useEffect(() => {
+    const interval = setInterval(() => {
+      nextSlide();
+    }, 5000); // Change slide every 5 seconds
+
+    return () => clearInterval(interval);
+  }, [currentSlide, t.slider.slides.length]);
 
   return (
     <Box sx={{ bgcolor: 'background.default', minHeight: '100vh' }}>
@@ -220,6 +250,143 @@ export default function LandingPage() {
               </Box>
             </Box>
           </Box>
+        </Container>
+      </Box>
+
+      {/* Slider Section */}
+      <Box sx={{ bgcolor: 'grey.50', py: { xs: 8, md: 12 }, position: 'relative', overflow: 'hidden' }}>
+        <Container maxWidth="lg">
+          <Typography variant="h3" align="center" sx={{ fontWeight: 'bold', mb: 2 }}>
+            {t.slider.title}
+          </Typography>
+          <Typography variant="h6" align="center" color="text.secondary" sx={{ mb: 6 }}>
+            {t.slider.subtitle}
+          </Typography>
+
+          <Box sx={{ position: 'relative', height: { xs: '400px', md: '500px' } }}>
+            {/* Slides */}
+            {t.slider.slides.map((slide, index) => (
+              <Fade key={index} in={currentSlide === index} timeout={1000}>
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    display: currentSlide === index ? 'flex' : 'none',
+                    flexDirection: { xs: 'column', md: 'row' },
+                    gap: 4,
+                    alignItems: 'center',
+                  }}
+                >
+                  {/* Text Content */}
+                  <Box sx={{ flex: 1, zIndex: 2 }}>
+                    <Typography
+                      variant="h3"
+                      sx={{
+                        fontWeight: 'bold',
+                        mb: 3,
+                        fontSize: { xs: '2rem', md: '2.5rem' },
+                        color: 'primary.main',
+                      }}
+                    >
+                      {slide.title}
+                    </Typography>
+                    <Typography variant="h6" color="text.secondary" sx={{ mb: 4 }}>
+                      {slide.description}
+                    </Typography>
+                    <Button
+                      variant="contained"
+                      size="large"
+                      onClick={() => router.push('/auth/register')}
+                      sx={{ px: 4, py: 1.5 }}
+                    >
+                      {t.hero.cta}
+                    </Button>
+                  </Box>
+
+                  {/* Image */}
+                  <Box sx={{ flex: 1 }}>
+                    <Box
+                      sx={{
+                        position: 'relative',
+                        borderRadius: 4,
+                        overflow: 'hidden',
+                        boxShadow: '0 20px 60px rgba(0,0,0,0.2)',
+                        height: { xs: '250px', md: '400px' },
+                      }}
+                    >
+                      <img
+                        src={slide.image}
+                        alt={slide.title}
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover',
+                          display: 'block',
+                        }}
+                      />
+                    </Box>
+                  </Box>
+                </Box>
+              </Fade>
+            ))}
+
+            {/* Navigation Arrows */}
+            <IconButton
+              onClick={prevSlide}
+              sx={{
+                position: 'absolute',
+                left: { xs: 0, md: -20 },
+                top: '50%',
+                transform: 'translateY(-50%)',
+                bgcolor: 'white',
+                boxShadow: 2,
+                '&:hover': { bgcolor: 'grey.100' },
+                zIndex: 3,
+              }}
+            >
+              <ArrowBackIos sx={{ ml: 1 }} />
+            </IconButton>
+            <IconButton
+              onClick={nextSlide}
+              sx={{
+                position: 'absolute',
+                right: { xs: 0, md: -20 },
+                top: '50%',
+                transform: 'translateY(-50%)',
+                bgcolor: 'white',
+                boxShadow: 2,
+                '&:hover': { bgcolor: 'grey.100' },
+                zIndex: 3,
+              }}
+            >
+              <ArrowForwardIos />
+            </IconButton>
+          </Box>
+
+          {/* Dots Indicator */}
+          <Stack direction="row" spacing={1} justifyContent="center" sx={{ mt: 4 }}>
+            {t.slider.slides.map((_, index) => (
+              <Box
+                key={index}
+                onClick={() => goToSlide(index)}
+                sx={{
+                  width: 12,
+                  height: 12,
+                  borderRadius: '50%',
+                  bgcolor: currentSlide === index ? 'primary.main' : 'grey.400',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s',
+                  '&:hover': {
+                    bgcolor: currentSlide === index ? 'primary.dark' : 'grey.500',
+                    transform: 'scale(1.2)',
+                  },
+                }}
+              />
+            ))}
+          </Stack>
         </Container>
       </Box>
 
