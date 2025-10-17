@@ -123,12 +123,16 @@ export default function LandingPage() {
 
   // Auto-play slider
   useEffect(() => {
+    if (!t.slider?.slides || t.slider.slides.length === 0) {
+      return;
+    }
+    
     const interval = setInterval(() => {
       nextSlide();
     }, 5000); // Change slide every 5 seconds
 
     return () => clearInterval(interval);
-  }, [currentSlide, t.slider.slides.length]);
+  }, [currentSlide, t.slider?.slides?.length]);
 
   return (
     <Box sx={{ bgcolor: 'background.default', minHeight: '100vh' }}>
@@ -254,18 +258,19 @@ export default function LandingPage() {
       </Box>
 
       {/* Slider Section */}
-      <Box sx={{ bgcolor: 'grey.50', py: { xs: 8, md: 12 }, position: 'relative', overflow: 'hidden' }}>
-        <Container maxWidth="lg">
-          <Typography variant="h3" align="center" sx={{ fontWeight: 'bold', mb: 2 }}>
-            {t.slider.title}
-          </Typography>
-          <Typography variant="h6" align="center" color="text.secondary" sx={{ mb: 6 }}>
-            {t.slider.subtitle}
-          </Typography>
+      {t.slider?.slides && t.slider.slides.length > 0 && (
+        <Box sx={{ bgcolor: 'grey.50', py: { xs: 8, md: 12 }, position: 'relative', overflow: 'hidden' }}>
+          <Container maxWidth="lg">
+            <Typography variant="h3" align="center" sx={{ fontWeight: 'bold', mb: 2 }}>
+              {t.slider.title}
+            </Typography>
+            <Typography variant="h6" align="center" color="text.secondary" sx={{ mb: 6 }}>
+              {t.slider.subtitle}
+            </Typography>
 
-          <Box sx={{ position: 'relative', height: { xs: '400px', md: '500px' } }}>
-            {/* Slides */}
-            {t.slider.slides.map((slide, index) => (
+            <Box sx={{ position: 'relative', height: { xs: '400px', md: '500px' } }}>
+              {/* Slides */}
+              {t.slider.slides.map((slide, index) => (
               <Fade key={index} in={currentSlide === index} timeout={1000}>
                 <Box
                   sx={{
@@ -389,6 +394,7 @@ export default function LandingPage() {
           </Stack>
         </Container>
       </Box>
+      )}
 
       {/* Features Section */}
       <Container maxWidth="lg" sx={{ py: { xs: 8, md: 12 } }} id="features">

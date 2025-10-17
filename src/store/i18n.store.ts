@@ -63,10 +63,10 @@ export const useI18nStore = create<I18nState>()(
     }),
     {
       name: 'i18n-storage',
-      version: 4, // Increment version to force reload with landing keys
+      version: 5, // Increment version to force reload with slider translations
       migrate: (persistedState: any, version: number) => {
         // If old version, reset to defaults
-        if (version < 4) {
+        if (version < 5) {
           const locale = persistedState?.locale || defaultLocale;
           return {
             locale,
