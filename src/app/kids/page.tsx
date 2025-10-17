@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { kidsService, Kid } from '@/services/kids.service';
+import { useI18nStore } from '@/store/i18n.store';
 import {
   Container,
   Box,
@@ -43,6 +44,7 @@ export default function KidsPage() {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'md'));
   const router = useRouter();
+  const { kids: kidsT } = useI18nStore();
   const [kids, setKids] = useState<Kid[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -61,7 +63,7 @@ export default function KidsPage() {
       setKids(data);
     } catch (err: any) {
       console.error('Error loading kids:', err);
-      setError(err.response?.data?.message || 'Failed to load kids');
+      setError(err.response?.data?.message || kidsT.loadError);
     } finally {
       setLoading(false);
     }
@@ -78,14 +80,14 @@ export default function KidsPage() {
   };
 
   const handleDeleteClick = async (kid: Kid) => {
-    if (!confirm(`Bạn có chắc muốn xóa ${kid.name}?`)) return;
+    if (!confirm(`${kidsT.deleteKidConfirm}`)) return;
 
     try {
       await kidsService.delete(kid.id);
       setKids(kids.filter((k) => k.id !== kid.id));
     } catch (err: any) {
       console.error('Error deleting kid:', err);
-      alert(err.response?.data?.message || 'Failed to delete kid');
+      alert(err.response?.data?.message || kidsT.deleteError);
     }
   };
 
@@ -109,7 +111,7 @@ export default function KidsPage() {
   };
 
   const getGenderLabel = (gender: string) => {
-    return gender === 'male' ? 'Bé trai' : gender === 'female' ? 'Bé gái' : 'Khác';
+    return gender === 'male' ? kidsT.gender.male : gender === 'female' ? kidsT.gender.female : kidsT.gender.other;
   };
 
   const calculateAge = (dateOfBirth: string) => {
@@ -119,9 +121,9 @@ export default function KidsPage() {
     const months = today.diff(birthDate, 'month') % 12;
     
     if (years > 0) {
-      return `${years} tuổi ${months} tháng`;
+      return `${years} ${kidsT.years} ${months} ${kidsT.months}`;
     } else {
-      return `${months} tháng`;
+      return `${months} ${kidsT.months}`;
     }
   };
 
@@ -213,10 +215,10 @@ export default function KidsPage() {
                 </Box>
                 <Box>
                   <Typography variant={isMobile ? "h6" : "h4"} fontWeight="bold" gutterBottom sx={{ mb: 0.5 }}>
-                    Bé yêu của tôi 💖
+                    {kidsT.myKids} 💖
                   </Typography>
                   <Typography variant={isMobile ? "caption" : "body1"} color="text.secondary">
-                    {isMobile ? `${kids.length} bé yêu` : 'Theo dõi sự phát triển và những khoảnh khắc đáng nhớ'}
+                    {isMobile ? `${kids.length} ${kidsT.kidsCount}` : kidsT.subtitle}
                   </Typography>
                 </Box>
               </Box>
@@ -240,7 +242,7 @@ export default function KidsPage() {
                   transition: 'all 0.3s ease',
                 }}
               >
-                {isMobile ? '➕ Thêm bé' : 'Thêm bé'}
+                {isMobile ? `➕ ${kidsT.addKid}` : kidsT.addKid}
               </Button>
             </Box>
           </Paper>
@@ -268,7 +270,7 @@ export default function KidsPage() {
                     {kids.length}
                   </Typography>
                   <Typography variant={isMobile ? "caption" : "body2"} color="text.secondary" sx={{ fontSize: { xs: '0.7rem', sm: '0.875rem' } }}>
-                    Bé yêu
+                    {kidsT.kidsCount}
                   </Typography>
                 </Paper>
               </Grid>
@@ -397,14 +399,14 @@ export default function KidsPage() {
                 <ChildCare sx={{ fontSize: { xs: 40, sm: 50, md: 60 }, color: 'white' }} />
               </Box>
               <Typography variant={isMobile ? "h6" : "h5"} fontWeight="bold" gutterBottom>
-                Chưa có thông tin bé nào 👶
+                {kidsT.noKids} 👶
               </Typography>
               <Typography 
                 variant={isMobile ? "body2" : "body1"} 
                 color="text.secondary" 
                 sx={{ mb: 3, maxWidth: 400, mx: 'auto' }}
               >
-                Bắt đầu hành trình ghi lại những kỷ niệm tuyệt vời của bé yêu ngay hôm nay!
+                {kidsT.noKidsDesc}
               </Typography>
               <Button 
                 variant="contained" 
@@ -423,7 +425,7 @@ export default function KidsPage() {
                   },
                 }}
               >
-                {isMobile ? '➕ Thêm bé đầu tiên' : 'Thêm bé đầu tiên'}
+                {isMobile ? `➕ ${kidsT.addKid}` : kidsT.addKid}
               </Button>
             </Paper>
           ) : (
@@ -511,7 +513,7 @@ export default function KidsPage() {
                           <Cake sx={{ fontSize: { xs: 18, sm: 20 }, mr: { xs: 1, sm: 1.5 }, color: '#FF6B9D' }} />
                           <Box>
                             <Typography variant="caption" color="text.secondary" display="block" sx={{ fontSize: { xs: '0.65rem', sm: '0.75rem' } }}>
-                              {isMobile ? 'Sinh' : 'Sinh nhật'}
+                              {kidsT.birthday}
                             </Typography>
                             <Typography variant="body2" fontWeight="bold" sx={{ fontSize: { xs: '0.8rem', sm: '0.875rem' } }}>
                               {dayjs(kid.date_of_birth).format('DD/MM/YYYY')}
@@ -532,7 +534,7 @@ export default function KidsPage() {
                           <TrendingUp sx={{ fontSize: { xs: 18, sm: 20 }, mr: { xs: 1, sm: 1.5 }, color: '#4CAF50' }} />
                           <Box>
                             <Typography variant="caption" color="text.secondary" display="block" sx={{ fontSize: { xs: '0.65rem', sm: '0.75rem' } }}>
-                              Tuổi
+                              {kidsT.age}
                             </Typography>
                             <Typography variant="body2" fontWeight="bold" sx={{ fontSize: { xs: '0.8rem', sm: '0.875rem' } }}>
                               {calculateAge(kid.date_of_birth)}
@@ -565,7 +567,7 @@ export default function KidsPage() {
 
                       {/* Action Buttons */}
                       <Box sx={{ display: 'flex', gap: 1, mt: { xs: 2, sm: 3 } }}>
-                        <Tooltip title={isMobile ? "" : "Xem chi tiết"}>
+                        <Tooltip title={isMobile ? "" : kidsT.viewDetails}>
                           <Button
                             fullWidth
                             variant="outlined"
@@ -583,10 +585,10 @@ export default function KidsPage() {
                               },
                             }}
                           >
-                            {isMobile ? '👁️' : 'Xem'}
+                            {isMobile ? '👁️' : kidsT.viewDetails}
                           </Button>
                         </Tooltip>
-                        <Tooltip title={isMobile ? "" : "Chỉnh sửa"}>
+                        <Tooltip title={isMobile ? "" : kidsT.edit}>
                           <IconButton
                             size="small"
                             onClick={(e) => {
@@ -604,7 +606,7 @@ export default function KidsPage() {
                             <Edit fontSize="small" sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }} />
                           </IconButton>
                         </Tooltip>
-                        <Tooltip title={isMobile ? "" : "Xóa"}>
+                        <Tooltip title={isMobile ? "" : kidsT.delete}>
                           <IconButton
                             size="small"
                             onClick={(e) => {
