@@ -297,8 +297,13 @@ export default function AdminUsersPage() {
             setPage(0);
           }}
           rowsPerPageOptions={[10, 20, 50, 100]}
-          labelRowsPerPage="Số dòng:"
-          labelDisplayedRows={({ from, to, count }) => `${from}-${to} trong tổng ${count}`}
+          labelRowsPerPage={adminT.pagination.rowsPerPage}
+          labelDisplayedRows={({ from, to, count }) => 
+            adminT.pagination.displayedRows
+              .replace('{from}', String(from))
+              .replace('{to}', String(to))
+              .replace('{count}', String(count))
+          }
         />
       </TableContainer>
 

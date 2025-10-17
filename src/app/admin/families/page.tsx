@@ -251,8 +251,13 @@ export default function AdminFamiliesPage() {
                 setPage(0);
               }}
               rowsPerPageOptions={[12, 24, 48]}
-              labelRowsPerPage="Số families/trang:"
-              labelDisplayedRows={({ from, to, count }) => `${from}-${to} trong tổng ${count}`}
+              labelRowsPerPage={adminT.pagination.rowsPerPage}
+              labelDisplayedRows={({ from, to, count }) => 
+                adminT.pagination.displayedRows
+                  .replace('{from}', String(from))
+                  .replace('{to}', String(to))
+                  .replace('{count}', String(count))
+              }
             />
           </Paper>
         </>

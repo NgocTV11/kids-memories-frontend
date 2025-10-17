@@ -143,6 +143,12 @@ export const adminTranslations = {
     close: 'Đóng',
     loading: 'Đang tải...',
     noData: 'Không có dữ liệu',
+    
+    // Pagination
+    pagination: {
+      rowsPerPage: 'Số dòng:',
+      displayedRows: '{from}-{to} trong tổng {count}',
+    },
   },
   en: {
     // Page title
@@ -286,6 +292,12 @@ export const adminTranslations = {
     close: 'Close',
     loading: 'Loading...',
     noData: 'No data',
+    
+    // Pagination
+    pagination: {
+      rowsPerPage: 'Rows per page:',
+      displayedRows: '{from}-{to} of {count}',
+    },
   },
   ja: {
     // Page title
@@ -429,6 +441,12 @@ export const adminTranslations = {
     close: '閉じる',
     loading: '読み込み中...',
     noData: 'データなし',
+    
+    // Pagination
+    pagination: {
+      rowsPerPage: '1ページあたりの行数:',
+      displayedRows: '{count}件中 {from}-{to}',
+    },
   },
 };
 
