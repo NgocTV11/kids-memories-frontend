@@ -28,6 +28,7 @@ export interface FamilyMember {
   user_id: string;
   role: 'owner' | 'admin' | 'member';
   status: 'pending' | 'active' | 'rejected';
+  relationship?: string | null;
   joined_at: string;
   user?: {
     id: string;

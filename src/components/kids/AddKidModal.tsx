@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -18,8 +18,11 @@ import {
   useTheme,
   useMediaQuery,
   IconButton,
+  Avatar,
+  Typography,
+  Stack,
 } from '@mui/material';
-import { Close } from '@mui/icons-material';
+import { Close, PhotoCamera, Delete } from '@mui/icons-material';
 import { kidsService, Kid, CreateKidDto, UpdateKidDto } from '@/services/kids.service';
 import dayjs from 'dayjs';
 
@@ -45,6 +48,13 @@ export function AddKidModal({ open, kid, onClose, onSuccess }: AddKidModalProps)
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Avatar upload states
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
+  const [deleteAvatar, setDeleteAvatar] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   useEffect(() => {
     if (kid) {
       setFormData({
@@ -52,15 +62,19 @@ export function AddKidModal({ open, kid, onClose, onSuccess }: AddKidModalProps)
         gender: kid.gender as 'male' | 'female' | 'other',
         date_of_birth: dayjs(kid.date_of_birth).format('YYYY-MM-DD'),
       });
+      setAvatarPreview(kid.profile_picture || null);
     } else {
       setFormData({
         name: '',
         gender: 'male',
         date_of_birth: '',
       });
+      setAvatarPreview(null);
     }
     setErrors({});
     setError(null);
+    setAvatarFile(null);
+    setDeleteAvatar(false);
   }, [kid, open]);
 
   const validateForm = (): boolean => {
@@ -83,6 +97,45 @@ export function AddKidModal({ open, kid, onClose, onSuccess }: AddKidModalProps)
     return Object.keys(newErrors).length === 0;
   };
 
+  const handleAvatarSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      setError('Vui lòng chọn file ảnh');
+      return;
+    }
+
+    // Validate file size (5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      setError('Kích thước ảnh không được vượt quá 5MB');
+      return;
+    }
+
+    setAvatarFile(file);
+    setDeleteAvatar(false);
+    setError(null);
+
+    // Create preview
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setAvatarPreview(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleAvatarRemove = () => {
+    setAvatarFile(null);
+    setAvatarPreview(kid?.profile_picture || null);
+    if (isEdit && kid?.profile_picture) {
+      setDeleteAvatar(true);
+    }
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
   const handleSubmit = async () => {
     if (!validateForm()) return;
 
@@ -90,20 +143,31 @@ export function AddKidModal({ open, kid, onClose, onSuccess }: AddKidModalProps)
       setLoading(true);
       setError(null);
 
+      let savedKid: Kid;
+
       if (isEdit) {
         const updateData: UpdateKidDto = {
           name: formData.name,
           gender: formData.gender,
           date_of_birth: formData.date_of_birth,
         };
-        await kidsService.update(kid.id, updateData);
+        savedKid = await kidsService.update(kid.id, updateData);
       } else {
         const createData: CreateKidDto = {
           name: formData.name,
           gender: formData.gender,
           date_of_birth: formData.date_of_birth,
         };
-        await kidsService.create(createData);
+        savedKid = await kidsService.create(createData);
+      }
+
+      // Handle avatar upload/delete after kid is saved
+      if (avatarFile) {
+        setUploadingAvatar(true);
+        await kidsService.uploadAvatar(savedKid.id, avatarFile);
+      } else if (deleteAvatar && isEdit) {
+        // If user removed avatar, we could add a delete endpoint
+        // For now, just upload an empty/default avatar or skip
       }
 
       onSuccess();
@@ -112,6 +176,7 @@ export function AddKidModal({ open, kid, onClose, onSuccess }: AddKidModalProps)
       setError(err.response?.data?.message || 'Failed to save kid');
     } finally {
       setLoading(false);
+      setUploadingAvatar(false);
     }
   };
 
@@ -145,6 +210,55 @@ export function AddKidModal({ open, kid, onClose, onSuccess }: AddKidModalProps)
               {error}
             </Alert>
           )}
+
+          {/* Avatar Upload Section */}
+          <Box sx={{ mb: 3, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <Avatar
+              src={avatarPreview || undefined}
+              sx={{
+                width: 100,
+                height: 100,
+                mb: 2,
+                border: '2px solid',
+                borderColor: 'divider',
+              }}
+            />
+            <Stack direction="row" spacing={1}>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleAvatarSelect}
+                style={{ display: 'none' }}
+              />
+              <Button
+                size="small"
+                variant="outlined"
+                startIcon={<PhotoCamera />}
+                onClick={() => fileInputRef.current?.click()}
+                disabled={loading || uploadingAvatar}
+              >
+                {avatarPreview ? 'Đổi ảnh' : 'Thêm ảnh'}
+              </Button>
+              {avatarPreview && (
+                <Button
+                  size="small"
+                  variant="outlined"
+                  color="error"
+                  startIcon={<Delete />}
+                  onClick={handleAvatarRemove}
+                  disabled={loading || uploadingAvatar}
+                >
+                  Xóa ảnh
+                </Button>
+              )}
+            </Stack>
+            {uploadingAvatar && (
+              <Typography variant="caption" color="text.secondary" sx={{ mt: 1 }}>
+                Đang tải ảnh lên...
+              </Typography>
+            )}
+          </Box>
 
           <TextField
             fullWidth

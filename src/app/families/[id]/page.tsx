@@ -46,6 +46,7 @@ import {
 import { useAuthStore } from '@/store/auth.store';
 import { familiesService } from '@/services/families.service';
 import type { Family, FamilyMember } from '@/services/families.service';
+import { InviteMemberModal } from '@/components/families/InviteMemberModal';
 import { use } from 'react';
 
 export default function FamilyDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -64,9 +65,6 @@ export default function FamilyDetailPage({ params }: { params: Promise<{ id: str
 
   // Invite Modal
   const [inviteModalOpen, setInviteModalOpen] = useState(false);
-  const [inviteUserId, setInviteUserId] = useState('');
-  const [inviteRole, setInviteRole] = useState<'admin' | 'member'>('member');
-  const [inviting, setInviting] = useState(false);
 
   useEffect(() => {
     if (!user) {
@@ -109,30 +107,6 @@ export default function FamilyDetailPage({ params }: { params: Promise<{ id: str
       alert(err.message || 'Không thể cập nhật family');
     } finally {
       setUpdating(false);
-    }
-  };
-
-  const handleInviteMember = async () => {
-    if (!inviteUserId.trim()) {
-      alert('Vui lòng nhập User ID');
-      return;
-    }
-
-    try {
-      setInviting(true);
-      await familiesService.inviteMember(id, {
-        user_id: inviteUserId,
-        role: inviteRole,
-      });
-      setInviteModalOpen(false);
-      setInviteUserId('');
-      setInviteRole('member');
-      loadFamily();
-      alert('Đã gửi lời mời thành công!');
-    } catch (err: any) {
-      alert(err.message || 'Không thể gửi lời mời');
-    } finally {
-      setInviting(false);
     }
   };
 
@@ -308,6 +282,7 @@ export default function FamilyDetailPage({ params }: { params: Promise<{ id: str
                     <TableCell>Người dùng</TableCell>
                     <TableCell>Email</TableCell>
                     <TableCell>Vai trò</TableCell>
+                    <TableCell>Quan hệ</TableCell>
                     {canManage && <TableCell align="right">Hành động</TableCell>}
                   </TableRow>
                 </TableHead>
@@ -332,6 +307,13 @@ export default function FamilyDetailPage({ params }: { params: Promise<{ id: str
                           size="small"
                           color={member.role === 'owner' ? 'primary' : member.role === 'admin' ? 'secondary' : 'default'}
                         />
+                      </TableCell>
+                      <TableCell>
+                        {member.relationship ? (
+                          <Chip label={member.relationship} size="small" variant="outlined" />
+                        ) : (
+                          <Typography variant="body2" color="text.secondary">-</Typography>
+                        )}
                       </TableCell>
                       {canManage && (
                         <TableCell align="right">
@@ -436,39 +418,12 @@ export default function FamilyDetailPage({ params }: { params: Promise<{ id: str
       </Dialog>
 
       {/* Invite Member Modal */}
-      <Dialog open={inviteModalOpen} onClose={() => !inviting && setInviteModalOpen(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>Mời Thành Viên</DialogTitle>
-        <DialogContent>
-          <TextField
-            fullWidth
-            label="User ID"
-            value={inviteUserId}
-            onChange={(e) => setInviteUserId(e.target.value)}
-            sx={{ mt: 2, mb: 2 }}
-            required
-            helperText="Nhập ID của người dùng bạn muốn mời"
-          />
-          <FormControl fullWidth>
-            <InputLabel>Vai trò</InputLabel>
-            <Select
-              value={inviteRole}
-              label="Vai trò"
-              onChange={(e) => setInviteRole(e.target.value as 'admin' | 'member')}
-            >
-              <MenuItem value="member">Thành viên</MenuItem>
-              <MenuItem value="admin">Quản trị viên</MenuItem>
-            </Select>
-          </FormControl>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setInviteModalOpen(false)} disabled={inviting}>
-            Hủy
-          </Button>
-          <Button onClick={handleInviteMember} variant="contained" disabled={inviting}>
-            {inviting ? <CircularProgress size={24} /> : 'Gửi lời mời'}
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <InviteMemberModal
+        open={inviteModalOpen}
+        familyId={id}
+        onClose={() => setInviteModalOpen(false)}
+        onSuccess={loadFamily}
+      />
     </Container>
   );
 }
