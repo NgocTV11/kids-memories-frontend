@@ -31,6 +31,7 @@ import {
 import { photosService, UploadPhotoDto } from '@/services/photos.service';
 import { Album } from '@/services/albums.service';
 import { Kid } from '@/services/kids.service';
+import { useI18nStore } from '@/store/i18n.store';
 
 interface PhotoUploadProps {
   open: boolean;
@@ -45,6 +46,7 @@ interface FileWithPreview extends File {
 }
 
 export function PhotoUpload({ open, albums, kids, onClose, onSuccess }: PhotoUploadProps) {
+  const { photos: photosT } = useI18nStore();
   const [files, setFiles] = useState<FileWithPreview[]>([]);
   const [albumId, setAlbumId] = useState<string>('');
   const [caption, setCaption] = useState<string>('');
@@ -83,12 +85,12 @@ export function PhotoUpload({ open, albums, kids, onClose, onSuccess }: PhotoUpl
 
   const handleUpload = async () => {
     if (files.length === 0) {
-      setError('Vui lòng chọn ít nhất một ảnh');
+      setError(photosT.form.selectAtLeastOne);
       return;
     }
 
     if (!albumId) {
-      setError('Vui lòng chọn album');
+      setError(photosT.form.albumRequired);
       return;
     }
 
@@ -145,7 +147,7 @@ export function PhotoUpload({ open, albums, kids, onClose, onSuccess }: PhotoUpl
 
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
-      <DialogTitle>Tải ảnh lên</DialogTitle>
+      <DialogTitle>{photosT.uploadTitle}</DialogTitle>
       <DialogContent>
         <Box sx={{ pt: 2 }}>
           {error && (
@@ -176,14 +178,14 @@ export function PhotoUpload({ open, albums, kids, onClose, onSuccess }: PhotoUpl
             <input {...getInputProps()} />
             <CloudUpload sx={{ fontSize: 48, color: 'primary.main', mb: 2 }} />
             {isDragActive ? (
-              <Typography>Thả ảnh vào đây...</Typography>
+              <Typography>{photosT.dropHere}</Typography>
             ) : (
               <>
                 <Typography variant="h6" gutterBottom>
-                  Kéo thả ảnh vào đây
+                  {photosT.dragAndDrop}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  hoặc click để chọn ảnh (tối đa 10MB/ảnh)
+                  {photosT.orClickToSelect}
                 </Typography>
               </>
             )}
@@ -193,7 +195,7 @@ export function PhotoUpload({ open, albums, kids, onClose, onSuccess }: PhotoUpl
           {files.length > 0 && (
             <Box sx={{ mb: 3 }}>
               <Typography variant="subtitle2" gutterBottom>
-                {files.length} ảnh đã chọn
+                {files.length} {photosT.photosSelected}
               </Typography>
               <Grid container spacing={2}>
                 {files.map((file, index) => (
@@ -244,10 +246,10 @@ export function PhotoUpload({ open, albums, kids, onClose, onSuccess }: PhotoUpl
 
           {/* Form Fields */}
           <FormControl fullWidth sx={{ mb: 2 }} required>
-            <InputLabel>Album</InputLabel>
+            <InputLabel>{photosT.form.album}</InputLabel>
             <Select
               value={albumId}
-              label="Album"
+              label={photosT.form.album}
               onChange={(e) => setAlbumId(e.target.value)}
               disabled={uploading}
             >
@@ -261,7 +263,8 @@ export function PhotoUpload({ open, albums, kids, onClose, onSuccess }: PhotoUpl
 
           <TextField
             fullWidth
-            label="Chú thích (tùy chọn)"
+            label={photosT.form.caption}
+            placeholder={photosT.form.captionPlaceholder}
             value={caption}
             onChange={(e) => setCaption(e.target.value)}
             disabled={uploading}
@@ -271,22 +274,22 @@ export function PhotoUpload({ open, albums, kids, onClose, onSuccess }: PhotoUpl
           <TextField
             fullWidth
             type="datetime-local"
-            label="Thời gian chụp (tùy chọn)"
+            label={photosT.form.dateTaken}
             value={dateTaken}
             onChange={(e) => setDateTaken(e.target.value)}
             InputLabelProps={{ shrink: true }}
             disabled={uploading}
-            helperText="Chọn ngày giờ chụp ảnh"
+            helperText={photosT.form.dateTakenHelper}
             sx={{ mb: 2 }}
           />
 
           <Box sx={{ mb: 2 }}>
             <FormControl fullWidth>
-              <InputLabel>Tag các bé (tùy chọn)</InputLabel>
+              <InputLabel>{photosT.form.tagKids}</InputLabel>
               <Select
                 multiple
                 value={selectedKids}
-                label="Tag các bé (tùy chọn)"
+                label={photosT.form.tagKids}
                 onChange={(e) => setSelectedKids(e.target.value as string[])}
                 disabled={uploading}
                 renderValue={(selected) => (
@@ -310,7 +313,7 @@ export function PhotoUpload({ open, albums, kids, onClose, onSuccess }: PhotoUpl
               </Select>
             </FormControl>
             <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5, display: 'block' }}>
-              Click bên ngoài hoặc nhấn Esc để đóng
+              {photosT.form.tagKidsHelper}
             </Typography>
           </Box>
 
@@ -318,7 +321,7 @@ export function PhotoUpload({ open, albums, kids, onClose, onSuccess }: PhotoUpl
           {uploading && (
             <Box sx={{ mt: 2 }}>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                <Typography variant="body2">Đang tải lên...</Typography>
+                <Typography variant="body2">{photosT.form.uploading}</Typography>
                 <Typography variant="body2">{Math.round(uploadProgress)}%</Typography>
               </Box>
               <LinearProgress variant="determinate" value={uploadProgress} />
@@ -328,7 +331,7 @@ export function PhotoUpload({ open, albums, kids, onClose, onSuccess }: PhotoUpl
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose} disabled={uploading}>
-          Hủy
+          {photosT.cancel}
         </Button>
         <Button
           onClick={handleUpload}
@@ -336,7 +339,7 @@ export function PhotoUpload({ open, albums, kids, onClose, onSuccess }: PhotoUpl
           disabled={uploading || files.length === 0}
           startIcon={<CloudUpload />}
         >
-          {uploading ? 'Đang tải...' : `Tải lên ${files.length} ảnh`}
+          {uploading ? photosT.uploading : photosT.form.uploadCount.replace('{count}', files.length.toString())}
         </Button>
       </DialogActions>
     </Dialog>

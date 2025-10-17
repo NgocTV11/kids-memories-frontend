@@ -68,12 +68,30 @@ export const photosTranslations = {
     // Upload modal
     uploadTitle: 'Tải Ảnh Lên',
     dragAndDrop: 'Kéo thả ảnh vào đây',
-    orClickToSelect: 'hoặc click để chọn',
+    orClickToSelect: 'hoặc click để chọn ảnh (tối đa 10MB/ảnh)',
+    dropHere: 'Thả ảnh vào đây...',
     selectFiles: 'Chọn tệp',
     selectedFiles: 'Đã chọn',
     files: 'tệp',
+    photosSelected: 'ảnh đã chọn',
     uploading: 'Đang tải lên...',
     uploadComplete: 'Hoàn tất!',
+    
+    // Upload form
+    form: {
+      album: 'Album',
+      albumRequired: 'Vui lòng chọn album',
+      caption: 'Chú thích (tùy chọn)',
+      captionPlaceholder: 'Thêm chú thích cho ảnh...',
+      dateTaken: 'Thời gian chụp (tùy chọn)',
+      dateTakenHelper: 'Chọn ngày giờ chụp ảnh',
+      tagKids: 'Tag các bé (tùy chọn)',
+      tagKidsHelper: 'Click bên ngoài hoặc nhấn Esc để đóng',
+      selectAtLeastOne: 'Vui lòng chọn ít nhất một ảnh',
+      uploading: 'Đang tải lên...',
+      uploadButton: 'Tải lên',
+      uploadCount: 'Tải lên {count} ảnh',
+    },
     
     // Delete modal
     deletePhotoTitle: 'Xóa Ảnh',
@@ -165,12 +183,30 @@ export const photosTranslations = {
     // Upload modal
     uploadTitle: 'Upload Photos',
     dragAndDrop: 'Drag and drop photos here',
-    orClickToSelect: 'or click to select',
+    orClickToSelect: 'or click to select photos (max 10MB/photo)',
+    dropHere: 'Drop photos here...',
     selectFiles: 'Select files',
     selectedFiles: 'Selected',
     files: 'files',
+    photosSelected: 'photos selected',
     uploading: 'Uploading...',
     uploadComplete: 'Complete!',
+    
+    // Upload form
+    form: {
+      album: 'Album',
+      albumRequired: 'Please select an album',
+      caption: 'Caption (optional)',
+      captionPlaceholder: 'Add caption for photos...',
+      dateTaken: 'Date taken (optional)',
+      dateTakenHelper: 'Select date and time photo was taken',
+      tagKids: 'Tag kids (optional)',
+      tagKidsHelper: 'Click outside or press Esc to close',
+      selectAtLeastOne: 'Please select at least one photo',
+      uploading: 'Uploading...',
+      uploadButton: 'Upload',
+      uploadCount: 'Upload {count} photos',
+    },
     
     // Delete modal
     deletePhotoTitle: 'Delete Photo',
@@ -262,12 +298,30 @@ export const photosTranslations = {
     // Upload modal
     uploadTitle: '写真をアップロード',
     dragAndDrop: 'ここに写真をドラッグ＆ドロップ',
-    orClickToSelect: 'またはクリックして選択',
+    orClickToSelect: 'またはクリックして写真を選択 (最大10MB/枚)',
+    dropHere: 'ここに写真をドロップ...',
     selectFiles: 'ファイルを選択',
     selectedFiles: '選択済み',
     files: 'ファイル',
+    photosSelected: '枚選択済み',
     uploading: 'アップロード中...',
     uploadComplete: '完了！',
+    
+    // Upload form
+    form: {
+      album: 'アルバム',
+      albumRequired: 'アルバムを選択してください',
+      caption: 'キャプション (オプション)',
+      captionPlaceholder: '写真のキャプションを追加...',
+      dateTaken: '撮影日時 (オプション)',
+      dateTakenHelper: '写真が撮影された日時を選択',
+      tagKids: '子供をタグ付け (オプション)',
+      tagKidsHelper: '外側をクリックまたはEscキーを押して閉じる',
+      selectAtLeastOne: '少なくとも1枚の写真を選択してください',
+      uploading: 'アップロード中...',
+      uploadButton: 'アップロード',
+      uploadCount: '{count}枚をアップロード',
+    },
     
     // Delete modal
     deletePhotoTitle: '写真を削除',
