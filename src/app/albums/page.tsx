@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
+import { useI18nStore } from '@/store/i18n.store';
 import { albumsService, Album } from '@/services/albums.service';
 import { kidsService, Kid } from '@/services/kids.service';
 import { getImageUrl } from '@/utils/image';
@@ -53,6 +54,7 @@ export default function AlbumsPage() {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'md'));
   const router = useRouter();
+  const { albums: albumsT } = useI18nStore();
   const [albums, setAlbums] = useState<Album[]>([]);
   const [kids, setKids] = useState<Kid[]>([]);
   const [loading, setLoading] = useState(true);
@@ -80,7 +82,7 @@ export default function AlbumsPage() {
       setKids(kidsData);
     } catch (err: any) {
       console.error('Error loading data:', err);
-      setError(err.response?.data?.message || 'Failed to load albums');
+      setError(err.response?.data?.message || albumsT.loadError);
     } finally {
       setLoading(false);
     }
@@ -102,14 +104,14 @@ export default function AlbumsPage() {
   };
 
   const handleDeleteClick = async (album: Album) => {
-    if (!confirm(`Bạn có chắc muốn xóa album "${album.title}"?`)) return;
+    if (!confirm(`${albumsT.deleteAlbumConfirm} "${album.title}"?`)) return;
 
     try {
       await albumsService.delete(album.id);
       setAlbums(albums.filter((a) => a.id !== album.id));
     } catch (err: any) {
       console.error('Error deleting album:', err);
-      alert(err.response?.data?.message || 'Failed to delete album');
+      alert(err.response?.data?.message || albumsT.deleteError);
     }
   };
 
@@ -149,13 +151,13 @@ export default function AlbumsPage() {
   const getPrivacyLabel = (privacy: string) => {
     switch (privacy) {
       case 'private':
-        return 'Riêng tư';
+        return albumsT.privacy.private;
       case 'family':
-        return 'Gia đình';
+        return albumsT.privacy.family;
       case 'public':
-        return 'Công khai';
+        return albumsT.privacy.public;
       default:
-        return 'Riêng tư';
+        return albumsT.privacy.private;
     }
   };
 
@@ -261,10 +263,10 @@ export default function AlbumsPage() {
                 </Box>
                 <Box>
                   <Typography variant={isMobile ? "h6" : "h4"} fontWeight="bold" gutterBottom sx={{ mb: 0.5 }}>
-                    Albums của bé 📸
+                    {albumsT.title} 📸
                   </Typography>
                   <Typography variant={isMobile ? "caption" : "body1"} color="text.secondary">
-                    {isMobile ? `${albums.length} albums` : 'Tổ chức và lưu giữ những khoảnh khắc đẹp'}
+                    {isMobile ? `${albums.length} albums` : albumsT.subtitle}
                   </Typography>
                 </Box>
               </Box>
@@ -288,7 +290,7 @@ export default function AlbumsPage() {
                   transition: 'all 0.3s ease',
                 }}
               >
-                {isMobile ? '➕ Tạo album' : 'Tạo album'}
+                {isMobile ? `➕ ${albumsT.createAlbum}` : albumsT.createAlbum}
               </Button>
             </Box>
 
@@ -297,10 +299,10 @@ export default function AlbumsPage() {
               <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 1, sm: 2 } }}>
                 {!isMobile && <FilterList sx={{ color: 'text.secondary' }} />}
                 <FormControl fullWidth={isMobile} sx={{ minWidth: isMobile ? 'auto' : 250 }} size={isMobile ? "small" : "medium"}>
-                  <InputLabel>Lọc theo bé</InputLabel>
+                  <InputLabel>{albumsT.filterByKid}</InputLabel>
                   <Select
                     value={selectedKidId}
-                    label="Lọc theo bé"
+                    label={albumsT.filterByKid}
                     onChange={(e) => setSelectedKidId(e.target.value)}
                     sx={{
                       borderRadius: 2,
@@ -312,7 +314,7 @@ export default function AlbumsPage() {
                     <MenuItem value="all">
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                         <Collections fontSize="small" />
-                        {isMobile ? 'Tất cả' : 'Tất cả albums'}
+                        {isMobile ? albumsT.all : albumsT.allAlbums}
                       </Box>
                     </MenuItem>
                     {kids.map((kid) => (
@@ -396,7 +398,7 @@ export default function AlbumsPage() {
                     {albums.filter(a => a.privacy_level === 'private').length}
                   </Typography>
                   <Typography variant="caption" color="text.secondary" sx={{ fontSize: { xs: '0.65rem', sm: '0.75rem' } }}>
-                    {isMobile ? 'Riêng' : 'Riêng tư'}
+                    {isMobile ? albumsT.private : albumsT.privacy.private}
                   </Typography>
                 </Paper>
               </Grid>
@@ -461,14 +463,14 @@ export default function AlbumsPage() {
                 <Collections sx={{ fontSize: { xs: 40, sm: 50, md: 60 }, color: 'white' }} />
               </Box>
               <Typography variant={isMobile ? "h6" : "h5"} fontWeight="bold" gutterBottom>
-                {selectedKidId === 'all' ? 'Chưa có album nào 📔' : 'Bé này chưa có album nào'}
+                {selectedKidId === 'all' ? albumsT.noAlbums : albumsT.noAlbumsForKid}
               </Typography>
               <Typography 
                 variant={isMobile ? "body2" : "body1"} 
                 color="text.secondary" 
                 sx={{ mb: 3, maxWidth: 400, mx: 'auto' }}
               >
-                Tạo album đầu tiên để bắt đầu tổ chức và lưu trữ những khoảnh khắc đáng nhớ
+                {albumsT.noAlbumsDesc}
               </Typography>
               <Button
                 variant="contained"
@@ -487,7 +489,7 @@ export default function AlbumsPage() {
                   },
                 }}
               >
-                {isMobile ? '➕ Tạo album đầu tiên' : 'Tạo album đầu tiên'}
+                {isMobile ? `➕ ${albumsT.createFirstAlbum}` : albumsT.createFirstAlbum}
               </Button>
             </Paper>
           ) : (
@@ -600,7 +602,7 @@ export default function AlbumsPage() {
                       >
                         <Chip
                           icon={<Photo />}
-                          label={`${album.photos_count || 0}${isMobile ? '' : ' ảnh'}`}
+                          label={`${album.photos_count || 0}${isMobile ? '' : ` ${albumsT.photos}`}`}
                           size="small"
                           sx={{
                             background: 'rgba(0, 0, 0, 0.6)',
@@ -680,7 +682,7 @@ export default function AlbumsPage() {
                             <Visibility fontSize="small" sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }} />
                           </IconButton>
                         </Tooltip>
-                        <Tooltip title={isMobile ? "" : "Chia sẻ"}>
+                        <Tooltip title={isMobile ? "" : albumsT.share}>
                           <IconButton
                             size="small"
                             sx={{
@@ -700,7 +702,7 @@ export default function AlbumsPage() {
                         </Tooltip>
                       </Box>
                       <Box sx={{ display: 'flex', gap: 0.5 }}>
-                        <Tooltip title={isMobile ? "" : "Chỉnh sửa"}>
+                        <Tooltip title={isMobile ? "" : albumsT.edit}>
                           <IconButton
                             size="small"
                             sx={{
@@ -718,7 +720,7 @@ export default function AlbumsPage() {
                             <Edit fontSize="small" sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }} />
                           </IconButton>
                         </Tooltip>
-                        <Tooltip title={isMobile ? "" : "Xóa"}>
+                        <Tooltip title={isMobile ? "" : albumsT.delete}>
                           <IconButton
                             size="small"
                             sx={{
