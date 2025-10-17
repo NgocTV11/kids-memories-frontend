@@ -44,6 +44,7 @@ import {
 } from '@mui/icons-material';
 import { familiesService, Family, FamilyMember } from '@/services/families.service';
 import { useAuthStore } from '@/store/auth.store';
+import { useI18nStore } from '@/store/i18n.store';
 import { InviteMemberModal } from '@/components/families/InviteMemberModal';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 
@@ -65,6 +66,7 @@ function TabPanel(props: TabPanelProps) {
 export default function FamiliesPage() {
   const router = useRouter();
   const { user } = useAuthStore();
+  const { families: familiesT } = useI18nStore();
   const [tabValue, setTabValue] = useState(0);
   const [families, setFamilies] = useState<Family[]>([]);
   const [invitations, setInvitations] = useState<Family[]>([]);
@@ -124,7 +126,7 @@ export default function FamiliesPage() {
       setInvitations(pendingInvites);
     } catch (err: any) {
       console.error('Load data error:', err);
-      setError(err.message || 'Không thể tải danh sách families');
+      setError(err.message || familiesT.loadError);
     } finally {
       setLoading(false);
     }
@@ -132,7 +134,7 @@ export default function FamiliesPage() {
 
   const handleCreateFamily = async () => {
     if (!familyName.trim()) {
-      alert('Vui lòng nhập tên family');
+      alert(familiesT.form.namePlaceholder);
       return;
     }
 
@@ -147,7 +149,7 @@ export default function FamiliesPage() {
       setFamilyDescription('');
       loadData();
     } catch (err: any) {
-      alert(err.message || 'Không thể tạo family');
+      alert(err.message || familiesT.createError);
     } finally {
       setCreating(false);
     }
@@ -158,12 +160,12 @@ export default function FamiliesPage() {
       await familiesService.acceptInvitation(familyId);
       loadData();
     } catch (err: any) {
-      alert(err.message || 'Không thể chấp nhận lời mời');
+      alert(err.message || familiesT.addMemberError);
     }
   };
 
   const handleLeaveFamily = async (familyId: string, familyName: string) => {
-    if (!confirm(`Bạn có chắc muốn rời khỏi family "${familyName}"?`)) {
+    if (!confirm(`${familiesT.leaveFamilyConfirm} "${familyName}"?`)) {
       return;
     }
 
@@ -171,12 +173,12 @@ export default function FamiliesPage() {
       await familiesService.leaveFamily(familyId);
       loadData();
     } catch (err: any) {
-      alert(err.message || 'Không thể rời family');
+      alert(err.message || familiesT.leaveError);
     }
   };
 
   const handleDeleteFamily = async (familyId: string, familyName: string) => {
-    if (!confirm(`Bạn có chắc muốn xóa family "${familyName}"? Hành động này không thể hoàn tác.`)) {
+    if (!confirm(`${familiesT.deleteFamilyConfirm} "${familyName}"?`)) {
       return;
     }
 
@@ -184,7 +186,7 @@ export default function FamiliesPage() {
       await familiesService.delete(familyId);
       loadData();
     } catch (err: any) {
-      alert(err.message || 'Không thể xóa family');
+      alert(err.message || familiesT.deleteError);
     }
   };
 
@@ -217,10 +219,10 @@ export default function FamiliesPage() {
             <FamilyRestroom fontSize="large" />
             <div>
               <Typography variant="h4" fontWeight="bold">
-                Families
+                {familiesT.title}
               </Typography>
               <Typography variant="body2" sx={{ opacity: 0.9 }}>
-                Quản lý families và lời mời
+                {familiesT.subtitle}
               </Typography>
             </div>
           </Box>
@@ -234,7 +236,7 @@ export default function FamiliesPage() {
               '&:hover': { bgcolor: 'rgba(255,255,255,0.9)' },
             }}
           >
-            Tạo Family
+            {familiesT.createFamily}
           </Button>
         </Box>
       </Paper>
@@ -248,7 +250,7 @@ export default function FamiliesPage() {
       {/* Tabs */}
       <Paper sx={{ mb: 3 }}>
         <Tabs value={tabValue} onChange={(_, newValue) => setTabValue(newValue)}>
-          <Tab label={`Families của tôi (${families.length})`} />
+          <Tab label={`${familiesT.myFamilies} (${families.length})`} />
           <Tab label={`Lời mời (${invitations.length})`} />
         </Tabs>
       </Paper>
@@ -259,13 +261,13 @@ export default function FamiliesPage() {
           <Paper sx={{ p: 6, textAlign: 'center' }}>
             <FamilyRestroom sx={{ fontSize: 80, color: 'text.secondary', mb: 2 }} />
             <Typography variant="h6" color="text.secondary" gutterBottom>
-              Bạn chưa có family nào
+              {familiesT.noFamilies}
             </Typography>
             <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-              Tạo family để chia sẻ hồ sơ bé yêu, albums và kỷ niệm với người thân
+              {familiesT.noFamiliesDesc}
             </Typography>
             <Button variant="contained" startIcon={<Add />} onClick={() => setCreateModalOpen(true)}>
-              Tạo Family Đầu Tiên
+              {familiesT.createFamily}
             </Button>
           </Paper>
         ) : (
@@ -301,12 +303,12 @@ export default function FamiliesPage() {
                             {family.name}
                           </Typography>
                           <Typography variant="caption" color="text.secondary">
-                            Chủ family: {family.owner?.display_name}
+                            {familiesT.createdBy}: {family.owner?.display_name}
                           </Typography>
                         </Box>
-                        {isOwner && <Chip label="Owner" color="primary" size="small" />}
+                        {isOwner && <Chip label={familiesT.roles.owner} color="primary" size="small" />}
                         {userMembership?.role === 'admin' && !isOwner && (
-                          <Chip label="Admin" color="secondary" size="small" />
+                          <Chip label={familiesT.roles.admin} color="secondary" size="small" />
                         )}
                       </Box>
 
@@ -319,7 +321,7 @@ export default function FamiliesPage() {
                       <Box display="flex" gap={2} flexWrap="wrap">
                         <Chip
                           icon={<People />}
-                          label={`${family._count?.members || 0} thành viên`}
+                          label={`${family._count?.members || 0} ${familiesT.members}`}
                           size="small"
                           variant="outlined"
                         />
@@ -340,7 +342,7 @@ export default function FamiliesPage() {
 
                     <CardActions sx={{ justifyContent: 'space-between', px: 2, pb: 2 }}>
                       <Button size="small" onClick={() => router.push(`/families/${family.id}`)}>
-                        Xem Chi Tiết
+                        {familiesT.viewFamily}
                       </Button>
                       {isOwner ? (
                         <Box>
@@ -369,7 +371,7 @@ export default function FamiliesPage() {
                           startIcon={<ExitToApp />}
                           onClick={() => handleLeaveFamily(family.id, family.name)}
                         >
-                          Rời Family
+                          {familiesT.leave}
                         </Button>
                       )}
                     </CardActions>
@@ -387,7 +389,7 @@ export default function FamiliesPage() {
           <Paper sx={{ p: 6, textAlign: 'center' }}>
             <PersonAdd sx={{ fontSize: 80, color: 'text.secondary', mb: 2 }} />
             <Typography variant="h6" color="text.secondary">
-              Không có lời mời nào
+              {familiesT.sendInvite}
             </Typography>
           </Paper>
         ) : (
@@ -426,11 +428,11 @@ export default function FamiliesPage() {
 
       {/* Create Family Modal */}
       <Dialog open={createModalOpen} onClose={() => !creating && setCreateModalOpen(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>Tạo Family Mới</DialogTitle>
+        <DialogTitle>{familiesT.createFamilyTitle}</DialogTitle>
         <DialogContent>
           <TextField
             fullWidth
-            label="Tên Family"
+            label={familiesT.form.name}
             value={familyName}
             onChange={(e) => setFamilyName(e.target.value)}
             sx={{ mt: 2, mb: 2 }}
@@ -438,7 +440,7 @@ export default function FamiliesPage() {
           />
           <TextField
             fullWidth
-            label="Mô tả"
+            label={familiesT.form.description}
             value={familyDescription}
             onChange={(e) => setFamilyDescription(e.target.value)}
             multiline
@@ -447,10 +449,10 @@ export default function FamiliesPage() {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setCreateModalOpen(false)} disabled={creating}>
-            Hủy
+            {familiesT.cancel}
           </Button>
           <Button onClick={handleCreateFamily} variant="contained" disabled={creating || !familyName.trim()}>
-            {creating ? <CircularProgress size={24} /> : 'Tạo'}
+            {creating ? <CircularProgress size={24} /> : familiesT.save}
           </Button>
         </DialogActions>
       </Dialog>
