@@ -9,12 +9,21 @@ export const photosTranslations = {
     // List view
     allPhotos: 'Tất Cả Ảnh',
     photosCount: 'ảnh',
+    photos: 'ảnh',
+    totalPhotos: 'Tổng số ảnh',
+    showing: 'Đang hiển thị',
+    albums: 'Albums',
+    kids: 'Bé yêu',
     noPhotos: 'Chưa có ảnh',
     noPhotosDesc: 'Tải ảnh đầu tiên lên để bắt đầu',
+    uploadFirstPhoto: 'Tải ảnh đầu tiên',
+    loading: 'Đang tải...',
+    loadMore: 'Xem thêm',
     
     // Filters
     filterByKid: 'Lọc theo bé',
     filterByAlbum: 'Lọc theo album',
+    all: 'Tất cả',
     allKids: 'Tất cả bé',
     allAlbums: 'Tất cả albums',
     sortBy: 'Sắp xếp theo',
@@ -69,6 +78,7 @@ export const photosTranslations = {
     // Delete modal
     deletePhotoTitle: 'Xóa Ảnh',
     deletePhotoConfirm: 'Bạn có chắc chắn muốn xóa ảnh này?',
+    deleteConfirm: 'Bạn có chắc muốn xóa ảnh này?',
     deletePhotosTitle: 'Xóa Nhiều Ảnh',
     deletePhotosConfirm: 'Bạn có chắc chắn muốn xóa {count} ảnh đã chọn?',
     
@@ -96,12 +106,21 @@ export const photosTranslations = {
     // List view
     allPhotos: 'All Photos',
     photosCount: 'photos',
+    photos: 'photos',
+    totalPhotos: 'Total photos',
+    showing: 'Showing',
+    albums: 'Albums',
+    kids: 'Kids',
     noPhotos: 'No photos yet',
     noPhotosDesc: 'Upload your first photo to get started',
+    uploadFirstPhoto: 'Upload first photo',
+    loading: 'Loading...',
+    loadMore: 'Load more',
     
     // Filters
     filterByKid: 'Filter by kid',
     filterByAlbum: 'Filter by album',
+    all: 'All',
     allKids: 'All kids',
     allAlbums: 'All albums',
     sortBy: 'Sort by',
@@ -156,6 +175,7 @@ export const photosTranslations = {
     // Delete modal
     deletePhotoTitle: 'Delete Photo',
     deletePhotoConfirm: 'Are you sure you want to delete this photo?',
+    deleteConfirm: 'Are you sure you want to delete this photo?',
     deletePhotosTitle: 'Delete Multiple Photos',
     deletePhotosConfirm: 'Are you sure you want to delete {count} selected photos?',
     
@@ -183,12 +203,21 @@ export const photosTranslations = {
     // List view
     allPhotos: 'すべての写真',
     photosCount: '枚',
+    photos: '枚',
+    totalPhotos: '合計写真',
+    showing: '表示中',
+    albums: 'アルバム',
+    kids: '子供',
     noPhotos: 'まだ写真がありません',
     noPhotosDesc: '最初の写真をアップロードして始めましょう',
+    uploadFirstPhoto: '最初の写真をアップロード',
+    loading: '読み込み中...',
+    loadMore: 'もっと見る',
     
     // Filters
     filterByKid: '子供で絞り込み',
     filterByAlbum: 'アルバムで絞り込み',
+    all: 'すべて',
     allKids: 'すべての子供',
     allAlbums: 'すべてのアルバム',
     sortBy: '並び替え',
@@ -243,6 +272,7 @@ export const photosTranslations = {
     // Delete modal
     deletePhotoTitle: '写真を削除',
     deletePhotoConfirm: 'この写真を削除してもよろしいですか？',
+    deleteConfirm: 'この写真を削除してもよろしいですか？',
     deletePhotosTitle: '複数の写真を削除',
     deletePhotosConfirm: '選択した{count}枚の写真を削除してもよろしいですか？',
     

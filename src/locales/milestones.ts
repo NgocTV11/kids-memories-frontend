@@ -10,7 +10,10 @@ export const milestonesTranslations = {
     allMilestones: 'Tất Cả Mốc',
     milestonesCount: 'mốc',
     noMilestones: 'Chưa có mốc phát triển',
+    noMilestonesForKid: 'Bé này chưa có mốc phát triển nào',
     noMilestonesDesc: 'Thêm mốc đầu tiên để ghi lại khoảnh khắc đặc biệt',
+    addFirstMilestone: 'Thêm mốc đầu tiên',
+    total: 'Tổng số',
     
     // Filters
     filterByKid: 'Lọc theo bé',
@@ -20,6 +23,7 @@ export const milestonesTranslations = {
     
     // Categories
     categories: {
+      first_time: 'Lần đầu',
       physical: 'Thể chất',
       cognitive: 'Nhận thức',
       social: 'Xã hội',
@@ -52,6 +56,7 @@ export const milestonesTranslations = {
     editMilestoneTitle: 'Chỉnh Sửa Mốc',
     deleteMilestoneTitle: 'Xóa Mốc',
     deleteMilestoneConfirm: 'Bạn có chắc chắn muốn xóa mốc phát triển này?',
+    deleteConfirm: 'Bạn có chắc muốn xóa milestone này?',
     
     // Form fields
     form: {
@@ -117,7 +122,10 @@ export const milestonesTranslations = {
     allMilestones: 'All Milestones',
     milestonesCount: 'milestones',
     noMilestones: 'No milestones yet',
+    noMilestonesForKid: 'No milestones for this kid yet',
     noMilestonesDesc: 'Add your first milestone to record special moments',
+    addFirstMilestone: 'Add first milestone',
+    total: 'Total',
     
     // Filters
     filterByKid: 'Filter by kid',
@@ -127,6 +135,7 @@ export const milestonesTranslations = {
     
     // Categories
     categories: {
+      first_time: 'First Time',
       physical: 'Physical',
       cognitive: 'Cognitive',
       social: 'Social',
@@ -159,6 +168,7 @@ export const milestonesTranslations = {
     editMilestoneTitle: 'Edit Milestone',
     deleteMilestoneTitle: 'Delete Milestone',
     deleteMilestoneConfirm: 'Are you sure you want to delete this milestone?',
+    deleteConfirm: 'Are you sure you want to delete this milestone?',
     
     // Form fields
     form: {
@@ -224,7 +234,10 @@ export const milestonesTranslations = {
     allMilestones: 'すべてのマイルストーン',
     milestonesCount: '件',
     noMilestones: 'まだマイルストーンがありません',
+    noMilestonesForKid: 'この子供のマイルストーンはまだありません',
     noMilestonesDesc: '最初のマイルストーンを追加して、特別な瞬間を記録しましょう',
+    addFirstMilestone: '最初のマイルストーンを追加',
+    total: '合計',
     
     // Filters
     filterByKid: '子供で絞り込み',
@@ -234,6 +247,7 @@ export const milestonesTranslations = {
     
     // Categories
     categories: {
+      first_time: '初めて',
       physical: '身体的',
       cognitive: '認知的',
       social: '社会的',
@@ -266,6 +280,7 @@ export const milestonesTranslations = {
     editMilestoneTitle: 'マイルストーンを編集',
     deleteMilestoneTitle: 'マイルストーンを削除',
     deleteMilestoneConfirm: 'このマイルストーンを削除してもよろしいですか？',
+    deleteConfirm: 'このマイルストーンを削除してもよろしいですか？',
     
     // Form fields
     form: {
