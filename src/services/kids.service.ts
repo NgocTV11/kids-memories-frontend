@@ -99,6 +99,25 @@ class KidsService {
     const response = await apiClient.get<GrowthData[]>(`/kids/${kidId}/growth`);
     return response.data;
   }
+
+  /**
+   * Upload avatar for kid
+   */
+  async uploadAvatar(kidId: string, file: File): Promise<{ message: string; kid: Kid }> {
+    const formData = new FormData();
+    formData.append('avatar', file);
+
+    const response = await apiClient.post<{ message: string; kid: Kid }>(
+      `/kids/${kidId}/avatar`,
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }
+    );
+    return response.data;
+  }
 }
 
 export const kidsService = new KidsService();

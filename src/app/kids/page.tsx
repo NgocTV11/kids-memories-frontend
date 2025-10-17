@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { kidsService, Kid } from '@/services/kids.service';
 import {
@@ -21,6 +21,7 @@ import {
   Tooltip,
   useTheme,
   useMediaQuery,
+  Badge,
 } from '@mui/material';
 import {
   Add,
@@ -33,6 +34,7 @@ import {
   Height,
   FitnessCenter,
   Favorite,
+  PhotoCamera,
 } from '@mui/icons-material';
 import { useRouter } from 'next/navigation';
 import dayjs from 'dayjs';
@@ -48,6 +50,8 @@ export default function KidsPage() {
   const [error, setError] = useState<string | null>(null);
   const [openModal, setOpenModal] = useState(false);
   const [selectedKid, setSelectedKid] = useState<Kid | undefined>(undefined);
+  const [uploadingAvatar, setUploadingAvatar] = useState<string | null>(null);
+  const fileInputRefs = useRef<{ [key: string]: HTMLInputElement | null }>({});
 
   useEffect(() => {
     loadKids();
@@ -98,6 +102,49 @@ export default function KidsPage() {
     setOpenModal(false);
     setSelectedKid(undefined);
     loadKids();
+  };
+
+  const handleAvatarClick = (kidId: string, e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent card click
+    fileInputRefs.current[kidId]?.click();
+  };
+
+  const handleAvatarChange = async (kidId: string, e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.match(/image\/(jpeg|jpg|png|webp)/)) {
+      setError('Chỉ chấp nhận file ảnh (JPG, PNG, WEBP)');
+      return;
+    }
+
+    // Validate file size (5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      setError('Kích thước file không được vượt quá 5MB');
+      return;
+    }
+
+    try {
+      setUploadingAvatar(kidId);
+      setError(null);
+      const result = await kidsService.uploadAvatar(kidId, file);
+      
+      // Update kid in list
+      setKids(prevKids =>
+        prevKids.map(k => k.id === kidId ? { ...k, profile_picture: result.kid.profile_picture } : k)
+      );
+      
+      // Reset file input
+      if (fileInputRefs.current[kidId]) {
+        fileInputRefs.current[kidId]!.value = '';
+      }
+    } catch (err: any) {
+      console.error('Error uploading avatar:', err);
+      setError(err.response?.data?.message || 'Không thể tải ảnh lên');
+    } finally {
+      setUploadingAvatar(null);
+    }
   };
 
   const handleCardClick = (kidId: string) => {
@@ -455,19 +502,61 @@ export default function KidsPage() {
                     }}
                   >
                     <CardContent sx={{ p: { xs: 2, sm: 2.5, md: 3 } }} onClick={() => handleCardClick(kid.id)}>
+                      {/* Hidden file input for avatar upload */}
+                      <input
+                        ref={(el) => { fileInputRefs.current[kid.id] = el; }}
+                        type="file"
+                        accept="image/jpeg,image/jpg,image/png,image/webp"
+                        style={{ display: 'none' }}
+                        onChange={(e) => handleAvatarChange(kid.id, e)}
+                      />
+                      
                       {/* Avatar and Name */}
                       <Box sx={{ display: 'flex', alignItems: 'center', mb: { xs: 2, sm: 2.5, md: 3 } }}>
-                        <Avatar
-                          sx={{
-                            width: { xs: 56, sm: 64, md: 70 },
-                            height: { xs: 56, sm: 64, md: 70 },
-                            background: `linear-gradient(135deg, ${getGenderColor(kid.gender)}, ${getGenderColor(kid.gender)}dd)`,
-                            mr: { xs: 1.5, sm: 2 },
-                            boxShadow: `0 4px 12px ${getGenderColor(kid.gender)}40`,
-                          }}
+                        <Badge
+                          overlap="circular"
+                          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                          badgeContent={
+                            uploadingAvatar === kid.id ? (
+                              <CircularProgress size={20} sx={{ color: 'white' }} />
+                            ) : (
+                              <Tooltip title="Thay đổi ảnh đại diện">
+                                <IconButton
+                                  size="small"
+                                  onClick={(e) => handleAvatarClick(kid.id, e)}
+                                  sx={{
+                                    bgcolor: 'primary.main',
+                                    color: 'white',
+                                    width: 28,
+                                    height: 28,
+                                    '&:hover': {
+                                      bgcolor: 'primary.dark',
+                                    },
+                                  }}
+                                >
+                                  <PhotoCamera sx={{ fontSize: 16 }} />
+                                </IconButton>
+                              </Tooltip>
+                            )
+                          }
                         >
-                          <ChildCare sx={{ fontSize: { xs: 28, sm: 32, md: 36 } }} />
-                        </Avatar>
+                          <Avatar
+                            src={kid.profile_picture || undefined}
+                            sx={{
+                              width: { xs: 56, sm: 64, md: 70 },
+                              height: { xs: 56, sm: 64, md: 70 },
+                              background: kid.profile_picture 
+                                ? 'transparent' 
+                                : `linear-gradient(135deg, ${getGenderColor(kid.gender)}, ${getGenderColor(kid.gender)}dd)`,
+                              mr: { xs: 1.5, sm: 2 },
+                              boxShadow: `0 4px 12px ${getGenderColor(kid.gender)}40`,
+                              cursor: 'pointer',
+                            }}
+                            onClick={(e) => handleAvatarClick(kid.id, e)}
+                          >
+                            {!kid.profile_picture && <ChildCare sx={{ fontSize: { xs: 28, sm: 32, md: 36 } }} />}
+                          </Avatar>
+                        </Badge>
                         <Box sx={{ flex: 1 }}>
                           <Typography 
                             variant={isMobile ? "subtitle1" : "h6"} 

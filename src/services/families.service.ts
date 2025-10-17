@@ -53,6 +53,7 @@ export interface UpdateFamilyDto {
 export interface InviteMemberDto {
   user_id: string;
   role: 'owner' | 'admin' | 'member';
+  relationship?: string;
 }
 
 class FamiliesService {

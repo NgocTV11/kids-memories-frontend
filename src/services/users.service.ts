@@ -66,6 +66,19 @@ class UsersService {
 
     return response.data;
   }
+
+  /**
+   * Search users by name or email
+   */
+  async searchUsers(query: string): Promise<User[]> {
+    if (!query || query.trim().length < 2) {
+      return [];
+    }
+    const response = await apiClient.get<User[]>(`/users/search`, {
+      params: { q: query },
+    });
+    return response.data;
+  }
 }
 
 export const usersService = new UsersService();

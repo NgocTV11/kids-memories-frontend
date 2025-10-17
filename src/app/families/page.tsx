@@ -44,6 +44,7 @@ import {
 } from '@mui/icons-material';
 import { familiesService, Family, FamilyMember } from '@/services/families.service';
 import { useAuthStore } from '@/store/auth.store';
+import { InviteMemberModal } from '@/components/families/InviteMemberModal';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -453,6 +454,14 @@ export default function FamiliesPage() {
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* Invite Member Modal */}
+      <InviteMemberModal
+        open={inviteModalOpen}
+        familyId={selectedFamilyId}
+        onClose={() => setInviteModalOpen(false)}
+        onSuccess={loadData}
+      />
     </Container>
   );
 }
