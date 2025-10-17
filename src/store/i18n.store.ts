@@ -11,6 +11,7 @@ import { getPhotosTranslation } from '@/locales/photos';
 import { getAuthTranslation } from '@/locales/auth';
 import { getAdminTranslation } from '@/locales/admin';
 import { getProfileTranslation } from '@/locales/profile';
+import { getLandingTranslation } from '@/locales/landing';
 
 interface I18nState {
   locale: Locale;
@@ -24,6 +25,7 @@ interface I18nState {
   auth: ReturnType<typeof getAuthTranslation>;
   admin: ReturnType<typeof getAdminTranslation>;
   profile: ReturnType<typeof getProfileTranslation>;
+  landing: ReturnType<typeof getLandingTranslation>;
   setLocale: (locale: Locale) => void;
 }
 
@@ -41,6 +43,7 @@ export const useI18nStore = create<I18nState>()(
       auth: getAuthTranslation(defaultLocale),
       admin: getAdminTranslation(defaultLocale),
       profile: getProfileTranslation(defaultLocale),
+      landing: getLandingTranslation(defaultLocale),
       setLocale: (locale: Locale) => {
         set({
           locale,
@@ -54,15 +57,16 @@ export const useI18nStore = create<I18nState>()(
           auth: getAuthTranslation(locale),
           admin: getAdminTranslation(locale),
           profile: getProfileTranslation(locale),
+          landing: getLandingTranslation(locale),
         });
       },
     }),
     {
       name: 'i18n-storage',
-      version: 3, // Increment version to force reload with profile keys
+      version: 4, // Increment version to force reload with landing keys
       migrate: (persistedState: any, version: number) => {
         // If old version, reset to defaults
-        if (version < 3) {
+        if (version < 4) {
           const locale = persistedState?.locale || defaultLocale;
           return {
             locale,
@@ -76,6 +80,7 @@ export const useI18nStore = create<I18nState>()(
             auth: getAuthTranslation(locale),
             admin: getAdminTranslation(locale),
             profile: getProfileTranslation(locale),
+            landing: getLandingTranslation(locale),
           };
         }
         return persistedState;
