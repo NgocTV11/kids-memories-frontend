@@ -115,6 +115,16 @@ export const photosTranslations = {
     deleteError: 'Không thể xóa ảnh',
     downloadSuccess: 'Đã tải về ảnh',
     downloadError: 'Không thể tải về ảnh',
+    
+    // Photo detail modal
+    photoDetail: {
+      likes: 'lượt thích',
+      comments: 'bình luận',
+      views: 'lượt xem',
+      noComments: 'Chưa có bình luận nào',
+      addCommentPlaceholder: 'Thêm bình luận...',
+      commentError: 'Không thể thêm bình luận. Vui lòng thử lại.',
+    },
   },
   en: {
     // Page title
@@ -230,6 +240,16 @@ export const photosTranslations = {
     deleteError: 'Failed to delete photo',
     downloadSuccess: 'Photo downloaded',
     downloadError: 'Failed to download photo',
+    
+    // Photo detail modal
+    photoDetail: {
+      likes: 'likes',
+      comments: 'comments',
+      views: 'views',
+      noComments: 'No comments yet',
+      addCommentPlaceholder: 'Add a comment...',
+      commentError: 'Failed to add comment. Please try again.',
+    },
   },
   ja: {
     // Page title
@@ -345,6 +365,16 @@ export const photosTranslations = {
     deleteError: '写真の削除に失敗しました',
     downloadSuccess: '写真がダウンロードされました',
     downloadError: '写真のダウンロードに失敗しました',
+    
+    // Photo detail modal
+    photoDetail: {
+      likes: 'いいね',
+      comments: 'コメント',
+      views: '閲覧数',
+      noComments: 'コメントがまだありません',
+      addCommentPlaceholder: 'コメントを追加...',
+      commentError: 'コメントの追加に失敗しました。もう一度お試しください。',
+    },
   },
 };
 

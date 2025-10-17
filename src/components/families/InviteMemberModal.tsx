@@ -25,6 +25,7 @@ import {
 import { Person, Search } from '@mui/icons-material';
 import { usersService, User } from '@/services/users.service';
 import { familiesService, InviteMemberDto } from '@/services/families.service';
+import { useI18nStore } from '@/store/i18n.store';
 
 interface InviteMemberModalProps {
   open: boolean;
@@ -34,6 +35,7 @@ interface InviteMemberModalProps {
 }
 
 export function InviteMemberModal({ open, familyId, onClose, onSuccess }: InviteMemberModalProps) {
+  const { families: familiesT } = useI18nStore();
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<User[]>([]);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
@@ -92,8 +94,8 @@ export function InviteMemberModal({ open, familyId, onClose, onSuccess }: Invite
       onSuccess();
       handleClose();
     } catch (err: any) {
-      console.error('Invite error:', err);
-      setError(err.response?.data?.message || 'Không thể mời thành viên');
+      console.error('Failed to invite member:', err);
+      setError(err.response?.data?.message || familiesT.inviteModal.inviteError);
     } finally {
       setInviting(false);
     }
@@ -110,8 +112,8 @@ export function InviteMemberModal({ open, familyId, onClose, onSuccess }: Invite
   };
 
   return (
-    <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
-      <DialogTitle>Mời Thành Viên Vào Family</DialogTitle>
+    <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
+      <DialogTitle>{familiesT.inviteModal.title}</DialogTitle>
       <DialogContent>
         {error && (
           <Alert severity="error" sx={{ mb: 2 }}>
@@ -148,29 +150,29 @@ export function InviteMemberModal({ open, familyId, onClose, onSuccess }: Invite
                 onClick={() => setSelectedUser(null)}
                 sx={{ ml: 'auto' }}
               >
-                Thay đổi
+                {familiesT.inviteModal.changeUser}
               </Button>
             </Box>
 
             {/* Role Selection */}
             <FormControl fullWidth sx={{ mb: 2 }}>
-              <InputLabel>Vai trò</InputLabel>
+              <InputLabel>{familiesT.inviteModal.roleLabel}</InputLabel>
               <Select
                 value={role}
-                label="Vai trò"
+                label={familiesT.inviteModal.roleLabel}
                 onChange={(e) => setRole(e.target.value as 'admin' | 'member')}
               >
-                <MenuItem value="member">Thành viên</MenuItem>
-                <MenuItem value="admin">Quản trị viên</MenuItem>
+                <MenuItem value="member">{familiesT.inviteModal.roleMember}</MenuItem>
+                <MenuItem value="admin">{familiesT.inviteModal.roleAdmin}</MenuItem>
               </Select>
             </FormControl>
 
             {/* Relationship Input */}
             <FormControl fullWidth>
-              <InputLabel>Mối quan hệ</InputLabel>
+              <InputLabel>{familiesT.inviteModal.relationshipLabel}</InputLabel>
               <Select
                 value={relationship}
-                label="Mối quan hệ"
+                label={familiesT.inviteModal.relationshipLabel}
                 onChange={(e) => setRelationship(e.target.value)}
                 displayEmpty
               >
@@ -191,7 +193,7 @@ export function InviteMemberModal({ open, familyId, onClose, onSuccess }: Invite
             <TextField
               fullWidth
               size="small"
-              placeholder="Nhập mối quan hệ khác..."
+              placeholder={familiesT.inviteModal.relationshipPlaceholder}
               value={relationship}
               onChange={(e) => setRelationship(e.target.value)}
               sx={{ mt: 1 }}
@@ -202,7 +204,7 @@ export function InviteMemberModal({ open, familyId, onClose, onSuccess }: Invite
             {/* Search Box */}
             <TextField
               fullWidth
-              placeholder="Tìm theo tên hoặc email..."
+              placeholder={familiesT.inviteModal.searchPlaceholder}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               InputProps={{
@@ -246,13 +248,13 @@ export function InviteMemberModal({ open, familyId, onClose, onSuccess }: Invite
 
             {searchQuery.trim().length >= 2 && !searching && searchResults.length === 0 && (
               <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center', py: 2 }}>
-                Không tìm thấy người dùng nào
+                {familiesT.inviteModal.noResults}
               </Typography>
             )}
 
             {searchQuery.trim().length < 2 && (
               <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center', py: 2 }}>
-                Nhập ít nhất 2 ký tự để tìm kiếm
+                {familiesT.inviteModal.searchPlaceholder}
               </Typography>
             )}
           </>
@@ -260,14 +262,14 @@ export function InviteMemberModal({ open, familyId, onClose, onSuccess }: Invite
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose} disabled={inviting}>
-          Hủy
+          {familiesT.inviteModal.cancel}
         </Button>
         <Button
           onClick={handleInvite}
           variant="contained"
           disabled={!selectedUser || inviting}
         >
-          {inviting ? <CircularProgress size={24} /> : 'Mời'}
+          {inviting ? <CircularProgress size={24} /> : familiesT.inviteModal.inviteButton}
         </Button>
       </DialogActions>
     </Dialog>

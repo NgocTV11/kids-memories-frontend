@@ -27,6 +27,7 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import 'dayjs/locale/vi';
 import { Photo, photosService, PhotoComment } from '@/services/photos.service';
 import { getImageUrl } from '@/utils/image';
+import { useI18nStore } from '@/store/i18n.store';
 
 dayjs.extend(relativeTime);
 dayjs.locale('vi');
@@ -39,6 +40,7 @@ interface PhotoDetailModalProps {
 }
 
 export function PhotoDetailModal({ open, photo, onClose, onPhotoUpdate }: PhotoDetailModalProps) {
+  const { photos: photosT } = useI18nStore();
   const [isLiked, setIsLiked] = useState(false);
   const [likesCount, setLikesCount] = useState(0);
   const [commentsCount, setCommentsCount] = useState(0);
@@ -207,7 +209,7 @@ export function PhotoDetailModal({ open, photo, onClose, onPhotoUpdate }: PhotoD
       }
     } catch (error) {
       console.error('Error submitting comment:', error);
-      alert('Không thể thêm bình luận. Vui lòng thử lại.');
+      alert(photosT.photoDetail.commentError);
     } finally {
       setSubmitting(false);
     }
@@ -332,13 +334,13 @@ export function PhotoDetailModal({ open, photo, onClose, onPhotoUpdate }: PhotoD
 
             <Box sx={{ display: 'flex', gap: 2, mt: 1 }}>
               <Typography variant="body2">
-                <strong>{likesCount}</strong> lượt thích
+                <strong>{likesCount}</strong> {photosT.photoDetail.likes}
               </Typography>
               <Typography variant="body2">
-                <strong>{commentsCount}</strong> bình luận
+                <strong>{commentsCount}</strong> {photosT.photoDetail.comments}
               </Typography>
               <Typography variant="body2">
-                <strong>{viewCount}</strong> lượt xem
+                <strong>{viewCount}</strong> {photosT.photoDetail.views}
               </Typography>
             </Box>
           </Box>
@@ -351,7 +353,7 @@ export function PhotoDetailModal({ open, photo, onClose, onPhotoUpdate }: PhotoD
               </Box>
             ) : comments.length === 0 ? (
               <Typography variant="body2" color="text.secondary" textAlign="center" sx={{ py: 4 }}>
-                Chưa có bình luận nào
+                {photosT.photoDetail.noComments}
               </Typography>
             ) : (
               comments.map((comment) => (
@@ -383,7 +385,7 @@ export function PhotoDetailModal({ open, photo, onClose, onPhotoUpdate }: PhotoD
               <TextField
                 fullWidth
                 size="small"
-                placeholder="Thêm bình luận..."
+                placeholder={photosT.photoDetail.addCommentPlaceholder}
                 value={newComment}
                 onChange={(e) => setNewComment(e.target.value)}
                 onKeyPress={(e) => {
