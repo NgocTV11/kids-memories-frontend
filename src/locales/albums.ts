@@ -10,7 +10,9 @@ export const albumsTranslations = {
     myAlbums: 'Albums Của Tôi',
     albumsCount: 'albums',
     noAlbums: 'Chưa có album nào',
+    noAlbumsForKid: 'Bé này chưa có album nào',
     noAlbumsDesc: 'Tạo album đầu tiên để lưu trữ những khoảnh khắc đáng nhớ',
+    createFirstAlbum: 'Tạo album đầu tiên',
     
     // Buttons
     createAlbum: 'Tạo Album',
@@ -21,6 +23,8 @@ export const albumsTranslations = {
     
     // Filters
     filterByKid: 'Lọc theo bé',
+    all: 'Tất cả',
+    allAlbums: 'Tất cả albums',
     allKids: 'Tất cả bé',
     privacyFilter: 'Quyền riêng tư',
     allPrivacy: 'Tất cả',
@@ -31,6 +35,7 @@ export const albumsTranslations = {
       family: 'Gia đình',
       public: 'Công khai',
     },
+    private: 'Riêng tư',
     
     // Album card
     photos: 'ảnh',
@@ -92,7 +97,9 @@ export const albumsTranslations = {
     myAlbums: 'My Albums',
     albumsCount: 'albums',
     noAlbums: 'No albums yet',
+    noAlbumsForKid: 'No albums for this kid yet',
     noAlbumsDesc: 'Create your first album to store memorable moments',
+    createFirstAlbum: 'Create first album',
     
     // Buttons
     createAlbum: 'Create Album',
@@ -103,6 +110,8 @@ export const albumsTranslations = {
     
     // Filters
     filterByKid: 'Filter by kid',
+    all: 'All',
+    allAlbums: 'All albums',
     allKids: 'All kids',
     privacyFilter: 'Privacy',
     allPrivacy: 'All',
@@ -113,6 +122,7 @@ export const albumsTranslations = {
       family: 'Family',
       public: 'Public',
     },
+    private: 'Private',
     
     // Album card
     photos: 'photos',
@@ -174,7 +184,9 @@ export const albumsTranslations = {
     myAlbums: '私のアルバム',
     albumsCount: 'アルバム',
     noAlbums: 'まだアルバムがありません',
+    noAlbumsForKid: 'この子供のアルバムはまだありません',
     noAlbumsDesc: '最初のアルバムを作成して、思い出に残る瞬間を保存しましょう',
+    createFirstAlbum: '最初のアルバムを作成',
     
     // Buttons
     createAlbum: 'アルバム作成',
@@ -185,6 +197,8 @@ export const albumsTranslations = {
     
     // Filters
     filterByKid: '子供で絞り込み',
+    all: 'すべて',
+    allAlbums: 'すべてのアルバム',
     allKids: 'すべての子供',
     privacyFilter: 'プライバシー',
     allPrivacy: 'すべて',
@@ -195,6 +209,7 @@ export const albumsTranslations = {
       family: '家族',
       public: '公開',
     },
+    private: 'プライベート',
     
     // Album card
     photos: '枚',
