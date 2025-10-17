@@ -197,7 +197,7 @@ export function AppNavigation() {
                   }}
                 >
                   <AccountCircle sx={{ mr: 1 }} fontSize="small" />
-                  Thông tin cá nhân
+                  {t.myProfile}
                 </MenuItem>
                 <MenuItem onClick={handleLogout}>
                   <Logout sx={{ mr: 1 }} fontSize="small" />

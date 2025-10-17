@@ -2,6 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import { AppNavigation } from './AppNavigation';
+import { Footer } from '../Footer';
 import { Box } from '@mui/material';
 import { useAuthStore } from '@/store/auth.store';
 
@@ -25,9 +26,12 @@ export function AuthenticatedLayout({ children }: AuthenticatedLayoutProps) {
 
   // Đã đăng nhập, hiển thị navigation
   return (
-    <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', bgcolor: 'background.default' }}>
       <AppNavigation />
-      <Box>{children}</Box>
+      <Box component="main" sx={{ flex: 1 }}>
+        {children}
+      </Box>
+      <Footer />
     </Box>
   );
 }

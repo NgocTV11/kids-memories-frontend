@@ -64,6 +64,22 @@ export const common = {
     // Language
     language: 'Ngôn ngữ',
     changeLanguage: 'Đổi ngôn ngữ',
+    
+    // Footer
+    footer: {
+      copyright: '© 2025 Kids Memories. Bản quyền thuộc về chúng tôi.',
+      tagline: 'Lưu giữ những khoảnh khắc quý giá của người thân yêu',
+      privacyPolicy: 'Chính sách bảo mật',
+      termsOfService: 'Điều khoản dịch vụ',
+      contact: 'Liên hệ',
+      version: 'Phiên bản',
+      madeWith: 'Được phát triển với ❤️',
+    },
+    
+    // User Menu
+    myAccount: 'Tài khoản của tôi',
+    accountSettings: 'Cài đặt tài khoản',
+    myProfile: 'Thông tin cá nhân',
   },
   en: {
     // App
@@ -127,6 +143,22 @@ export const common = {
     // Language
     language: 'Language',
     changeLanguage: 'Change Language',
+    
+    // Footer
+    footer: {
+      copyright: '© 2025 Kids Memories. All rights reserved.',
+      tagline: 'Preserve precious moments of your loved ones',
+      privacyPolicy: 'Privacy Policy',
+      termsOfService: 'Terms of Service',
+      contact: 'Contact',
+      version: 'Version',
+      madeWith: 'Made with ❤️',
+    },
+    
+    // User Menu
+    myAccount: 'My Account',
+    accountSettings: 'Account Settings',
+    myProfile: 'My Profile',
   },
   ja: {
     // App
@@ -190,6 +222,22 @@ export const common = {
     // Language
     language: '言語',
     changeLanguage: '言語を変更',
+    
+    // Footer
+    footer: {
+      copyright: '© 2025 Kids Memories. All rights reserved.',
+      tagline: '大切な人の貴重な瞬間を保存',
+      privacyPolicy: 'プライバシーポリシー',
+      termsOfService: '利用規約',
+      contact: 'お問い合わせ',
+      version: 'バージョン',
+      madeWith: '❤️で開発',
+    },
+    
+    // User Menu
+    myAccount: 'マイアカウント',
+    accountSettings: 'アカウント設定',
+    myProfile: 'プロフィール',
   },
 };
 
