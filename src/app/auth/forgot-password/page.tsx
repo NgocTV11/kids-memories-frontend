@@ -16,9 +16,11 @@ import {
 import { Email, ArrowBack } from '@mui/icons-material';
 import Link from 'next/link';
 import { authService } from '@/services/auth.service';
+import { useI18nStore } from '@/store/i18n.store';
 
 export default function ForgotPasswordPage() {
   const router = useRouter();
+  const { auth: authT } = useI18nStore();
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -29,7 +31,7 @@ export default function ForgotPasswordPage() {
     e.preventDefault();
 
     if (!email.trim()) {
-      setError('Vui lòng nhập email');
+      setError(authT.forgotPasswordPage.emailRequired);
       return;
     }
 
@@ -45,7 +47,7 @@ export default function ForgotPasswordPage() {
       }
     } catch (err: any) {
       console.error('Forgot password error:', err);
-      setError(err.response?.data?.message || 'Có lỗi xảy ra, vui lòng thử lại');
+      setError(err.response?.data?.message || authT.forgotPasswordPage.errorMessage);
     } finally {
       setLoading(false);
     }
@@ -58,17 +60,17 @@ export default function ForgotPasswordPage() {
           <Box sx={{ textAlign: 'center', mb: 3 }}>
             <Email sx={{ fontSize: 64, color: 'primary.main', mb: 2 }} />
             <Typography variant="h5" fontWeight="bold" gutterBottom>
-              Kiểm tra email của bạn
+              {authT.forgotPasswordPage.successTitle}
             </Typography>
             <Typography color="text.secondary">
-              Nếu email <strong>{email}</strong> tồn tại trong hệ thống, bạn sẽ nhận được hướng dẫn đặt lại mật khẩu trong vài phút.
+              {authT.forgotPasswordPage.successMessage.replace('{email}', email)}
             </Typography>
           </Box>
 
           {resetUrl && (
             <Alert severity="info" sx={{ mb: 2 }}>
               <Typography variant="body2" gutterBottom>
-                <strong>Development Mode:</strong>
+                <strong>{authT.forgotPasswordPage.devMode}</strong>
               </Typography>
               <Typography variant="body2" sx={{ wordBreak: 'break-all' }}>
                 <MuiLink href={resetUrl} target="_blank" rel="noopener">
@@ -84,7 +86,7 @@ export default function ForgotPasswordPage() {
             startIcon={<ArrowBack />}
             onClick={() => router.push('/auth/login')}
           >
-            Quay lại đăng nhập
+            {authT.forgotPasswordPage.backToLogin}
           </Button>
         </Paper>
       </Container>
@@ -97,10 +99,10 @@ export default function ForgotPasswordPage() {
         <Box sx={{ textAlign: 'center', mb: 4 }}>
           <Email sx={{ fontSize: 64, color: 'primary.main', mb: 2 }} />
           <Typography variant="h4" fontWeight="bold" gutterBottom>
-            Quên mật khẩu?
+            {authT.forgotPasswordPage.title}
           </Typography>
           <Typography color="text.secondary">
-            Nhập email của bạn và chúng tôi sẽ gửi hướng dẫn đặt lại mật khẩu
+            {authT.forgotPasswordPage.subtitle}
           </Typography>
         </Box>
 
@@ -113,7 +115,7 @@ export default function ForgotPasswordPage() {
         <form onSubmit={handleSubmit}>
           <TextField
             fullWidth
-            label="Email"
+            label={authT.forgotPasswordPage.emailLabel}
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -131,14 +133,14 @@ export default function ForgotPasswordPage() {
             disabled={loading}
             sx={{ mb: 2 }}
           >
-            {loading ? <CircularProgress size={24} /> : 'Gửi hướng dẫn'}
+            {loading ? <CircularProgress size={24} /> : authT.forgotPasswordPage.submitButton}
           </Button>
 
           <Box sx={{ textAlign: 'center' }}>
             <Link href="/auth/login" passHref legacyBehavior>
               <MuiLink sx={{ display: 'inline-flex', alignItems: 'center', gap: 0.5 }}>
                 <ArrowBack fontSize="small" />
-                Quay lại đăng nhập
+                {authT.forgotPasswordPage.backToLogin}
               </MuiLink>
             </Link>
           </Box>

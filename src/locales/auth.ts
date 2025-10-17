@@ -76,6 +76,24 @@ export const authTranslations = {
       registering: 'Đang đăng ký...',
     },
     
+    // Forgot Password page
+    forgotPasswordPage: {
+      title: 'Quên mật khẩu?',
+      subtitle: 'Nhập email của bạn và chúng tôi sẽ gửi hướng dẫn đặt lại mật khẩu',
+      emailLabel: 'Email',
+      submitButton: 'Gửi hướng dẫn',
+      backToLogin: 'Quay lại đăng nhập',
+      
+      // Success state
+      successTitle: 'Kiểm tra email của bạn',
+      successMessage: 'Nếu email {email} tồn tại trong hệ thống, bạn sẽ nhận được hướng dẫn đặt lại mật khẩu trong vài phút.',
+      devMode: 'Development Mode:',
+      
+      // Errors
+      emailRequired: 'Vui lòng nhập email',
+      errorMessage: 'Có lỗi xảy ra, vui lòng thử lại',
+    },
+    
     // Validation messages
     validation: {
       emailRequired: 'Email là bắt buộc',
@@ -169,6 +187,24 @@ export const authTranslations = {
       registering: 'Registering...',
     },
     
+    // Forgot Password page
+    forgotPasswordPage: {
+      title: 'Forgot password?',
+      subtitle: 'Enter your email and we\'ll send you reset instructions',
+      emailLabel: 'Email',
+      submitButton: 'Send instructions',
+      backToLogin: 'Back to login',
+      
+      // Success state
+      successTitle: 'Check your email',
+      successMessage: 'If the email {email} exists in our system, you will receive password reset instructions in a few minutes.',
+      devMode: 'Development Mode:',
+      
+      // Errors
+      emailRequired: 'Please enter your email',
+      errorMessage: 'An error occurred, please try again',
+    },
+    
     // Validation messages
     validation: {
       emailRequired: 'Email is required',
@@ -260,6 +296,24 @@ export const authTranslations = {
       haveAccount: 'すでにアカウントをお持ちですか？',
       signIn: 'サインイン',
       registering: '登録中...',
+    },
+    
+    // Forgot Password page
+    forgotPasswordPage: {
+      title: 'パスワードをお忘れですか？',
+      subtitle: 'メールアドレスを入力してください。リセット手順をお送りします',
+      emailLabel: 'メール',
+      submitButton: '手順を送信',
+      backToLogin: 'ログインに戻る',
+      
+      // Success state
+      successTitle: 'メールを確認してください',
+      successMessage: 'メール {email} がシステムに存在する場合、数分以内にパスワードリセットの手順が届きます。',
+      devMode: '開発モード：',
+      
+      // Errors
+      emailRequired: 'メールアドレスを入力してください',
+      errorMessage: 'エラーが発生しました。もう一度お試しください',
     },
     
     // Validation messages
