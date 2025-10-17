@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { useAuthStore } from '@/store/auth.store';
+import { useI18nStore } from '@/store/i18n.store';
 import { kidsService, Kid } from '@/services/kids.service';
 import { milestonesService, Milestone } from '@/services/milestones.service';
 import { statsService } from '@/services/stats.service';
@@ -44,6 +45,7 @@ export default function DashboardPage() {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'md'));
   const { user, logout } = useAuthStore();
+  const { dashboard: dashboardT, kids: kidsT } = useI18nStore();
   
   const [stats, setStats] = useState({
     kids: 0,
@@ -99,35 +101,35 @@ export default function DashboardPage() {
 
   const statsCards = [
     {
-      title: 'Bé yêu',
+      title: dashboardT.stats.kids,
       value: stats.kids,
       icon: <ChildCare sx={{ fontSize: 40 }} />,
       color: '#2196f3',
       action: () => router.push('/kids'),
     },
     {
-      title: 'Albums',
+      title: dashboardT.stats.albums,
       value: stats.albums,
       icon: <PhotoAlbum sx={{ fontSize: 40 }} />,
       color: '#4caf50',
       action: () => router.push('/albums'),
     },
     {
-      title: 'Photos',
+      title: dashboardT.stats.photos,
       value: stats.photos,
       icon: <PhotoIcon sx={{ fontSize: 40 }} />,
       color: '#ff9800',
       action: () => router.push('/photos'),
     },
     {
-      title: 'Milestones',
+      title: dashboardT.stats.milestones,
       value: stats.milestones,
       icon: <Celebration sx={{ fontSize: 40 }} />,
       color: '#9c27b0',
       action: () => router.push('/milestones'),
     },
     {
-      title: 'Families',
+      title: dashboardT.stats.families,
       value: stats.families,
       icon: <FamilyRestroom sx={{ fontSize: 40 }} />,
       color: '#FF6B6B',
@@ -220,7 +222,7 @@ export default function DashboardPage() {
                   sx={{ mb: 0.5 }}
                   noWrap={isMobile}
                 >
-                  👋 Xin chào, {user?.display_name}!
+                  👋 {dashboardT.greeting}, {user?.display_name}!
                 </Typography>
                 <Typography 
                   variant={isMobile ? "caption" : "body1"} 
@@ -258,7 +260,7 @@ export default function DashboardPage() {
                   },
                 }}
               >
-                Đăng xuất
+                {dashboardT.logout}
               </Button>
             )}
           </Box>
@@ -376,7 +378,7 @@ export default function DashboardPage() {
           >
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: { xs: 2, sm: 3 } }}>
               <Typography variant={isMobile ? "subtitle1" : "h5"} fontWeight="bold" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                👶 Bé yêu của bạn
+                👶 {dashboardT.recentKids}
               </Typography>
               <Button
                 variant="contained"
@@ -388,7 +390,7 @@ export default function DashboardPage() {
                   fontSize: { xs: '0.75rem', sm: '0.875rem' },
                 }}
               >
-                {isMobile ? 'Tất cả' : 'Xem tất cả'}
+                {isMobile ? dashboardT.viewAll : dashboardT.viewAll}
               </Button>
             </Box>
             <Divider sx={{ mb: { xs: 2, sm: 3 } }} />
@@ -433,7 +435,7 @@ export default function DashboardPage() {
                         </Box>
                         {kid.gender && (
                           <Chip
-                            label={kid.gender === 'male' ? '👦 Nam' : '👧 Nữ'}
+                            label={kid.gender === 'male' ? `👦 ${kidsT.gender.male}` : `👧 ${kidsT.gender.female}`}
                             size="small"
                             sx={{ mt: 1 }}
                           />
@@ -463,7 +465,7 @@ export default function DashboardPage() {
           >
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: { xs: 2, sm: 3 } }}>
               <Typography variant={isMobile ? "subtitle1" : "h5"} fontWeight="bold" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                🎉 Milestones gần đây
+                🎉 {dashboardT.recentMilestones}
               </Typography>
               <Button
                 variant="contained"
@@ -475,7 +477,7 @@ export default function DashboardPage() {
                   fontSize: { xs: '0.75rem', sm: '0.875rem' },
                 }}
               >
-                {isMobile ? 'Tất cả' : 'Xem tất cả'}
+                {isMobile ? dashboardT.viewAll : dashboardT.viewAll}
               </Button>
             </Box>
             <Divider sx={{ mb: { xs: 2, sm: 3 } }} />
@@ -555,14 +557,14 @@ export default function DashboardPage() {
             gutterBottom 
             sx={{ textAlign: 'center', mb: 1, fontWeight: 'bold' }}
           >
-            🎉 Chào mừng đến với Kids Memories!
+            🎉 {dashboardT.welcomeTitle}
           </Typography>
           <Typography 
             variant={isMobile ? "caption" : "body1"} 
             color="text.secondary" 
             sx={{ textAlign: 'center', mb: { xs: 3, sm: 4 }, display: 'block' }}
           >
-            Bắt đầu lưu giữ những kỷ niệm đáng nhớ của bé yêu
+            {dashboardT.welcomeMessage}
           </Typography>
           
           <Box sx={{ 
@@ -590,7 +592,7 @@ export default function DashboardPage() {
                 transition: 'all 0.3s ease',
               }}
             >
-              {isMobile ? 'Thêm bé' : 'Thêm bé'}
+              {dashboardT.quickActions.addKid}
             </Button>
             <Button
               variant="contained"
@@ -612,7 +614,7 @@ export default function DashboardPage() {
                 transition: 'all 0.3s ease',
               }}
             >
-              {isMobile ? 'Album' : 'Tạo album'}
+              {dashboardT.quickActions.createAlbum}
             </Button>
             <Button
               variant="contained"
@@ -634,7 +636,7 @@ export default function DashboardPage() {
                 transition: 'all 0.3s ease',
               }}
             >
-              {isMobile ? 'Ảnh' : 'Upload ảnh'}
+              {dashboardT.quickActions.uploadPhoto}
             </Button>
             <Button
               variant="contained"
@@ -656,7 +658,7 @@ export default function DashboardPage() {
                 transition: 'all 0.3s ease',
               }}
             >
-              {isMobile ? 'Mốc' : 'Thêm milestone'}
+              {dashboardT.quickActions.addMilestone}
             </Button>
           </Box>
         </Paper>

@@ -16,11 +16,13 @@ export const dashboardTranslations = {
     },
     
     // Quick actions
-    quickActions: 'Thao Tác Nhanh',
-    addKid: 'Thêm Bé',
-    createAlbum: 'Tạo Album',
-    uploadPhotos: 'Tải Ảnh Lên',
-    addMilestone: 'Thêm Mốc',
+    quickActions: {
+      title: 'Thao Tác Nhanh',
+      addKid: 'Thêm Bé',
+      createAlbum: 'Tạo Album',
+      uploadPhoto: 'Upload ảnh',
+      addMilestone: 'Thêm Mốc',
+    },
     
     // Recent sections
     recentKids: 'Bé Gần Đây',
@@ -46,6 +48,12 @@ export const dashboardTranslations = {
     // Buttons
     getStarted: 'Bắt Đầu',
     close: 'Đóng',
+    
+    // Additional
+    greeting: 'Xin chào',
+    logout: 'Đăng xuất',
+    welcomeTitle: 'Chào mừng đến với Kids Memories!',
+    welcomeMessage: 'Bắt đầu lưu giữ những kỷ niệm đáng nhớ của bé yêu',
   },
   en: {
     // Page title
@@ -62,11 +70,13 @@ export const dashboardTranslations = {
     },
     
     // Quick actions
-    quickActions: 'Quick Actions',
-    addKid: 'Add Kid',
-    createAlbum: 'Create Album',
-    uploadPhotos: 'Upload Photos',
-    addMilestone: 'Add Milestone',
+    quickActions: {
+      title: 'Quick Actions',
+      addKid: 'Add Kid',
+      createAlbum: 'Create Album',
+      uploadPhoto: 'Upload photo',
+      addMilestone: 'Add Milestone',
+    },
     
     // Recent sections
     recentKids: 'Recent Kids',
@@ -92,6 +102,12 @@ export const dashboardTranslations = {
     // Buttons
     getStarted: 'Get Started',
     close: 'Close',
+    
+    // Additional
+    greeting: 'Hello',
+    logout: 'Logout',
+    welcomeTitle: 'Welcome to Kids Memories!',
+    welcomeMessage: 'Start preserving your precious memories of your little ones',
   },
   ja: {
     // Page title
@@ -108,11 +124,13 @@ export const dashboardTranslations = {
     },
     
     // Quick actions
-    quickActions: 'クイックアクション',
-    addKid: '子供を追加',
-    createAlbum: 'アルバム作成',
-    uploadPhotos: '写真アップロード',
-    addMilestone: 'マイルストーン追加',
+    quickActions: {
+      title: 'クイックアクション',
+      addKid: '子供を追加',
+      createAlbum: 'アルバム作成',
+      uploadPhoto: '写真をアップロード',
+      addMilestone: 'マイルストーン追加',
+    },
     
     // Recent sections
     recentKids: '最近の子供',
@@ -138,6 +156,12 @@ export const dashboardTranslations = {
     // Buttons
     getStarted: '始める',
     close: '閉じる',
+    
+    // Additional
+    greeting: 'こんにちは',
+    logout: 'ログアウト',
+    welcomeTitle: 'Kids Memoriesへようこそ！',
+    welcomeMessage: 'お子様の大切な思い出を保存しましょう',
   },
 };
 
