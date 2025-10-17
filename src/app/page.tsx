@@ -7,7 +7,6 @@ import {
   Container,
   Typography,
   Button,
-  Grid,
   Card,
   CardContent,
   AppBar,
@@ -260,33 +259,31 @@ export default function LandingPage() {
             {t.howItWorks.subtitle}
           </Typography>
 
-          <Grid container spacing={4}>
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' }, gap: 4 }}>
             {t.howItWorks.steps.map((step, index) => (
-              <Grid item xs={12} md={4} key={index}>
-                <Box sx={{ textAlign: 'center' }}>
-                  <Avatar
-                    sx={{
-                      width: 80,
-                      height: 80,
-                      mx: 'auto',
-                      mb: 2,
-                      bgcolor: 'primary.main',
-                      fontSize: '2rem',
-                      fontWeight: 'bold',
-                    }}
-                  >
-                    {index + 1}
-                  </Avatar>
-                  <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 1 }}>
-                    {step.title}
-                  </Typography>
-                  <Typography variant="body1" color="text.secondary">
-                    {step.description}
-                  </Typography>
-                </Box>
-              </Grid>
+              <Box key={index} sx={{ textAlign: 'center' }}>
+                <Avatar
+                  sx={{
+                    width: 80,
+                    height: 80,
+                    mx: 'auto',
+                    mb: 2,
+                    bgcolor: 'primary.main',
+                    fontSize: '2rem',
+                    fontWeight: 'bold',
+                  }}
+                >
+                  {index + 1}
+                </Avatar>
+                <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 1 }}>
+                  {step.title}
+                </Typography>
+                <Typography variant="body1" color="text.secondary">
+                  {step.description}
+                </Typography>
+              </Box>
             ))}
-          </Grid>
+          </Box>
         </Container>
       </Box>
 
@@ -299,37 +296,35 @@ export default function LandingPage() {
           {t.testimonials.subtitle}
         </Typography>
 
-        <Grid container spacing={4}>
+        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' }, gap: 4 }}>
           {t.testimonials.items.map((testimonial, index) => (
-            <Grid item xs={12} md={4} key={index}>
-              <Card sx={{ height: '100%' }}>
-                <CardContent sx={{ p: 4 }}>
-                  <Stack direction="row" spacing={0.5} sx={{ mb: 2 }}>
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} sx={{ color: 'warning.main', fontSize: 20 }} />
-                    ))}
-                  </Stack>
-                  <Typography variant="body1" sx={{ mb: 3, fontStyle: 'italic' }}>
-                    &ldquo;{testimonial.content}&rdquo;
-                  </Typography>
-                  <Stack direction="row" spacing={2} alignItems="center">
-                    <Avatar sx={{ bgcolor: 'primary.main' }}>
-                      {testimonial.name[0]}
-                    </Avatar>
-                    <Box>
-                      <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
-                        {testimonial.name}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        {testimonial.role}
-                      </Typography>
-                    </Box>
-                  </Stack>
-                </CardContent>
-              </Card>
-            </Grid>
+            <Card key={index} sx={{ height: '100%' }}>
+              <CardContent sx={{ p: 4 }}>
+                <Stack direction="row" spacing={0.5} sx={{ mb: 2 }}>
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} sx={{ color: 'warning.main', fontSize: 20 }} />
+                  ))}
+                </Stack>
+                <Typography variant="body1" sx={{ mb: 3, fontStyle: 'italic' }}>
+                  &ldquo;{testimonial.content}&rdquo;
+                </Typography>
+                <Stack direction="row" spacing={2} alignItems="center">
+                  <Avatar sx={{ bgcolor: 'primary.main' }}>
+                    {testimonial.name[0]}
+                  </Avatar>
+                  <Box>
+                    <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
+                      {testimonial.name}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {testimonial.role}
+                    </Typography>
+                  </Box>
+                </Stack>
+              </CardContent>
+            </Card>
           ))}
-        </Grid>
+        </Box>
       </Container>
 
       {/* Pricing */}
@@ -342,65 +337,64 @@ export default function LandingPage() {
             {t.pricing.subtitle}
           </Typography>
 
-          <Grid container spacing={4} justifyContent="center">
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)' }, gap: 4, maxWidth: '1200px', mx: 'auto' }}>
             {t.pricing.plans.map((plan, index) => (
-              <Grid item xs={12} sm={6} md={4} key={index}>
-                <Card
-                  sx={{
-                    height: '100%',
-                    position: 'relative',
-                    border: plan.popular ? 3 : 0,
-                    borderColor: 'primary.main',
-                    transform: plan.popular ? 'scale(1.05)' : 'none',
-                  }}
-                >
-                  {plan.popular && (
-                    <Chip
-                      label="POPULAR"
-                      color="primary"
-                      sx={{ position: 'absolute', top: 16, right: 16 }}
-                    />
-                  )}
-                  <CardContent sx={{ p: 4, textAlign: 'center' }}>
-                    <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 1 }}>
-                      {plan.name}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-                      {plan.description}
-                    </Typography>
-                    <Box sx={{ mb: 3 }}>
-                      <Typography variant="h3" sx={{ fontWeight: 'bold' }}>
-                        {plan.price}
-                        <Typography component="span" variant="h6" color="text.secondary">
-                          {plan.currency}
-                        </Typography>
+              <Card
+                key={index}
+                sx={{
+                  height: '100%',
+                  position: 'relative',
+                  border: plan.popular ? 3 : 0,
+                  borderColor: 'primary.main',
+                  transform: plan.popular ? 'scale(1.05)' : 'none',
+                }}
+              >
+                {plan.popular && (
+                  <Chip
+                    label="POPULAR"
+                    color="primary"
+                    sx={{ position: 'absolute', top: 16, right: 16 }}
+                  />
+                )}
+                <CardContent sx={{ p: 4, textAlign: 'center' }}>
+                  <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 1 }}>
+                    {plan.name}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+                    {plan.description}
+                  </Typography>
+                  <Box sx={{ mb: 3 }}>
+                    <Typography variant="h3" sx={{ fontWeight: 'bold' }}>
+                      {plan.price}
+                      <Typography component="span" variant="h6" color="text.secondary">
+                        {plan.currency}
                       </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        /{plan.period}
-                      </Typography>
-                    </Box>
-                    <Divider sx={{ my: 3 }} />
-                    <Stack spacing={2} sx={{ mb: 3, textAlign: 'left' }}>
-                      {plan.features.map((feature, i) => (
-                        <Stack direction="row" spacing={1} key={i}>
-                          <Check sx={{ color: 'success.main', fontSize: 20 }} />
-                          <Typography variant="body2">{feature}</Typography>
-                        </Stack>
-                      ))}
-                    </Stack>
-                    <Button
-                      variant={plan.popular ? 'contained' : 'outlined'}
-                      fullWidth
-                      size="large"
-                      onClick={() => router.push('/auth/register')}
-                    >
-                      {plan.cta}
-                    </Button>
-                  </CardContent>
-                </Card>
-              </Grid>
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      /{plan.period}
+                    </Typography>
+                  </Box>
+                  <Divider sx={{ my: 3 }} />
+                  <Stack spacing={2} sx={{ mb: 3, textAlign: 'left' }}>
+                    {plan.features.map((feature, i) => (
+                      <Stack direction="row" spacing={1} key={i}>
+                        <Check sx={{ color: 'success.main', fontSize: 20 }} />
+                        <Typography variant="body2">{feature}</Typography>
+                      </Stack>
+                    ))}
+                  </Stack>
+                  <Button
+                    variant={plan.popular ? 'contained' : 'outlined'}
+                    fullWidth
+                    size="large"
+                    onClick={() => router.push('/auth/register')}
+                  >
+                    {plan.cta}
+                  </Button>
+                </CardContent>
+              </Card>
             ))}
-          </Grid>
+          </Box>
         </Container>
       </Box>
 
@@ -437,8 +431,8 @@ export default function LandingPage() {
       {/* Footer */}
       <Box sx={{ bgcolor: 'grey.900', color: 'white', py: 6 }}>
         <Container maxWidth="lg">
-          <Grid container spacing={4}>
-            <Grid item xs={12} md={4}>
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: '2fr 1fr 1fr 1fr' }, gap: 4 }}>
+            <Box>
               <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 2 }}>
                 <PhotoLibrary sx={{ fontSize: 32 }} />
                 <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
@@ -454,8 +448,8 @@ export default function LandingPage() {
                 <IconButton size="small" sx={{ color: 'white' }}><Instagram /></IconButton>
                 <IconButton size="small" sx={{ color: 'white' }}><LinkedIn /></IconButton>
               </Stack>
-            </Grid>
-            <Grid item xs={6} md={2}>
+            </Box>
+            <Box>
               <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mb: 2 }}>
                 {t.footer.product}
               </Typography>
@@ -467,8 +461,8 @@ export default function LandingPage() {
                   {t.footer.pricing}
                 </Typography>
               </Stack>
-            </Grid>
-            <Grid item xs={6} md={2}>
+            </Box>
+            <Box>
               <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mb: 2 }}>
                 {t.footer.company}
               </Typography>
@@ -483,8 +477,8 @@ export default function LandingPage() {
                   {t.footer.contact}
                 </Typography>
               </Stack>
-            </Grid>
-            <Grid item xs={6} md={2}>
+            </Box>
+            <Box>
               <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mb: 2 }}>
                 {t.footer.support}
               </Typography>
@@ -499,8 +493,8 @@ export default function LandingPage() {
                   {t.footer.terms}
                 </Typography>
               </Stack>
-            </Grid>
-          </Grid>
+            </Box>
+          </Box>
           <Divider sx={{ my: 4, bgcolor: 'grey.700' }} />
           <Typography variant="body2" align="center" sx={{ opacity: 0.6 }}>
             {t.footer.copyright}
