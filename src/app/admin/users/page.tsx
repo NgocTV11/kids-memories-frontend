@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useI18nStore } from '@/store/i18n.store';
 import {
   Box,
   Container,
@@ -47,6 +48,7 @@ import { useAuthStore } from '@/store/auth.store';
 export default function AdminUsersPage() {
   const router = useRouter();
   const { user } = useAuthStore();
+  const { admin: adminT } = useI18nStore();
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(0);
@@ -83,7 +85,7 @@ export default function AdminUsersPage() {
       setUsers(response.data);
       setTotal(response.total);
     } catch (err: any) {
-      setError(err.message || 'Không thể tải danh sách users');
+      setError(err.message || adminT.loadError);
     } finally {
       setLoading(false);
     }
@@ -115,14 +117,14 @@ export default function AdminUsersPage() {
       setEditDialogOpen(false);
       loadUsers();
     } catch (err: any) {
-      alert(err.message || 'Không thể cập nhật role');
+      alert(err.message || adminT.updateError);
     }
   };
 
   const handleDeleteUser = async () => {
     if (!selectedUser) return;
 
-    if (!confirm(`Bạn có chắc muốn xóa user "${selectedUser.display_name}"?`)) {
+    if (!confirm(adminT.deleteUserConfirm)) {
       handleMenuClose();
       return;
     }
@@ -132,7 +134,7 @@ export default function AdminUsersPage() {
       handleMenuClose();
       loadUsers();
     } catch (err: any) {
-      alert(err.message || 'Không thể xóa user');
+      alert(err.message || adminT.deleteError);
     }
   };
 
@@ -167,10 +169,10 @@ export default function AdminUsersPage() {
           <Person fontSize="large" />
           <div>
             <Typography variant="h4" fontWeight="bold">
-              Quản Lý Users
+              {adminT.usersManagement}
             </Typography>
             <Typography variant="body2" sx={{ opacity: 0.9 }}>
-              Tổng số: {total} users
+              {adminT.usersCount}: {total}
             </Typography>
           </div>
         </Box>
@@ -186,7 +188,7 @@ export default function AdminUsersPage() {
       <Paper sx={{ p: 2, mb: 3 }}>
         <TextField
           fullWidth
-          placeholder="Tìm kiếm theo tên hoặc email..."
+          placeholder={adminT.searchUsers}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           InputProps={{
@@ -204,15 +206,15 @@ export default function AdminUsersPage() {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>User</TableCell>
+              <TableCell>Avatar</TableCell>
               <TableCell>Email</TableCell>
               <TableCell>Role</TableCell>
               <TableCell align="center">Families</TableCell>
               <TableCell align="center">Kids</TableCell>
               <TableCell align="center">Albums</TableCell>
               <TableCell align="center">Photos</TableCell>
-              <TableCell>Ngày Tạo</TableCell>
-              <TableCell align="center">Actions</TableCell>
+              <TableCell>{adminT.userTable.joinedDate}</TableCell>
+              <TableCell align="center">{adminT.userTable.actions}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -226,7 +228,7 @@ export default function AdminUsersPage() {
               <TableRow>
                 <TableCell colSpan={9} align="center">
                   <Typography variant="body2" color="text.secondary">
-                    Không tìm thấy user nào
+                    {adminT.noData}
                   </Typography>
                 </TableCell>
               </TableRow>
@@ -304,22 +306,22 @@ export default function AdminUsersPage() {
       <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
         <MenuItem onClick={handleEditRole}>
           <Edit fontSize="small" sx={{ mr: 1 }} />
-          Đổi Role
+          {adminT.viewUser}
         </MenuItem>
         <MenuItem onClick={handleDeleteUser} sx={{ color: 'error.main' }}>
           <Delete fontSize="small" sx={{ mr: 1 }} />
-          Xóa User
+          {adminT.deleteUser}
         </MenuItem>
       </Menu>
 
       {/* Edit Role Dialog */}
       <Dialog open={editDialogOpen} onClose={() => setEditDialogOpen(false)} maxWidth="xs" fullWidth>
-        <DialogTitle>Đổi Role User</DialogTitle>
+        <DialogTitle>{adminT.editUserTitle}</DialogTitle>
         <DialogContent>
           <FormControl fullWidth sx={{ mt: 2 }}>
             <InputLabel>Role</InputLabel>
             <Select value={newRole} onChange={(e) => setNewRole(e.target.value)} label="Role">
-              <MenuItem value="admin">Admin</MenuItem>
+              <MenuItem value="admin">{adminT.roles.admin}</MenuItem>
               <MenuItem value="family_owner">Family Owner</MenuItem>
               <MenuItem value="family_member">Family Member</MenuItem>
             </Select>
@@ -335,9 +337,9 @@ export default function AdminUsersPage() {
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setEditDialogOpen(false)}>Hủy</Button>
+          <Button onClick={() => setEditDialogOpen(false)}>{adminT.cancel}</Button>
           <Button onClick={handleSaveRole} variant="contained">
-            Lưu
+            {adminT.save}
           </Button>
         </DialogActions>
       </Dialog>

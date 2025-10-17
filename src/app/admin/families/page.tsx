@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useI18nStore } from '@/store/i18n.store';
 import {
   Box,
   Container,
@@ -31,6 +32,7 @@ import { useAuthStore } from '@/store/auth.store';
 export default function AdminFamiliesPage() {
   const router = useRouter();
   const { user } = useAuthStore();
+  const { admin: adminT } = useI18nStore();
   const [families, setFamilies] = useState<AdminFamily[]>([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(0);
@@ -59,7 +61,7 @@ export default function AdminFamiliesPage() {
       setFamilies(response.data);
       setTotal(response.total);
     } catch (err: any) {
-      setError(err.message || 'Không thể tải danh sách families');
+      setError(err.message || adminT.loadError);
     } finally {
       setLoading(false);
     }
@@ -95,10 +97,10 @@ export default function AdminFamiliesPage() {
           <FamilyRestroom fontSize="large" />
           <div>
             <Typography variant="h4" fontWeight="bold">
-              Quản Lý Families
+              {adminT.familiesManagement}
             </Typography>
             <Typography variant="body2" sx={{ opacity: 0.9 }}>
-              Tổng số: {total} families
+              {adminT.familiesCount}: {total}
             </Typography>
           </div>
         </Box>
@@ -114,7 +116,7 @@ export default function AdminFamiliesPage() {
       <Paper sx={{ p: 2, mb: 3 }}>
         <TextField
           fullWidth
-          placeholder="Tìm kiếm theo tên family hoặc chủ family..."
+          placeholder={adminT.searchFamilies}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           InputProps={{
@@ -136,7 +138,7 @@ export default function AdminFamiliesPage() {
         <Paper sx={{ p: 6, textAlign: 'center' }}>
           <FamilyRestroom sx={{ fontSize: 80, color: 'text.secondary', mb: 2 }} />
           <Typography variant="h6" color="text.secondary">
-            {searchQuery ? 'Không tìm thấy family nào' : 'Chưa có family nào'}
+            {searchQuery ? adminT.noData : adminT.noData}
           </Typography>
         </Paper>
       ) : (
@@ -205,7 +207,7 @@ export default function AdminFamiliesPage() {
                           {family.owner?.display_name}
                         </Typography>
                         <Typography variant="caption" color="text.secondary">
-                          Chủ family
+                          {adminT.familyTable.owner}
                         </Typography>
                       </Box>
                     </Box>
@@ -213,19 +215,19 @@ export default function AdminFamiliesPage() {
                     <Box display="flex" gap={1} flexWrap="wrap">
                       <Chip
                         icon={<Person />}
-                        label={`${family._count?.members || 0} thành viên`}
+                        label={`${family._count?.members || 0} ${adminT.familyTable.members}`}
                         size="small"
                         variant="outlined"
                       />
                       <Chip
                         icon={<ChildCare />}
-                        label={`${family._count?.kids || 0} bé yêu`}
+                        label={`${family._count?.kids || 0} ${adminT.familyTable.kids}`}
                         size="small"
                         variant="outlined"
                       />
                       <Chip
                         icon={<PhotoAlbum />}
-                        label={`${family._count?.albums || 0} albums`}
+                        label={`${family._count?.albums || 0} ${adminT.familyTable.albums}`}
                         size="small"
                         variant="outlined"
                       />
