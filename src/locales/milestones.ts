@@ -134,6 +134,9 @@ export const milestonesTranslations = {
     updateError: 'Không thể cập nhật mốc',
     deleteSuccess: 'Đã xóa mốc',
     deleteError: 'Không thể xóa mốc',
+    
+    // Timeline
+    photosCount: '{count} ảnh',
   },
   en: {
     // Page title
@@ -268,6 +271,9 @@ export const milestonesTranslations = {
     updateError: 'Failed to update milestone',
     deleteSuccess: 'Milestone deleted',
     deleteError: 'Failed to delete milestone',
+    
+    // Timeline
+    photosCount: '{count} photos',
   },
   ja: {
     // Page title
@@ -402,6 +408,9 @@ export const milestonesTranslations = {
     updateError: 'マイルストーンの更新に失敗しました',
     deleteSuccess: 'マイルストーンが削除されました',
     deleteError: 'マイルストーンの削除に失敗しました',
+    
+    // Timeline
+    photosCount: '{count}枚の写真',
   },
 };
 

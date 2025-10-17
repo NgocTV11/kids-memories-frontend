@@ -22,6 +22,7 @@ export const familiesTranslations = {
     
     // Family card
     members: 'thành viên',
+    kids: 'bé yêu',
     role: 'Vai trò',
     createdBy: 'Tạo bởi',
     createdOn: 'Tạo ngày',
@@ -95,6 +96,18 @@ export const familiesTranslations = {
     addMemberError: 'Không thể thêm thành viên',
     removeMemberSuccess: 'Đã xóa thành viên',
     removeMemberError: 'Không thể xóa thành viên',
+    
+    // Detail page
+    detail: {
+      familyNotFound: 'Gia đình không tồn tại',
+      loadFamilyError: 'Không thể tải thông tin gia đình',
+      enterFamilyName: 'Vui lòng nhập tên gia đình',
+      removeMemberConfirm: 'Bạn có chắc muốn xóa {name} khỏi gia đình?',
+      leaveFamilyConfirmMsg: 'Bạn có chắc muốn rời khỏi gia đình này?',
+      deleteFamilyConfirmMsg: 'Bạn có chắc muốn xóa gia đình "{name}"? Hành động này không thể hoàn tác.',
+      noMembers: 'Chưa có thành viên',
+      noKids: 'Chưa có bé',
+    },
   },
   en: {
     // Page title
@@ -117,6 +130,7 @@ export const familiesTranslations = {
     
     // Family card
     members: 'members',
+    kids: 'kids',
     role: 'Role',
     createdBy: 'Created by',
     createdOn: 'Created on',
@@ -190,6 +204,18 @@ export const familiesTranslations = {
     addMemberError: 'Failed to add member',
     removeMemberSuccess: 'Member removed',
     removeMemberError: 'Failed to remove member',
+    
+    // Detail page
+    detail: {
+      familyNotFound: 'Family not found',
+      loadFamilyError: 'Failed to load family information',
+      enterFamilyName: 'Please enter family name',
+      removeMemberConfirm: 'Are you sure you want to remove {name} from the family?',
+      leaveFamilyConfirmMsg: 'Are you sure you want to leave this family?',
+      deleteFamilyConfirmMsg: 'Are you sure you want to delete family "{name}"? This action cannot be undone.',
+      noMembers: 'No members',
+      noKids: 'No kids',
+    },
   },
   ja: {
     // Page title
@@ -212,6 +238,7 @@ export const familiesTranslations = {
     
     // Family card
     members: 'メンバー',
+    kids: '子供',
     role: '役割',
     createdBy: '作成者',
     createdOn: '作成日',
@@ -285,6 +312,18 @@ export const familiesTranslations = {
     addMemberError: 'メンバーの追加に失敗しました',
     removeMemberSuccess: 'メンバーが削除されました',
     removeMemberError: 'メンバーの削除に失敗しました',
+    
+    // Detail page
+    detail: {
+      familyNotFound: '家族が見つかりません',
+      loadFamilyError: '家族情報の読み込みに失敗しました',
+      enterFamilyName: '家族名を入力してください',
+      removeMemberConfirm: '{name}を家族から削除してもよろしいですか？',
+      leaveFamilyConfirmMsg: 'この家族を離れてもよろしいですか？',
+      deleteFamilyConfirmMsg: '家族「{name}」を削除してもよろしいですか？この操作は元に戻せません。',
+      noMembers: 'メンバーなし',
+      noKids: '子供なし',
+    },
   },
 };
 

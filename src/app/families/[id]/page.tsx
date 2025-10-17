@@ -44,6 +44,7 @@ import {
   RemoveCircle,
 } from '@mui/icons-material';
 import { useAuthStore } from '@/store/auth.store';
+import { useI18nStore } from '@/store/i18n.store';
 import { familiesService } from '@/services/families.service';
 import type { Family, FamilyMember } from '@/services/families.service';
 import { InviteMemberModal } from '@/components/families/InviteMemberModal';
@@ -54,6 +55,7 @@ export default function FamilyDetailPage({ params }: { params: Promise<{ id: str
   const { id } = use(params);
   const router = useRouter();
   const { user } = useAuthStore();
+  const { families: familiesT } = useI18nStore();
   const [family, setFamily] = useState<Family | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -80,7 +82,7 @@ export default function FamilyDetailPage({ params }: { params: Promise<{ id: str
       setFamilyName(data.name);
       setFamilyDescription(data.description || '');
     } catch (err: any) {
-      setError(err.message || 'Không thể tải thông tin family');
+      setError(err.message || familiesT.detail.loadFamilyError);
     } finally {
       setLoading(false);
     }
@@ -88,7 +90,7 @@ export default function FamilyDetailPage({ params }: { params: Promise<{ id: str
 
   const handleUpdateFamily = async () => {
     if (!familyName.trim()) {
-      alert('Vui lòng nhập tên family');
+      alert(familiesT.detail.enterFamilyName);
       return;
     }
 
@@ -101,14 +103,14 @@ export default function FamilyDetailPage({ params }: { params: Promise<{ id: str
       setEditModalOpen(false);
       loadFamily();
     } catch (err: any) {
-      alert(err.message || 'Không thể cập nhật family');
+      alert(err.message || familiesT.updateError);
     } finally {
       setUpdating(false);
     }
   };
 
   const handleRemoveMember = async (memberId: string, memberName: string) => {
-    if (!confirm(`Bạn có chắc muốn xóa ${memberName} khỏi family?`)) {
+    if (!confirm(familiesT.detail.removeMemberConfirm.replace('{name}', memberName))) {
       return;
     }
 
@@ -116,12 +118,12 @@ export default function FamilyDetailPage({ params }: { params: Promise<{ id: str
       await familiesService.removeMember(id, memberId);
       loadFamily();
     } catch (err: any) {
-      alert(err.message || 'Không thể xóa thành viên');
+      alert(err.message || familiesT.removeMemberError);
     }
   };
 
   const handleLeaveFamily = async () => {
-    if (!confirm('Bạn có chắc muốn rời khỏi family này?')) {
+    if (!confirm(familiesT.detail.leaveFamilyConfirmMsg)) {
       return;
     }
 
@@ -129,12 +131,12 @@ export default function FamilyDetailPage({ params }: { params: Promise<{ id: str
       await familiesService.leaveFamily(id);
       router.push('/families');
     } catch (err: any) {
-      alert(err.message || 'Không thể rời family');
+      alert(err.message || familiesT.leaveError);
     }
   };
 
   const handleDeleteFamily = async () => {
-    if (!confirm(`Bạn có chắc muốn xóa family "${family?.name}"? Hành động này không thể hoàn tác.`)) {
+    if (!confirm(familiesT.detail.deleteFamilyConfirmMsg.replace('{name}', family?.name || ''))) {
       return;
     }
 
@@ -142,7 +144,7 @@ export default function FamilyDetailPage({ params }: { params: Promise<{ id: str
       await familiesService.delete(id);
       router.push('/families');
     } catch (err: any) {
-      alert(err.message || 'Không thể xóa family');
+      alert(err.message || familiesT.deleteError);
     }
   };
 

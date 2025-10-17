@@ -15,6 +15,7 @@ import {
   Photo,
 } from '@mui/icons-material';
 import dayjs from 'dayjs';
+import { useI18nStore } from '@/store/i18n.store';
 
 interface TimelineItemProps {
   milestone: Milestone;
@@ -24,6 +25,7 @@ interface TimelineItemProps {
 }
 
 export function TimelineItem({ milestone, isLast, onEdit, onDelete }: TimelineItemProps) {
+  const { milestones: milestonesT } = useI18nStore();
   const getCategoryColor = (category?: string) => {
     switch (category) {
       case 'first_word':
@@ -128,7 +130,9 @@ export function TimelineItem({ milestone, isLast, onEdit, onDelete }: TimelineIt
           <Box>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
               <Photo fontSize="small" color="action" />
-              <Typography variant="subtitle2">{milestone.photos.length} ảnh</Typography>
+              <Typography variant="subtitle2">
+                {milestonesT.photosCount.replace('{count}', String(milestone.photos.length))}
+              </Typography>
             </Box>
             <Grid container spacing={1}>
               {milestone.photos.slice(0, 4).map((photo) => (

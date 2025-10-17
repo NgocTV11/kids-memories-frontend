@@ -97,6 +97,18 @@ export const albumsTranslations = {
     deleteError: 'Không thể xóa album',
     shareSuccess: 'Đã chia sẻ album',
     shareError: 'Không thể chia sẻ album',
+    
+    // Detail page
+    detail: {
+      albumNotFound: 'Album không tồn tại',
+      loadAlbumError: 'Không thể tải album',
+      backToAlbums: 'Albums',
+      noPhotos: 'Chưa có ảnh',
+      noPhotosDescription: 'Album này chưa có ảnh nào. Hãy thêm ảnh để bắt đầu!',
+      uploadPhotos: 'Tải ảnh lên',
+      photosCount: '{count} ảnh',
+      createdAt: 'Tạo ngày',
+    },
   },
   en: {
     // Page title
@@ -194,6 +206,18 @@ export const albumsTranslations = {
     deleteError: 'Failed to delete album',
     shareSuccess: 'Album shared',
     shareError: 'Failed to share album',
+    
+    // Detail page
+    detail: {
+      albumNotFound: 'Album not found',
+      loadAlbumError: 'Failed to load album',
+      backToAlbums: 'Albums',
+      noPhotos: 'No photos',
+      noPhotosDescription: 'This album has no photos yet. Add some to get started!',
+      uploadPhotos: 'Upload photos',
+      photosCount: '{count} photos',
+      createdAt: 'Created on',
+    },
   },
   ja: {
     // Page title
@@ -291,6 +315,18 @@ export const albumsTranslations = {
     deleteError: 'アルバムの削除に失敗しました',
     shareSuccess: 'アルバムが共有されました',
     shareError: 'アルバムの共有に失敗しました',
+    
+    // Detail page
+    detail: {
+      albumNotFound: 'アルバムが見つかりません',
+      loadAlbumError: 'アルバムの読み込みに失敗しました',
+      backToAlbums: 'アルバム',
+      noPhotos: '写真がありません',
+      noPhotosDescription: 'このアルバムにはまだ写真がありません。写真を追加してください！',
+      uploadPhotos: '写真をアップロード',
+      photosCount: '{count}枚の写真',
+      createdAt: '作成日',
+    },
   },
 };
 

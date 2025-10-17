@@ -35,11 +35,13 @@ import { photosService, Photo } from '@/services/photos.service';
 import { getImageUrl } from '@/utils/image';
 import { PhotoGallery } from '@/components/photos/PhotoGallery';
 import { PhotoDetailModal } from '@/components/photos/PhotoDetailModal';
+import { useI18nStore } from '@/store/i18n.store';
 
 export default function AlbumDetailPage() {
   const params = useParams();
   const router = useRouter();
   const albumId = params.id as string;
+  const { albums: albumsT } = useI18nStore();
 
   const [album, setAlbum] = useState<Album | null>(null);
   const [photos, setPhotos] = useState<Photo[]>([]);
@@ -64,7 +66,7 @@ export default function AlbumDetailPage() {
       setAlbum(data);
     } catch (err: any) {
       console.error('Error loading album:', err);
-      setError(err.response?.data?.message || 'Không thể tải album');
+      setError(err.response?.data?.message || albumsT.detail.loadAlbumError);
     } finally {
       setLoading(false);
     }
@@ -98,13 +100,13 @@ export default function AlbumDetailPage() {
   const getPrivacyLabel = (privacy: string) => {
     switch (privacy) {
       case 'private':
-        return 'Riêng tư';
+        return albumsT.privacy.private;
       case 'family':
-        return 'Gia đình';
+        return albumsT.privacy.family;
       case 'public':
-        return 'Công khai';
+        return albumsT.privacy.public;
       default:
-        return 'Riêng tư';
+        return albumsT.privacy.private;
     }
   };
 
@@ -146,7 +148,7 @@ export default function AlbumDetailPage() {
       >
         <Container maxWidth="lg">
           <Alert severity="error" sx={{ mb: 3 }}>
-            {error || 'Album không tồn tại'}
+            {error || albumsT.detail.albumNotFound}
           </Alert>
           <IconButton
             onClick={() => router.push('/albums')}
@@ -183,7 +185,7 @@ export default function AlbumDetailPage() {
             }}
             sx={{ cursor: 'pointer', '&:hover': { textDecoration: 'underline' } }}
           >
-            Albums
+            {albumsT.detail.backToAlbums}
           </Link>
           <Typography color="white" fontWeight="bold">
             {album.title}

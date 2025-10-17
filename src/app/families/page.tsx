@@ -327,7 +327,7 @@ export default function FamiliesPage() {
                         />
                         <Chip
                           icon={<ChildCare />}
-                          label={`${family._count?.kids || 0} bé yêu`}
+                          label={`${family._count?.kids || 0} ${familiesT.kids}`}
                           size="small"
                           variant="outlined"
                         />
