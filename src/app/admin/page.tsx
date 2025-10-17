@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { useAuthStore } from '@/store/auth.store';
+import { useI18nStore } from '@/store/i18n.store';
 import { adminService, AdminStats } from '@/services/admin.service';
 import {
   Container,
@@ -33,6 +34,7 @@ import dayjs from 'dayjs';
 export default function AdminDashboardPage() {
   const router = useRouter();
   const { user } = useAuthStore();
+  const { admin: adminT } = useI18nStore();
   const [stats, setStats] = useState<AdminStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -50,10 +52,10 @@ export default function AdminDashboardPage() {
       setStats(data);
     } catch (err: any) {
       console.error('Error loading stats:', err);
-      setError(err.response?.data?.message || 'Failed to load statistics');
+      setError(err.response?.data?.message || adminT.loadStatsError);
       
       if (err.response?.status === 403) {
-        setError('Bạn không có quyền truy cập trang này');
+        setError(adminT.accessDenied);
       }
     } finally {
       setLoading(false);
@@ -66,7 +68,7 @@ export default function AdminDashboardPage() {
       <ProtectedRoute>
         <Container maxWidth="lg" sx={{ pt: 4 }}>
           <Alert severity="error">
-            Bạn không có quyền truy cập trang này. Chỉ Admin mới được phép.
+            {adminT.noPermission}
           </Alert>
         </Container>
       </ProtectedRoute>
@@ -75,42 +77,42 @@ export default function AdminDashboardPage() {
 
   const statsCards = [
     {
-      title: 'Users',
+      title: adminT.stats.totalUsers,
       value: stats?.totalUsers || 0,
       icon: <People sx={{ fontSize: 40 }} />,
       color: '#2196f3',
       link: '/admin/users',
     },
     {
-      title: 'Families',
+      title: adminT.stats.totalFamilies,
       value: stats?.totalFamilies || 0,
       icon: <FamilyRestroom sx={{ fontSize: 40 }} />,
       color: '#4caf50',
       link: '/admin/families',
     },
     {
-      title: 'Kids',
+      title: adminT.stats.totalKids,
       value: stats?.totalKids || 0,
       icon: <ChildCare sx={{ fontSize: 40 }} />,
       color: '#ff9800',
       link: '#',
     },
     {
-      title: 'Albums',
+      title: adminT.stats.totalAlbums,
       value: stats?.totalAlbums || 0,
       icon: <PhotoAlbum sx={{ fontSize: 40 }} />,
       color: '#9c27b0',
       link: '#',
     },
     {
-      title: 'Photos',
+      title: adminT.stats.totalPhotos,
       value: stats?.totalPhotos || 0,
       icon: <Photo sx={{ fontSize: 40 }} />,
       color: '#f44336',
       link: '#',
     },
     {
-      title: 'Milestones',
+      title: adminT.stats.totalMilestones,
       value: stats?.totalMilestones || 0,
       icon: <Celebration sx={{ fontSize: 40 }} />,
       color: '#00bcd4',
@@ -177,13 +179,13 @@ export default function AdminDashboardPage() {
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <Box>
                 <Typography variant="h4" fontWeight="bold" gutterBottom>
-                  🛠️ Admin Dashboard
+                  🛠️ {adminT.title}
                 </Typography>
                 <Typography variant="body1" color="text.secondary">
-                  Quản lý hệ thống Kids Memories
+                  {adminT.subtitle}
                 </Typography>
               </Box>
-              <Chip label="Admin" color="error" sx={{ fontWeight: 'bold', fontSize: '1rem', py: 2 }} />
+              <Chip label={adminT.adminLabel} color="error" sx={{ fontWeight: 'bold', fontSize: '1rem', py: 2 }} />
             </Box>
           </Paper>
 
@@ -276,7 +278,7 @@ export default function AdminDashboardPage() {
                 >
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
                     <Typography variant="h5" fontWeight="bold">
-                      👤 Users mới nhất
+                      👤 {adminT.recentUsers}
                     </Typography>
                     <Button
                       variant="contained"
@@ -287,7 +289,7 @@ export default function AdminDashboardPage() {
                         background: 'linear-gradient(135deg, #2196f3 0%, #1976d2 100%)',
                       }}
                     >
-                      Xem tất cả
+                      {adminT.viewAll}
                     </Button>
                   </Box>
                   <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
@@ -321,7 +323,7 @@ export default function AdminDashboardPage() {
                                 {user.email}
                               </Typography>
                               <Typography variant="caption" color="text.secondary">
-                                Đăng ký: {dayjs(user.created_at).format('DD/MM/YYYY HH:mm')}
+                                {adminT.registeredAt}: {dayjs(user.created_at).format('DD/MM/YYYY HH:mm')}
                               </Typography>
                             </Box>
                           </Box>

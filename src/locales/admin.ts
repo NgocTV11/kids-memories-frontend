@@ -5,6 +5,13 @@ export const adminTranslations = {
     // Page title
     title: 'Quản Trị Hệ Thống',
     subtitle: 'Quản lý người dùng, gia đình và thống kê',
+    adminLabel: 'Admin',
+    noPermission: 'Bạn không có quyền truy cập trang này. Chỉ Admin mới được phép.',
+    accessDenied: 'Bạn không có quyền truy cập trang này',
+    loadStatsError: 'Không thể tải thống kê',
+    recentUsers: 'Users mới nhất',
+    viewAll: 'Xem tất cả',
+    registeredAt: 'Đăng ký',
     
     // Navigation
     dashboard: 'Tổng Quan',
@@ -141,6 +148,13 @@ export const adminTranslations = {
     // Page title
     title: 'System Administration',
     subtitle: 'Manage users, families and statistics',
+    adminLabel: 'Admin',
+    noPermission: 'You do not have permission to access this page. Admins only.',
+    accessDenied: 'You do not have permission to access this page',
+    loadStatsError: 'Failed to load statistics',
+    recentUsers: 'Recent Users',
+    viewAll: 'View All',
+    registeredAt: 'Registered',
     
     // Navigation
     dashboard: 'Dashboard',
@@ -277,6 +291,13 @@ export const adminTranslations = {
     // Page title
     title: 'システム管理',
     subtitle: 'ユーザー、家族、統計を管理',
+    adminLabel: '管理者',
+    noPermission: 'このページにアクセスする権限がありません。管理者のみアクセス可能です。',
+    accessDenied: 'このページにアクセスする権限がありません',
+    loadStatsError: '統計の読み込みに失敗しました',
+    recentUsers: '最新ユーザー',
+    viewAll: 'すべて表示',
+    registeredAt: '登録日',
     
     // Navigation
     dashboard: 'ダッシュボード',
