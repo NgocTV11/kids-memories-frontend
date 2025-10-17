@@ -41,8 +41,13 @@ export const adminTranslations = {
     // User table columns
     userTable: {
       name: 'Tên',
+      avatar: 'Avatar',
       email: 'Email',
       role: 'Vai trò',
+      families: 'Families',
+      kids: 'Kids',
+      albums: 'Albums',
+      photos: 'Photos',
       status: 'Trạng thái',
       joinedDate: 'Ngày tham gia',
       lastActive: 'Hoạt động cuối',
@@ -190,8 +195,13 @@ export const adminTranslations = {
     // User table columns
     userTable: {
       name: 'Name',
+      avatar: 'Avatar',
       email: 'Email',
       role: 'Role',
+      families: 'Families',
+      kids: 'Kids',
+      albums: 'Albums',
+      photos: 'Photos',
       status: 'Status',
       joinedDate: 'Joined Date',
       lastActive: 'Last Active',
@@ -339,8 +349,13 @@ export const adminTranslations = {
     // User table columns
     userTable: {
       name: '名前',
+      avatar: 'アバター',
       email: 'メール',
       role: '役割',
+      families: '家族',
+      kids: '子供',
+      albums: 'アルバム',
+      photos: '写真',
       status: 'ステータス',
       joinedDate: '参加日',
       lastActive: '最終アクティブ',

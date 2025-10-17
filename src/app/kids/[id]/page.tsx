@@ -46,6 +46,19 @@ export default function KidDetailPage() {
   const [openEditModal, setOpenEditModal] = useState(false);
   const [openGrowthModal, setOpenGrowthModal] = useState(false);
 
+  // Format age from backend string to localized format
+  const formatAge = (ageStr: string) => {
+    const match = ageStr.match(/(\d+)\s*tuổi\s*(\d+)\s*tháng/);
+    if (match) {
+      const years = match[1];
+      const months = match[2];
+      return kidsT.detail.ageFormat
+        .replace('{years}', years)
+        .replace('{months}', months);
+    }
+    return ageStr; // fallback to original
+  };
+
   useEffect(() => {
     loadKid();
   }, [kidId]);
@@ -149,7 +162,7 @@ export default function KidDetailPage() {
                     </Box>
                     {kid.age && (
                       <Typography variant="body2" color="text.secondary">
-                        {kid.age}
+                        {formatAge(kid.age)}
                       </Typography>
                     )}
                   </Box>

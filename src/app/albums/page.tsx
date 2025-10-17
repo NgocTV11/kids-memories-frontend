@@ -378,7 +378,7 @@ export default function AlbumsPage() {
                     {albums.reduce((sum, a) => sum + (a.photos_count || 0), 0)}
                   </Typography>
                   <Typography variant="caption" color="text.secondary" sx={{ fontSize: { xs: '0.65rem', sm: '0.75rem' } }}>
-                    Ảnh
+                    {albumsT.photos}
                   </Typography>
                 </Paper>
               </Grid>

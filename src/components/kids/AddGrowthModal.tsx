@@ -16,6 +16,7 @@ import {
 } from '@mui/material';
 import { Close } from '@mui/icons-material';
 import { kidsService, AddGrowthDataDto } from '@/services/kids.service';
+import { useI18nStore } from '@/store/i18n.store';
 import dayjs from 'dayjs';
 
 interface AddGrowthModalProps {
@@ -28,6 +29,7 @@ interface AddGrowthModalProps {
 export function AddGrowthModal({ open, kidId, onClose, onSuccess }: AddGrowthModalProps) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const { kids: kidsT } = useI18nStore();
   
   const [formData, setFormData] = useState<AddGrowthDataDto>({
     date: dayjs().format('YYYY-MM-DD'),
@@ -87,7 +89,7 @@ export function AddGrowthModal({ open, kidId, onClose, onSuccess }: AddGrowthMod
       });
     } catch (err: any) {
       console.error('Error adding growth data:', err);
-      setError(err.response?.data?.message || 'Failed to add growth data');
+      setError(err.response?.data?.message || kidsT.growthModal.addError);
     } finally {
       setLoading(false);
     }
@@ -121,7 +123,7 @@ export function AddGrowthModal({ open, kidId, onClose, onSuccess }: AddGrowthMod
       fullScreen={isMobile}
     >
       <DialogTitle sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        Thêm dữ liệu phát triển
+        {kidsT.growthModal.title}
         {isMobile && (
           <IconButton edge="end" onClick={handleClose} disabled={loading}>
             <Close />
@@ -139,7 +141,7 @@ export function AddGrowthModal({ open, kidId, onClose, onSuccess }: AddGrowthMod
           <TextField
             fullWidth
             type="date"
-            label="Ngày đo"
+            label={kidsT.growthModal.dateLabel}
             value={formData.date}
             onChange={(e) => handleChange('date', e.target.value)}
             error={!!errors.date}
@@ -153,7 +155,8 @@ export function AddGrowthModal({ open, kidId, onClose, onSuccess }: AddGrowthMod
           <TextField
             fullWidth
             type="number"
-            label="Chiều cao (cm)"
+            label={kidsT.growthModal.heightLabel}
+            placeholder={kidsT.growthModal.heightPlaceholder}
             value={formData.height || ''}
             onChange={(e) => handleChange('height', parseFloat(e.target.value))}
             error={!!errors.height}
@@ -167,7 +170,8 @@ export function AddGrowthModal({ open, kidId, onClose, onSuccess }: AddGrowthMod
           <TextField
             fullWidth
             type="number"
-            label="Cân nặng (kg)"
+            label={kidsT.growthModal.weightLabel}
+            placeholder={kidsT.growthModal.weightPlaceholder}
             value={formData.weight || ''}
             onChange={(e) => handleChange('weight', parseFloat(e.target.value))}
             error={!!errors.weight}
@@ -182,17 +186,17 @@ export function AddGrowthModal({ open, kidId, onClose, onSuccess }: AddGrowthMod
             fullWidth
             multiline
             rows={3}
-            label="Ghi chú"
+            label={kidsT.growthModal.noteLabel}
+            placeholder={kidsT.growthModal.notePlaceholder}
             value={formData.note}
             onChange={(e) => handleChange('note', e.target.value)}
-            placeholder="Ghi chú về sự phát triển..."
             size={isMobile ? "small" : "medium"}
           />
         </Box>
       </DialogContent>
       <DialogActions sx={{ p: { xs: 2, sm: 1.5 } }}>
         <Button onClick={handleClose} disabled={loading} size={isMobile ? "medium" : "large"}>
-          Hủy
+          {kidsT.growthModal.cancel}
         </Button>
         <Button 
           onClick={handleSubmit} 
@@ -200,7 +204,7 @@ export function AddGrowthModal({ open, kidId, onClose, onSuccess }: AddGrowthMod
           disabled={loading}
           size={isMobile ? "medium" : "large"}
         >
-          {loading ? 'Đang lưu...' : 'Thêm'}
+          {loading ? kidsT.saving : kidsT.growthModal.addButton}
         </Button>
       </DialogActions>
     </Dialog>

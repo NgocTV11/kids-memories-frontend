@@ -206,13 +206,13 @@ export default function AdminUsersPage() {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Avatar</TableCell>
-              <TableCell>Email</TableCell>
-              <TableCell>Role</TableCell>
-              <TableCell align="center">Families</TableCell>
-              <TableCell align="center">Kids</TableCell>
-              <TableCell align="center">Albums</TableCell>
-              <TableCell align="center">Photos</TableCell>
+              <TableCell>{adminT.userTable.avatar}</TableCell>
+              <TableCell>{adminT.userTable.email}</TableCell>
+              <TableCell>{adminT.userTable.role}</TableCell>
+              <TableCell align="center">{adminT.userTable.families}</TableCell>
+              <TableCell align="center">{adminT.userTable.kids}</TableCell>
+              <TableCell align="center">{adminT.userTable.albums}</TableCell>
+              <TableCell align="center">{adminT.userTable.photos}</TableCell>
               <TableCell>{adminT.userTable.joinedDate}</TableCell>
               <TableCell align="center">{adminT.userTable.actions}</TableCell>
             </TableRow>
