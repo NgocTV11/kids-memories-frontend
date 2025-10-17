@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { milestonesService, Milestone } from '@/services/milestones.service';
 import { kidsService, Kid } from '@/services/kids.service';
+import { useI18nStore } from '@/store/i18n.store';
 import {
   Container,
   Box,
@@ -32,6 +33,7 @@ import { TimelineItem } from '@/components/milestones/TimelineItem';
 import { AddMilestoneModal } from '@/components/milestones/AddMilestoneModal';
 
 export default function MilestonesPage() {
+  const { milestones: milestonesT } = useI18nStore();
   const [milestones, setMilestones] = useState<Milestone[]>([]);
   const [kids, setKids] = useState<Kid[]>([]);
   const [loading, setLoading] = useState(true);
@@ -63,7 +65,7 @@ export default function MilestonesPage() {
       setKids(kidsData);
     } catch (err: any) {
       console.error('Error loading data:', err);
-      setError(err.response?.data?.message || 'Failed to load milestones');
+      setError(err.response?.data?.message || milestonesT.loadError);
     } finally {
       setLoading(false);
     }
@@ -80,14 +82,14 @@ export default function MilestonesPage() {
   };
 
   const handleDeleteClick = async (milestoneId: string) => {
-    if (!confirm('Bạn có chắc muốn xóa milestone này?')) return;
+    if (!confirm(milestonesT.deleteConfirm)) return;
 
     try {
       await milestonesService.delete(milestoneId);
       setMilestones(milestones.filter((m) => m.id !== milestoneId));
     } catch (err: any) {
       console.error('Error deleting milestone:', err);
-      alert(err.response?.data?.message || 'Failed to delete milestone');
+      alert(err.response?.data?.message || milestonesT.deleteError);
     }
   };
 
@@ -211,10 +213,10 @@ export default function MilestonesPage() {
                 </Box>
                 <Box>
                   <Typography variant="h4" fontWeight="bold" gutterBottom sx={{ mb: 0.5 }}>
-                    Milestones 🌟
+                    {milestonesT.title}
                   </Typography>
                   <Typography variant="body1" color="text.secondary">
-                    Ghi lại những cột mốc đáng nhớ trong hành trình lớn lên
+                    {milestonesT.subtitle}
                   </Typography>
                 </Box>
               </Box>
@@ -236,7 +238,7 @@ export default function MilestonesPage() {
                   transition: 'all 0.3s ease',
                 }}
               >
-                Thêm milestone
+                {milestonesT.addMilestone}
               </Button>
             </Box>
 
@@ -245,10 +247,10 @@ export default function MilestonesPage() {
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                 <FilterList sx={{ color: 'text.secondary' }} />
                 <FormControl sx={{ minWidth: 250 }}>
-                  <InputLabel>Lọc theo bé</InputLabel>
+                  <InputLabel>{milestonesT.filterByKid}</InputLabel>
                   <Select
                     value={selectedKidId}
-                    label="Lọc theo bé"
+                    label={milestonesT.filterByKid}
                     onChange={(e) => setSelectedKidId(e.target.value)}
                     sx={{
                       borderRadius: 2,
@@ -260,7 +262,7 @@ export default function MilestonesPage() {
                     <MenuItem value="all">
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                         <Timeline fontSize="small" />
-                        Tất cả milestones
+                        {milestonesT.allMilestones}
                       </Box>
                     </MenuItem>
                     {kids.map((kid) => (
@@ -304,7 +306,7 @@ export default function MilestonesPage() {
                     {milestones.filter(m => m.category === 'first_time').length}
                   </Typography>
                   <Typography variant="caption" color="text.secondary">
-                    Lần đầu
+                    {milestonesT.categories.first_time}
                   </Typography>
                 </Paper>
               </Grid>
@@ -324,7 +326,7 @@ export default function MilestonesPage() {
                     {milestones.filter(m => m.category === 'physical').length}
                   </Typography>
                   <Typography variant="caption" color="text.secondary">
-                    Thể chất
+                    {milestonesT.categories.physical}
                   </Typography>
                 </Paper>
               </Grid>
@@ -344,7 +346,7 @@ export default function MilestonesPage() {
                     {milestones.filter(m => m.category === 'cognitive').length}
                   </Typography>
                   <Typography variant="caption" color="text.secondary">
-                    Nhận thức
+                    {milestonesT.categories.cognitive}
                   </Typography>
                 </Paper>
               </Grid>
@@ -364,7 +366,7 @@ export default function MilestonesPage() {
                     {milestones.filter(m => m.category === 'social').length}
                   </Typography>
                   <Typography variant="caption" color="text.secondary">
-                    Xã hội
+                    {milestonesT.categories.social}
                   </Typography>
                 </Paper>
               </Grid>
@@ -384,7 +386,7 @@ export default function MilestonesPage() {
                     {milestones.length}
                   </Typography>
                   <Typography variant="caption" color="text.secondary">
-                    Tổng số
+                    {milestonesT.total}
                   </Typography>
                 </Paper>
               </Grid>
@@ -449,10 +451,10 @@ export default function MilestonesPage() {
                 <EmojiEvents sx={{ fontSize: 60, color: 'white' }} />
               </Box>
               <Typography variant="h5" fontWeight="bold" gutterBottom>
-                {selectedKidId === 'all' ? 'Chưa có milestone nào 🎯' : 'Bé này chưa có milestone nào'}
+                {selectedKidId === 'all' ? milestonesT.noMilestones : milestonesT.noMilestonesForKid}
               </Typography>
               <Typography variant="body1" color="text.secondary" sx={{ mb: 3, maxWidth: 400, mx: 'auto' }}>
-                Bắt đầu ghi lại những cột mốc quan trọng trong hành trình phát triển của bé!
+                {milestonesT.noMilestonesDesc}
               </Typography>
               <Button
                 variant="contained"
@@ -469,7 +471,7 @@ export default function MilestonesPage() {
                   },
                 }}
               >
-                Thêm milestone đầu tiên
+                {milestonesT.addFirstMilestone}
               </Button>
             </Paper>
           ) : (
