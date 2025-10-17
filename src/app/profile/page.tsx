@@ -40,12 +40,14 @@ import {
   Person,
 } from '@mui/icons-material';
 import { useAuthStore } from '@/store/auth.store';
+import { useI18nStore } from '@/store/i18n.store';
 import { usersService, UpdateProfileDto, ChangePasswordDto } from '@/services/users.service';
 import dayjs from 'dayjs';
 
 export default function ProfilePage() {
   const router = useRouter();
   const { user, setUser } = useAuthStore();
+  const { profile: profileT } = useI18nStore();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -86,13 +88,13 @@ export default function ProfilePage() {
     if (file) {
       // Validate file type
       if (!file.type.startsWith('image/')) {
-        setError('Vui lòng chọn file ảnh');
+        setError(profileT.avatarError);
         return;
       }
 
       // Validate file size (max 5MB)
       if (file.size > 5 * 1024 * 1024) {
-        setError('Kích thước ảnh tối đa 5MB');
+        setError(profileT.avatarSizeError);
         return;
       }
 
@@ -133,11 +135,11 @@ export default function ProfilePage() {
       // Update auth store
       setUser(updatedUser);
       
-      setSuccess('Cập nhật thông tin thành công!');
+      setSuccess(profileT.updateSuccess);
       setEditMode(false);
       setAvatarFile(null);
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Không thể cập nhật thông tin');
+      setError(err.response?.data?.message || profileT.updateError);
     } finally {
       setLoading(false);
     }
@@ -156,19 +158,19 @@ export default function ProfilePage() {
     const errors: Record<string, string> = {};
 
     if (!passwordForm.current_password) {
-      errors.current_password = 'Vui lòng nhập mật khẩu hiện tại';
+      errors.current_password = profileT.passwordRequired;
     }
 
     if (!passwordForm.new_password) {
-      errors.new_password = 'Vui lòng nhập mật khẩu mới';
+      errors.new_password = profileT.newPasswordRequired;
     } else if (passwordForm.new_password.length < 6) {
-      errors.new_password = 'Mật khẩu tối thiểu 6 ký tự';
+      errors.new_password = profileT.passwordMinLength;
     }
 
     if (!passwordForm.confirm_password) {
-      errors.confirm_password = 'Vui lòng xác nhận mật khẩu mới';
+      errors.confirm_password = profileT.confirmPasswordRequired;
     } else if (passwordForm.new_password !== passwordForm.confirm_password) {
-      errors.confirm_password = 'Mật khẩu xác nhận không khớp';
+      errors.confirm_password = profileT.passwordMismatch;
     }
 
     setPasswordErrors(errors);
@@ -184,7 +186,7 @@ export default function ProfilePage() {
       
       await usersService.changePassword(passwordForm);
       
-      setSuccess('Đổi mật khẩu thành công!');
+      setSuccess(profileT.passwordChangeSuccess);
       setPasswordModalOpen(false);
       setPasswordForm({
         current_password: '',
@@ -193,7 +195,7 @@ export default function ProfilePage() {
       });
       setPasswordErrors({});
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Không thể đổi mật khẩu');
+      setError(err.response?.data?.message || profileT.passwordChangeError);
     } finally {
       setLoading(false);
     }
@@ -224,10 +226,10 @@ export default function ProfilePage() {
           <AccountCircle sx={{ fontSize: { xs: 48, md: 64 } }} />
           <Box>
             <Typography variant={isMobile ? "h5" : "h4"} fontWeight="bold">
-              Thông Tin Cá Nhân
+              {profileT.title}
             </Typography>
             <Typography variant="body2" sx={{ opacity: 0.9 }}>
-              Quản lý thông tin tài khoản của bạn
+              {profileT.subtitle}
             </Typography>
           </Box>
         </Box>
@@ -292,7 +294,7 @@ export default function ProfilePage() {
                 {user.email}
               </Typography>
               <Typography variant="caption" color="text.secondary">
-                Tham gia: {dayjs(user.created_at).format('DD/MM/YYYY')}
+                {profileT.joinedDate}: {dayjs(user.created_at).format('DD/MM/YYYY')}
               </Typography>
             </CardContent>
           </Card>
@@ -304,7 +306,7 @@ export default function ProfilePage() {
             <CardContent sx={{ p: { xs: 2, md: 3 } }}>
               <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
                 <Typography variant="h6" fontWeight="bold">
-                  Thông Tin Tài Khoản
+                  {profileT.accountInfo}
                 </Typography>
                 {!editMode ? (
                   <Button
@@ -313,7 +315,7 @@ export default function ProfilePage() {
                     onClick={() => setEditMode(true)}
                     size={isMobile ? "small" : "medium"}
                   >
-                    Chỉnh Sửa
+                    {profileT.editProfile}
                   </Button>
                 ) : (
                   <Box display="flex" gap={1}>
@@ -324,7 +326,7 @@ export default function ProfilePage() {
                       disabled={loading}
                       size={isMobile ? "small" : "medium"}
                     >
-                      Hủy
+                      {profileT.cancel}
                     </Button>
                     <Button
                       variant="contained"
@@ -333,7 +335,7 @@ export default function ProfilePage() {
                       disabled={loading}
                       size={isMobile ? "small" : "medium"}
                     >
-                      Lưu
+                      {loading ? profileT.saving : profileT.saveChanges}
                     </Button>
                   </Box>
                 )}
@@ -345,7 +347,7 @@ export default function ProfilePage() {
                 <Grid size={{ xs: 12 }}>
                   <TextField
                     fullWidth
-                    label="Tên hiển thị"
+                    label={profileT.displayName}
                     value={displayName}
                     onChange={(e) => setDisplayName(e.target.value)}
                     disabled={!editMode}
@@ -359,28 +361,29 @@ export default function ProfilePage() {
                 <Grid size={{ xs: 12 }}>
                   <TextField
                     fullWidth
-                    label="Email"
+                    label={profileT.email}
                     value={user.email}
                     disabled
                     InputProps={{
                       startAdornment: <Email sx={{ mr: 1, color: 'action.active' }} />,
                     }}
-                    helperText="Email không thể thay đổi"
+                    helperText={profileT.emailHelper}
                     size={isMobile ? "small" : "medium"}
                   />
                 </Grid>
 
                 <Grid size={{ xs: 12 }}>
                   <FormControl fullWidth disabled={!editMode} size={isMobile ? "small" : "medium"}>
-                    <InputLabel>Ngôn ngữ</InputLabel>
+                    <InputLabel>{profileT.language}</InputLabel>
                     <Select
                       value={language}
-                      label="Ngôn ngữ"
+                      label={profileT.language}
                       onChange={(e) => setLanguage(e.target.value)}
                       startAdornment={<LanguageIcon sx={{ mr: 1, color: 'action.active' }} />}
                     >
-                      <MenuItem value="vi">🇻🇳 Tiếng Việt</MenuItem>
-                      <MenuItem value="en">🇬🇧 English</MenuItem>
+                      <MenuItem value="vi">🇻🇳 {profileT.vietnamese}</MenuItem>
+                      <MenuItem value="en">🇬🇧 {profileT.english}</MenuItem>
+                      <MenuItem value="ja">🇯🇵 {profileT.japanese}</MenuItem>
                     </Select>
                   </FormControl>
                 </Grid>
@@ -390,7 +393,7 @@ export default function ProfilePage() {
 
               <Box>
                 <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-                  Bảo mật
+                  {profileT.securitySettings}
                 </Typography>
                 <Button
                   variant="outlined"
@@ -399,7 +402,7 @@ export default function ProfilePage() {
                   fullWidth={isMobile}
                   size={isMobile ? "small" : "medium"}
                 >
-                  Đổi Mật Khẩu
+                  {profileT.changePasswordBtn}
                 </Button>
               </Box>
             </CardContent>
@@ -416,7 +419,7 @@ export default function ProfilePage() {
         fullScreen={isMobile}
       >
         <DialogTitle sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          Đổi Mật Khẩu
+          {profileT.changePassword}
           {isMobile && (
             <IconButton edge="end" onClick={() => setPasswordModalOpen(false)} disabled={loading}>
               <Cancel />
@@ -428,7 +431,7 @@ export default function ProfilePage() {
             <TextField
               fullWidth
               type="password"
-              label="Mật khẩu hiện tại"
+              label={profileT.currentPassword}
               value={passwordForm.current_password}
               onChange={(e) =>
                 setPasswordForm({ ...passwordForm, current_password: e.target.value })
@@ -442,7 +445,7 @@ export default function ProfilePage() {
             <TextField
               fullWidth
               type="password"
-              label="Mật khẩu mới"
+              label={profileT.newPassword}
               value={passwordForm.new_password}
               onChange={(e) =>
                 setPasswordForm({ ...passwordForm, new_password: e.target.value })
@@ -456,7 +459,7 @@ export default function ProfilePage() {
             <TextField
               fullWidth
               type="password"
-              label="Xác nhận mật khẩu mới"
+              label={profileT.confirmNewPassword}
               value={passwordForm.confirm_password}
               onChange={(e) =>
                 setPasswordForm({ ...passwordForm, confirm_password: e.target.value })
@@ -473,7 +476,7 @@ export default function ProfilePage() {
             disabled={loading}
             size={isMobile ? "medium" : "large"}
           >
-            Hủy
+            {profileT.cancel}
           </Button>
           <Button
             onClick={handleChangePassword}
@@ -482,7 +485,7 @@ export default function ProfilePage() {
             startIcon={loading ? <CircularProgress size={20} /> : <Lock />}
             size={isMobile ? "medium" : "large"}
           >
-            Đổi Mật Khẩu
+            {loading ? profileT.saving : profileT.changePasswordBtn}
           </Button>
         </DialogActions>
       </Dialog>

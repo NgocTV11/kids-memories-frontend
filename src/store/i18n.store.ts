@@ -10,6 +10,7 @@ import { getMilestonesTranslation } from '@/locales/milestones';
 import { getPhotosTranslation } from '@/locales/photos';
 import { getAuthTranslation } from '@/locales/auth';
 import { getAdminTranslation } from '@/locales/admin';
+import { getProfileTranslation } from '@/locales/profile';
 
 interface I18nState {
   locale: Locale;
@@ -22,6 +23,7 @@ interface I18nState {
   photos: ReturnType<typeof getPhotosTranslation>;
   auth: ReturnType<typeof getAuthTranslation>;
   admin: ReturnType<typeof getAdminTranslation>;
+  profile: ReturnType<typeof getProfileTranslation>;
   setLocale: (locale: Locale) => void;
 }
 
@@ -38,6 +40,7 @@ export const useI18nStore = create<I18nState>()(
       photos: getPhotosTranslation(defaultLocale),
       auth: getAuthTranslation(defaultLocale),
       admin: getAdminTranslation(defaultLocale),
+      profile: getProfileTranslation(defaultLocale),
       setLocale: (locale: Locale) => {
         set({
           locale,
@@ -50,15 +53,16 @@ export const useI18nStore = create<I18nState>()(
           photos: getPhotosTranslation(locale),
           auth: getAuthTranslation(locale),
           admin: getAdminTranslation(locale),
+          profile: getProfileTranslation(locale),
         });
       },
     }),
     {
       name: 'i18n-storage',
-      version: 2, // Increment version to force reload with new hero keys
+      version: 3, // Increment version to force reload with profile keys
       migrate: (persistedState: any, version: number) => {
         // If old version, reset to defaults
-        if (version < 2) {
+        if (version < 3) {
           const locale = persistedState?.locale || defaultLocale;
           return {
             locale,
@@ -71,6 +75,7 @@ export const useI18nStore = create<I18nState>()(
             photos: getPhotosTranslation(locale),
             auth: getAuthTranslation(locale),
             admin: getAdminTranslation(locale),
+            profile: getProfileTranslation(locale),
           };
         }
         return persistedState;
