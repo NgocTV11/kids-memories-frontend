@@ -58,11 +58,18 @@ export const kidsTranslations = {
       notesPlaceholder: 'Thông tin thêm về bé...',
       avatarLabel: 'Ảnh đại diện',
       uploadAvatar: 'Tải ảnh lên',
+      changePhoto: 'Đổi ảnh',
+      addPhoto: 'Thêm ảnh',
+      removePhoto: 'Xóa ảnh',
+      uploadingPhoto: 'Đang tải ảnh lên...',
     },
     
     // Actions
     cancel: 'Hủy',
     save: 'Lưu',
+    add: 'Thêm',
+    update: 'Cập nhật',
+    saving: 'Đang lưu...',
     confirm: 'Xác nhận',
     
     // Messages
@@ -159,11 +166,18 @@ export const kidsTranslations = {
       notesPlaceholder: 'Additional information about the kid...',
       avatarLabel: 'Avatar',
       uploadAvatar: 'Upload image',
+      changePhoto: 'Change photo',
+      addPhoto: 'Add photo',
+      removePhoto: 'Remove photo',
+      uploadingPhoto: 'Uploading image...',
     },
     
     // Actions
     cancel: 'Cancel',
     save: 'Save',
+    add: 'Add',
+    update: 'Update',
+    saving: 'Saving...',
     confirm: 'Confirm',
     
     // Messages
@@ -260,11 +274,18 @@ export const kidsTranslations = {
       notesPlaceholder: '子供に関する追加情報...',
       avatarLabel: 'アバター',
       uploadAvatar: '画像をアップロード',
+      changePhoto: '写真を変更',
+      addPhoto: '写真を追加',
+      removePhoto: '写真を削除',
+      uploadingPhoto: '画像をアップロード中...',
     },
     
     // Actions
     cancel: 'キャンセル',
     save: '保存',
+    add: '追加',
+    update: '更新',
+    saving: '保存中...',
     confirm: '確認',
     
     // Messages

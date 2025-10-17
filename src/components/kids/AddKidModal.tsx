@@ -24,6 +24,7 @@ import {
 } from '@mui/material';
 import { Close, PhotoCamera, Delete } from '@mui/icons-material';
 import { kidsService, Kid, CreateKidDto, UpdateKidDto } from '@/services/kids.service';
+import { useI18nStore } from '@/store/i18n.store';
 import dayjs from 'dayjs';
 
 interface AddKidModalProps {
@@ -35,6 +36,7 @@ interface AddKidModalProps {
 
 export function AddKidModal({ open, kid, onClose, onSuccess }: AddKidModalProps) {
   const isEdit = !!kid;
+  const { kids: kidsT } = useI18nStore();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -196,7 +198,7 @@ export function AddKidModal({ open, kid, onClose, onSuccess }: AddKidModalProps)
       fullScreen={isMobile}
     >
       <DialogTitle sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        {isEdit ? 'Chỉnh sửa thông tin bé' : 'Thêm bé mới'}
+        {isEdit ? kidsT.editKidTitle : kidsT.addKidTitle}
         {isMobile && (
           <IconButton edge="end" onClick={onClose} disabled={loading}>
             <Close />
@@ -238,7 +240,7 @@ export function AddKidModal({ open, kid, onClose, onSuccess }: AddKidModalProps)
                 onClick={() => fileInputRef.current?.click()}
                 disabled={loading || uploadingAvatar}
               >
-                {avatarPreview ? 'Đổi ảnh' : 'Thêm ảnh'}
+                {avatarPreview ? kidsT.form.changePhoto : kidsT.form.addPhoto}
               </Button>
               {avatarPreview && (
                 <Button
@@ -249,20 +251,20 @@ export function AddKidModal({ open, kid, onClose, onSuccess }: AddKidModalProps)
                   onClick={handleAvatarRemove}
                   disabled={loading || uploadingAvatar}
                 >
-                  Xóa ảnh
+                  {kidsT.form.removePhoto}
                 </Button>
               )}
             </Stack>
             {uploadingAvatar && (
               <Typography variant="caption" color="text.secondary" sx={{ mt: 1 }}>
-                Đang tải ảnh lên...
+                {kidsT.form.uploadingPhoto}
               </Typography>
             )}
           </Box>
 
           <TextField
             fullWidth
-            label="Tên bé"
+            label={kidsT.form.name}
             value={formData.name}
             onChange={(e) => handleChange('name', e.target.value)}
             error={!!errors.name}
@@ -275,7 +277,7 @@ export function AddKidModal({ open, kid, onClose, onSuccess }: AddKidModalProps)
           <TextField
             fullWidth
             type="date"
-            label="Ngày sinh"
+            label={kidsT.form.dateOfBirth}
             value={formData.date_of_birth}
             onChange={(e) => handleChange('date_of_birth', e.target.value)}
             error={!!errors.date_of_birth}
@@ -287,22 +289,22 @@ export function AddKidModal({ open, kid, onClose, onSuccess }: AddKidModalProps)
           />
 
           <FormControl component="fieldset">
-            <FormLabel component="legend">Giới tính</FormLabel>
+            <FormLabel component="legend">{kidsT.form.genderLabel}</FormLabel>
             <RadioGroup
               row={!isMobile}
               value={formData.gender}
               onChange={(e) => handleChange('gender', e.target.value)}
             >
-              <FormControlLabel value="male" control={<Radio />} label="Bé trai" />
-              <FormControlLabel value="female" control={<Radio />} label="Bé gái" />
-              <FormControlLabel value="other" control={<Radio />} label="Khác" />
+              <FormControlLabel value="male" control={<Radio />} label={kidsT.gender.male} />
+              <FormControlLabel value="female" control={<Radio />} label={kidsT.gender.female} />
+              <FormControlLabel value="other" control={<Radio />} label={kidsT.gender.other} />
             </RadioGroup>
           </FormControl>
         </Box>
       </DialogContent>
       <DialogActions sx={{ p: { xs: 2, sm: 1.5 } }}>
         <Button onClick={onClose} disabled={loading} size={isMobile ? "medium" : "large"}>
-          Hủy
+          {kidsT.cancel}
         </Button>
         <Button 
           onClick={handleSubmit} 
@@ -310,7 +312,7 @@ export function AddKidModal({ open, kid, onClose, onSuccess }: AddKidModalProps)
           disabled={loading}
           size={isMobile ? "medium" : "large"}
         >
-          {loading ? 'Đang lưu...' : isEdit ? 'Cập nhật' : 'Thêm'}
+          {loading ? kidsT.saving : isEdit ? kidsT.update : kidsT.add}
         </Button>
       </DialogActions>
     </Dialog>
