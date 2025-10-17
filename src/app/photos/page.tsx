@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
+import { useI18nStore } from '@/store/i18n.store';
 import { photosService, Photo } from '@/services/photos.service';
 import { albumsService, Album } from '@/services/albums.service';
 import { kidsService, Kid } from '@/services/kids.service';
@@ -41,6 +42,7 @@ export default function PhotosPage() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'md'));
+  const { photos: photosT } = useI18nStore();
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [albums, setAlbums] = useState<Album[]>([]);
   const [kids, setKids] = useState<Kid[]>([]);
@@ -80,7 +82,7 @@ export default function PhotosPage() {
       setKids(kidsData);
     } catch (err: any) {
       console.error('Error loading data:', err);
-      setError(err.response?.data?.message || 'Failed to load photos');
+      setError(err.response?.data?.message || photosT.loadError);
     } finally {
       setLoading(false);
     }
@@ -102,7 +104,7 @@ export default function PhotosPage() {
   };
 
   const handleDeletePhoto = async (photoId: string) => {
-    if (!confirm('Bạn có chắc muốn xóa ảnh này?')) return;
+    if (!confirm(photosT.deleteConfirm)) return;
 
     try {
       await photosService.delete(photoId);
@@ -110,7 +112,7 @@ export default function PhotosPage() {
       setSelectedPhoto(null);
     } catch (err: any) {
       console.error('Error deleting photo:', err);
-      alert(err.response?.data?.message || 'Failed to delete photo');
+      alert(err.response?.data?.message || photosT.deleteError);
     }
   };
 
@@ -207,10 +209,10 @@ export default function PhotosPage() {
                 </Box>
                 <Box>
                   <Typography variant={isMobile ? "h6" : "h4"} fontWeight="bold" gutterBottom sx={{ mb: 0.5 }}>
-                    Thư viện ảnh 🖼️
+                    {photosT.title}
                   </Typography>
                   <Typography variant={isMobile ? "caption" : "body1"} color="text.secondary">
-                    {total} ảnh {!isMobile && "đã lưu • Lưu giữ từng khoảnh khắc đáng nhớ"}
+                    {total} {photosT.photos} {!isMobile && `• ${photosT.subtitle}`}
                   </Typography>
                 </Box>
               </Box>
@@ -234,7 +236,7 @@ export default function PhotosPage() {
                   transition: 'all 0.3s ease',
                 }}
               >
-                {isMobile ? '📤 Tải ảnh lên' : 'Tải ảnh lên'}
+                {isMobile ? `📤 ${photosT.uploadPhotos}` : photosT.uploadPhotos}
               </Button>
             </Box>
 
@@ -249,10 +251,10 @@ export default function PhotosPage() {
               <Grid container spacing={{ xs: 1, sm: 2 }} sx={{ flex: 1 }}>
                 <Grid size={{ xs: 12, sm: 6, md: 4 }}>
                   <FormControl fullWidth size={isMobile ? "small" : "medium"}>
-                    <InputLabel>Album</InputLabel>
+                    <InputLabel>{photosT.filterByAlbum}</InputLabel>
                     <Select
                       value={selectedAlbumId}
-                      label="Album"
+                      label={photosT.filterByAlbum}
                       onChange={(e) => {
                         setSelectedAlbumId(e.target.value);
                         setPage(0);
@@ -267,7 +269,7 @@ export default function PhotosPage() {
                       <MenuItem value="all">
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                           <Collections fontSize="small" />
-                          {isMobile ? 'Tất cả' : 'Tất cả albums'}
+                          {isMobile ? photosT.all : photosT.allAlbums}
                         </Box>
                       </MenuItem>
                       {albums.map((album) => (
@@ -280,10 +282,10 @@ export default function PhotosPage() {
                 </Grid>
                 <Grid size={{ xs: 12, sm: 6, md: 4 }}>
                   <FormControl fullWidth size={isMobile ? "small" : "medium"}>
-                    <InputLabel>Bé yêu</InputLabel>
+                    <InputLabel>{photosT.filterByKid}</InputLabel>
                     <Select
                       value={selectedKidId}
-                      label="Bé yêu"
+                      label={photosT.filterByKid}
                       onChange={(e) => {
                         setSelectedKidId(e.target.value);
                         setPage(0);
@@ -295,7 +297,7 @@ export default function PhotosPage() {
                         },
                       }}
                     >
-                      <MenuItem value="all">Tất cả</MenuItem>
+                      <MenuItem value="all">{photosT.all}</MenuItem>
                       {kids.map((kid) => (
                         <MenuItem key={kid.id} value={kid.id}>
                           {kid.name}
@@ -318,7 +320,7 @@ export default function PhotosPage() {
                       {photos.length}
                     </Typography>
                     <Typography variant="caption" color="text.secondary">
-                      Đang hiển thị
+                      {photosT.showing}
                     </Typography>
                   </Box>
                 </Grid>
@@ -349,7 +351,7 @@ export default function PhotosPage() {
                     {total}
                   </Typography>
                   <Typography variant="caption" color="text.secondary" sx={{ fontSize: { xs: '0.7rem', sm: '0.75rem' } }}>
-                    {isMobile ? 'Ảnh' : 'Tổng số ảnh'}
+                    {isMobile ? photosT.photos : photosT.totalPhotos}
                   </Typography>
                 </Paper>
               </Grid>
@@ -369,7 +371,7 @@ export default function PhotosPage() {
                     {albums.length}
                   </Typography>
                   <Typography variant="caption" color="text.secondary" sx={{ fontSize: { xs: '0.7rem', sm: '0.75rem' } }}>
-                    Albums
+                    {photosT.albums}
                   </Typography>
                 </Paper>
               </Grid>
@@ -389,7 +391,7 @@ export default function PhotosPage() {
                     {Math.round((photos.length / total) * 100)}%
                   </Typography>
                   <Typography variant="caption" color="text.secondary" sx={{ fontSize: { xs: '0.7rem', sm: '0.75rem' } }}>
-                    Hiển thị
+                    {photosT.showing}
                   </Typography>
                 </Paper>
               </Grid>
@@ -409,7 +411,7 @@ export default function PhotosPage() {
                     {kids.length}
                   </Typography>
                   <Typography variant="caption" color="text.secondary" sx={{ fontSize: { xs: '0.7rem', sm: '0.75rem' } }}>
-                    Bé yêu
+                    {photosT.kids}
                   </Typography>
                 </Paper>
               </Grid>
@@ -474,14 +476,14 @@ export default function PhotosPage() {
                 <Image sx={{ fontSize: { xs: 40, sm: 50, md: 60 }, color: 'white' }} />
               </Box>
               <Typography variant={isMobile ? "h6" : "h5"} fontWeight="bold" gutterBottom>
-                Chưa có ảnh nào 📷
+                {photosT.noPhotos}
               </Typography>
               <Typography 
                 variant={isMobile ? "body2" : "body1"} 
                 color="text.secondary" 
                 sx={{ mb: 3, maxWidth: 400, mx: 'auto' }}
               >
-                Bắt đầu tải lên những khoảnh khắc đáng nhớ của bé yêu ngay hôm nay!
+                {photosT.noPhotosDesc}
               </Typography>
               <Button
                 variant="contained"
@@ -500,7 +502,7 @@ export default function PhotosPage() {
                   },
                 }}
               >
-                {isMobile ? '📤 Tải ảnh đầu tiên' : 'Tải ảnh đầu tiên'}
+                {isMobile ? `📤 ${photosT.uploadFirstPhoto}` : photosT.uploadFirstPhoto}
               </Button>
             </Paper>
           ) : (
@@ -545,10 +547,10 @@ export default function PhotosPage() {
                     {loading ? (
                       <>
                         <CircularProgress size={20} sx={{ mr: 1, color: '#667eea' }} />
-                        Đang tải...
+                        {photosT.loading}
                       </>
                     ) : (
-                      `${isMobile ? `+${total - photos.length}` : `Xem thêm (${total - photos.length} ảnh)`}`
+                      `${isMobile ? `+${total - photos.length}` : `${photosT.loadMore} (${total - photos.length} ${photosT.photos})`}`
                     )}
                   </Button>
                 </Box>
