@@ -510,7 +510,7 @@ function LoginContent() {
                         },
                       }}
                     >
-                      Quên mật khẩu?
+                      {auth.login.forgotPassword}
                     </MuiLink>
                   </Link>
                 </Box>

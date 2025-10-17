@@ -21,6 +21,7 @@ import {
 import { Close } from '@mui/icons-material';
 import { albumsService, Album, CreateAlbumDto, UpdateAlbumDto } from '@/services/albums.service';
 import { Kid } from '@/services/kids.service';
+import { useI18nStore } from '@/store/i18n.store';
 
 interface AddAlbumModalProps {
   open: boolean;
@@ -34,6 +35,7 @@ export function AddAlbumModal({ open, album, kids, onClose, onSuccess }: AddAlbu
   const isEdit = !!album;
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const { albums: albumsT } = useI18nStore();
 
   const [formData, setFormData] = useState({
     title: '',
@@ -70,7 +72,7 @@ export function AddAlbumModal({ open, album, kids, onClose, onSuccess }: AddAlbu
     const newErrors: Record<string, string> = {};
 
     if (!formData.title.trim()) {
-      newErrors.title = 'Tên album là bắt buộc';
+      newErrors.title = albumsT.form.nameRequired;
     }
 
     setErrors(newErrors);
@@ -105,7 +107,7 @@ export function AddAlbumModal({ open, album, kids, onClose, onSuccess }: AddAlbu
       onSuccess();
     } catch (err: any) {
       console.error('Error saving album:', err);
-      setError(err.response?.data?.message || 'Failed to save album');
+      setError(err.response?.data?.message || albumsT.createError);
     } finally {
       setLoading(false);
     }
@@ -127,7 +129,7 @@ export function AddAlbumModal({ open, album, kids, onClose, onSuccess }: AddAlbu
       fullScreen={isMobile}
     >
       <DialogTitle sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        {isEdit ? 'Chỉnh sửa album' : 'Tạo album mới'}
+        {isEdit ? albumsT.editAlbumTitle : albumsT.createAlbumTitle}
         {isMobile && (
           <IconButton edge="end" onClick={onClose} disabled={loading}>
             <Close />
@@ -144,7 +146,7 @@ export function AddAlbumModal({ open, album, kids, onClose, onSuccess }: AddAlbu
 
           <TextField
             fullWidth
-            label="Tên album"
+            label={albumsT.form.name}
             value={formData.title}
             onChange={(e) => handleChange('title', e.target.value)}
             error={!!errors.title}
@@ -158,7 +160,7 @@ export function AddAlbumModal({ open, album, kids, onClose, onSuccess }: AddAlbu
             fullWidth
             multiline
             rows={3}
-            label="Mô tả"
+            label={albumsT.form.description}
             value={formData.description}
             onChange={(e) => handleChange('description', e.target.value)}
             sx={{ mb: 2 }}
@@ -166,13 +168,13 @@ export function AddAlbumModal({ open, album, kids, onClose, onSuccess }: AddAlbu
           />
 
           <FormControl fullWidth sx={{ mb: 2 }} size={isMobile ? "small" : "medium"}>
-            <InputLabel>Chọn bé (tùy chọn)</InputLabel>
+            <InputLabel>{albumsT.form.selectKid}</InputLabel>
             <Select
               value={formData.kid_id}
-              label="Chọn bé (tùy chọn)"
+              label={albumsT.form.selectKid}
               onChange={(e) => handleChange('kid_id', e.target.value)}
             >
-              <MenuItem value="">Không chọn</MenuItem>
+              <MenuItem value="">{albumsT.form.noKid}</MenuItem>
               {kids.map((kid) => (
                 <MenuItem key={kid.id} value={kid.id}>
                   {kid.name}
@@ -182,22 +184,22 @@ export function AddAlbumModal({ open, album, kids, onClose, onSuccess }: AddAlbu
           </FormControl>
 
           <FormControl fullWidth required size={isMobile ? "small" : "medium"}>
-            <InputLabel>Mức độ riêng tư</InputLabel>
+            <InputLabel>{albumsT.form.privacy}</InputLabel>
             <Select
               value={formData.privacy_level}
-              label="Mức độ riêng tư"
+              label={albumsT.form.privacy}
               onChange={(e) => handleChange('privacy_level', e.target.value)}
             >
-              <MenuItem value="private">🔒 Riêng tư (chỉ mình tôi)</MenuItem>
-              <MenuItem value="family">👨‍👩‍👧‍👦 Gia đình</MenuItem>
-              <MenuItem value="public">🌍 Công khai</MenuItem>
+              <MenuItem value="private">{albumsT.form.privacyOptions.private}</MenuItem>
+              <MenuItem value="family">{albumsT.form.privacyOptions.family}</MenuItem>
+              <MenuItem value="public">{albumsT.form.privacyOptions.public}</MenuItem>
             </Select>
           </FormControl>
         </Box>
       </DialogContent>
       <DialogActions sx={{ p: { xs: 2, sm: 1.5 } }}>
         <Button onClick={onClose} disabled={loading} size={isMobile ? "medium" : "large"}>
-          Hủy
+          {albumsT.cancel}
         </Button>
         <Button 
           onClick={handleSubmit} 
@@ -205,7 +207,7 @@ export function AddAlbumModal({ open, album, kids, onClose, onSuccess }: AddAlbu
           disabled={loading}
           size={isMobile ? "medium" : "large"}
         >
-          {loading ? 'Đang lưu...' : isEdit ? 'Cập nhật' : 'Tạo'}
+          {loading ? albumsT.form.saving : isEdit ? albumsT.form.updating : albumsT.form.creating}
         </Button>
       </DialogActions>
     </Dialog>

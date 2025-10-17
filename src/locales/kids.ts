@@ -73,6 +73,23 @@ export const kidsTranslations = {
     updateError: 'Không thể cập nhật thông tin',
     deleteSuccess: 'Đã xóa bé',
     deleteError: 'Không thể xóa bé',
+    
+    // Detail page
+    detail: {
+      backToList: 'Quay lại danh sách',
+      back: 'Quay lại',
+      notFound: 'Không tìm thấy bé',
+      genderBoy: 'Bé trai',
+      genderGirl: 'Bé gái',
+      genderOther: 'Khác',
+      growthRecords: 'Số bản ghi phát triển',
+      currentHeight: 'Chiều cao hiện tại',
+      currentWeight: 'Cân nặng hiện tại',
+      growthChart: 'Biểu đồ phát triển',
+      addData: 'Thêm dữ liệu',
+      noGrowthData: 'Chưa có dữ liệu phát triển',
+      addFirstData: 'Thêm dữ liệu đầu tiên',
+    },
   },
   en: {
     // Page title
@@ -146,6 +163,23 @@ export const kidsTranslations = {
     updateError: 'Failed to update information',
     deleteSuccess: 'Kid deleted',
     deleteError: 'Failed to delete kid',
+    
+    // Detail page
+    detail: {
+      backToList: 'Back to list',
+      back: 'Back',
+      notFound: 'Kid not found',
+      genderBoy: 'Boy',
+      genderGirl: 'Girl',
+      genderOther: 'Other',
+      growthRecords: 'Growth Records',
+      currentHeight: 'Current Height',
+      currentWeight: 'Current Weight',
+      growthChart: 'Growth Chart',
+      addData: 'Add Data',
+      noGrowthData: 'No growth data yet',
+      addFirstData: 'Add first data',
+    },
   },
   ja: {
     // Page title
@@ -219,6 +253,23 @@ export const kidsTranslations = {
     updateError: '情報の更新に失敗しました',
     deleteSuccess: '子供が削除されました',
     deleteError: '子供の削除に失敗しました',
+    
+    // Detail page
+    detail: {
+      backToList: 'リストに戻る',
+      back: '戻る',
+      notFound: '子供が見つかりません',
+      genderBoy: '男の子',
+      genderGirl: '女の子',
+      genderOther: 'その他',
+      growthRecords: '成長記録',
+      currentHeight: '現在の身長',
+      currentWeight: '現在の体重',
+      growthChart: '成長チャート',
+      addData: 'データを追加',
+      noGrowthData: 'まだ成長データがありません',
+      addFirstData: '最初のデータを追加',
+    },
   },
 };
 

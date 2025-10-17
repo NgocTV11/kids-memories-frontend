@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { kidsService, Kid, GrowthData } from '@/services/kids.service';
+import { useI18nStore } from '@/store/i18n.store';
+import { getImageUrl } from '@/utils/image';
 import {
   Container,
   Box,
@@ -36,6 +38,7 @@ export default function KidDetailPage() {
   const params = useParams();
   const router = useRouter();
   const kidId = params.id as string;
+  const { kids: kidsT } = useI18nStore();
 
   const [kid, setKid] = useState<Kid | null>(null);
   const [loading, setLoading] = useState(true);
@@ -55,7 +58,7 @@ export default function KidDetailPage() {
       setKid(data);
     } catch (err: any) {
       console.error('Error loading kid:', err);
-      setError(err.response?.data?.message || 'Failed to load kid');
+      setError(err.response?.data?.message || kidsT.loadError);
     } finally {
       setLoading(false);
     }
@@ -66,7 +69,7 @@ export default function KidDetailPage() {
   };
 
   const getGenderLabel = (gender: string) => {
-    return gender === 'male' ? 'Bé trai' : gender === 'female' ? 'Bé gái' : 'Khác';
+    return gender === 'male' ? kidsT.detail.genderBoy : gender === 'female' ? kidsT.detail.genderGirl : kidsT.detail.genderOther;
   };
 
   if (loading) {
@@ -86,10 +89,10 @@ export default function KidDetailPage() {
       <ProtectedRoute>
         <Container maxWidth="lg" sx={{ py: 4 }}>
           <Alert severity="error" sx={{ mb: 3 }}>
-            {error || 'Kid not found'}
+            {error || kidsT.detail.notFound}
           </Alert>
           <Button startIcon={<ArrowBack />} onClick={() => router.back()}>
-            Quay lại
+            {kidsT.detail.back}
           </Button>
         </Container>
       </ProtectedRoute>
@@ -106,13 +109,14 @@ export default function KidDetailPage() {
             onClick={() => router.push('/kids')}
             sx={{ mb: 2 }}
           >
-            Quay lại danh sách
+            {kidsT.detail.backToList}
           </Button>
 
           <Paper sx={{ p: 3 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <Avatar
+                  src={kid.profile_picture ? getImageUrl(kid.profile_picture) : undefined}
                   sx={{
                     width: 80,
                     height: 80,
@@ -120,7 +124,7 @@ export default function KidDetailPage() {
                     mr: 3,
                   }}
                 >
-                  <ChildCare sx={{ fontSize: 48 }} />
+                  {!kid.profile_picture && <ChildCare sx={{ fontSize: 48 }} />}
                 </Avatar>
                 <Box>
                   <Typography variant="h4" fontWeight="bold" gutterBottom>
@@ -164,7 +168,7 @@ export default function KidDetailPage() {
             <Card>
               <CardContent>
                 <Typography variant="h6" color="text.secondary" gutterBottom>
-                  Số bản ghi phát triển
+                  {kidsT.detail.growthRecords}
                 </Typography>
                 <Typography variant="h3" fontWeight="bold">
                   {kid.growth_data?.length || 0}
@@ -178,10 +182,10 @@ export default function KidDetailPage() {
                 <Card>
                   <CardContent>
                     <Typography variant="h6" color="text.secondary" gutterBottom>
-                      Chiều cao hiện tại
+                      {kidsT.detail.currentHeight}
                     </Typography>
                     <Typography variant="h3" fontWeight="bold">
-                      {kid.growth_data[kid.growth_data.length - 1].height} cm
+                      {kid.growth_data[kid.growth_data.length - 1].height} {kidsT.cm}
                     </Typography>
                   </CardContent>
                 </Card>
@@ -190,10 +194,10 @@ export default function KidDetailPage() {
                 <Card>
                   <CardContent>
                     <Typography variant="h6" color="text.secondary" gutterBottom>
-                      Cân nặng hiện tại
+                      {kidsT.detail.currentWeight}
                     </Typography>
                     <Typography variant="h3" fontWeight="bold">
-                      {kid.growth_data[kid.growth_data.length - 1].weight} kg
+                      {kid.growth_data[kid.growth_data.length - 1].weight} {kidsT.kg}
                     </Typography>
                   </CardContent>
                 </Card>
@@ -207,14 +211,14 @@ export default function KidDetailPage() {
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
             <Typography variant="h6" fontWeight="bold">
               <TrendingUp sx={{ mr: 1, verticalAlign: 'middle' }} />
-              Biểu đồ phát triển
+              {kidsT.detail.growthChart}
             </Typography>
             <Button
               variant="contained"
               startIcon={<Add />}
               onClick={() => setOpenGrowthModal(true)}
             >
-              Thêm dữ liệu
+              {kidsT.detail.addData}
             </Button>
           </Box>
 
@@ -223,7 +227,7 @@ export default function KidDetailPage() {
           ) : (
             <Box sx={{ textAlign: 'center', py: 4 }}>
               <Typography variant="body1" color="text.secondary">
-                Chưa có dữ liệu phát triển
+                {kidsT.detail.noGrowthData}
               </Typography>
               <Button
                 variant="outlined"
@@ -231,7 +235,7 @@ export default function KidDetailPage() {
                 onClick={() => setOpenGrowthModal(true)}
                 sx={{ mt: 2 }}
               >
-                Thêm dữ liệu đầu tiên
+                {kidsT.detail.addFirstData}
               </Button>
             </Box>
           )}

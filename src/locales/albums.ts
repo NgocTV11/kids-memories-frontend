@@ -55,13 +55,23 @@ export const albumsTranslations = {
     form: {
       name: 'Tên album',
       namePlaceholder: 'Nhập tên album',
+      nameRequired: 'Tên album là bắt buộc',
       description: 'Mô tả',
       descriptionPlaceholder: 'Mô tả về album...',
-      selectKid: 'Chọn bé',
+      selectKid: 'Chọn bé (tùy chọn)',
       selectKidPlaceholder: 'Chọn bé cho album',
-      privacy: 'Quyền riêng tư',
+      noKid: 'Không chọn',
+      privacy: 'Mức độ riêng tư',
+      privacyOptions: {
+        private: '🔒 Riêng tư (chỉ mình tôi)',
+        family: '👨‍👩‍👧‍👦 Gia đình',
+        public: '🌍 Công khai',
+      },
       coverPhoto: 'Ảnh bìa',
       uploadCover: 'Tải ảnh bìa',
+      saving: 'Đang lưu...',
+      creating: 'Tạo',
+      updating: 'Cập nhật',
     },
     
     // Share dialog
@@ -142,13 +152,23 @@ export const albumsTranslations = {
     form: {
       name: 'Album name',
       namePlaceholder: 'Enter album name',
+      nameRequired: 'Album name is required',
       description: 'Description',
       descriptionPlaceholder: 'Description about the album...',
-      selectKid: 'Select kid',
+      selectKid: 'Select kid (optional)',
       selectKidPlaceholder: 'Select kid for album',
-      privacy: 'Privacy',
+      noKid: 'None',
+      privacy: 'Privacy level',
+      privacyOptions: {
+        private: '🔒 Private (only me)',
+        family: '👨‍👩‍👧‍👦 Family',
+        public: '🌍 Public',
+      },
       coverPhoto: 'Cover photo',
       uploadCover: 'Upload cover',
+      saving: 'Saving...',
+      creating: 'Create',
+      updating: 'Update',
     },
     
     // Share dialog
@@ -229,13 +249,23 @@ export const albumsTranslations = {
     form: {
       name: 'アルバム名',
       namePlaceholder: 'アルバム名を入力',
+      nameRequired: 'アルバム名は必須です',
       description: '説明',
       descriptionPlaceholder: 'アルバムの説明...',
-      selectKid: '子供を選択',
+      selectKid: '子供を選択 (オプション)',
       selectKidPlaceholder: 'アルバムの子供を選択',
-      privacy: 'プライバシー',
+      noKid: '選択しない',
+      privacy: 'プライバシーレベル',
+      privacyOptions: {
+        private: '🔒 プライベート (自分のみ)',
+        family: '👨‍👩‍👧‍👦 家族',
+        public: '🌍 公開',
+      },
       coverPhoto: 'カバー写真',
       uploadCover: 'カバーをアップロード',
+      saving: '保存中...',
+      creating: '作成',
+      updating: '更新',
     },
     
     // Share dialog
