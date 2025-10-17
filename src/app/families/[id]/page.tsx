@@ -47,6 +47,7 @@ import { useAuthStore } from '@/store/auth.store';
 import { familiesService } from '@/services/families.service';
 import type { Family, FamilyMember } from '@/services/families.service';
 import { InviteMemberModal } from '@/components/families/InviteMemberModal';
+import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { use } from 'react';
 
 export default function FamilyDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -67,12 +68,8 @@ export default function FamilyDetailPage({ params }: { params: Promise<{ id: str
   const [inviteModalOpen, setInviteModalOpen] = useState(false);
 
   useEffect(() => {
-    if (!user) {
-      router.push('/auth/login');
-      return;
-    }
     loadFamily();
-  }, [id, user, router]);
+  }, [id]);
 
   const loadFamily = async () => {
     try {
@@ -156,25 +153,30 @@ export default function FamilyDetailPage({ params }: { params: Promise<{ id: str
 
   if (loading) {
     return (
-      <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh' }}>
-        <CircularProgress />
-      </Container>
+      <ProtectedRoute>
+        <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh' }}>
+          <CircularProgress />
+        </Container>
+      </ProtectedRoute>
     );
   }
 
   if (error || !family) {
     return (
-      <Container sx={{ pt: 3 }}>
-        <Alert severity="error">{error || 'Không tìm thấy family'}</Alert>
-        <Button sx={{ mt: 2 }} variant="contained" onClick={() => router.push('/families')}>
-          Quay lại
-        </Button>
-      </Container>
+      <ProtectedRoute>
+        <Container sx={{ pt: 3 }}>
+          <Alert severity="error">{error || 'Không tìm thấy family'}</Alert>
+          <Button sx={{ mt: 2 }} variant="contained" onClick={() => router.push('/families')}>
+            Quay lại
+          </Button>
+        </Container>
+      </ProtectedRoute>
     );
   }
 
   return (
-    <Container maxWidth="lg" sx={{ pt: 3, pb: 4 }}>
+    <ProtectedRoute>
+      <Container maxWidth="lg" sx={{ pt: 3, pb: 4 }}>
       {/* Header */}
       <Paper
         elevation={0}
@@ -425,5 +427,6 @@ export default function FamilyDetailPage({ params }: { params: Promise<{ id: str
         onSuccess={loadFamily}
       />
     </Container>
+    </ProtectedRoute>
   );
 }

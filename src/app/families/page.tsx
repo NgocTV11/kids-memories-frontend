@@ -45,6 +45,7 @@ import {
 import { familiesService, Family, FamilyMember } from '@/services/families.service';
 import { useAuthStore } from '@/store/auth.store';
 import { InviteMemberModal } from '@/components/families/InviteMemberModal';
+import { ProtectedRoute } from '@/components/ProtectedRoute';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -83,12 +84,8 @@ export default function FamiliesPage() {
   const [inviteRole, setInviteRole] = useState<'admin' | 'member'>('member');
 
   useEffect(() => {
-    if (!user) {
-      router.push('/auth/login');
-      return;
-    }
     loadData();
-  }, [user, router]);
+  }, []);
 
   const loadData = async () => {
     try {
@@ -193,14 +190,17 @@ export default function FamiliesPage() {
 
   if (loading) {
     return (
-      <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh' }}>
-        <CircularProgress />
-      </Container>
+      <ProtectedRoute>
+        <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh' }}>
+          <CircularProgress />
+        </Container>
+      </ProtectedRoute>
     );
   }
 
   return (
-    <Container maxWidth="lg" sx={{ pt: 3, pb: 4 }}>
+    <ProtectedRoute>
+      <Container maxWidth="lg" sx={{ pt: 3, pb: 4 }}>
       {/* Header */}
       <Paper
         elevation={0}
@@ -463,5 +463,6 @@ export default function FamiliesPage() {
         onSuccess={loadData}
       />
     </Container>
+    </ProtectedRoute>
   );
 }
