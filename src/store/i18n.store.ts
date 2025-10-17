@@ -12,6 +12,7 @@ import { getAuthTranslation } from '@/locales/auth';
 import { getAdminTranslation } from '@/locales/admin';
 import { getProfileTranslation } from '@/locales/profile';
 import { getLandingTranslation } from '@/locales/landing';
+import { getTakabanhmiTranslation } from '@/locales/takabanhmi';
 
 interface I18nState {
   locale: Locale;
@@ -26,6 +27,7 @@ interface I18nState {
   admin: ReturnType<typeof getAdminTranslation>;
   profile: ReturnType<typeof getProfileTranslation>;
   landing: ReturnType<typeof getLandingTranslation>;
+  takabanhmi: ReturnType<typeof getTakabanhmiTranslation>;
   setLocale: (locale: Locale) => void;
 }
 
@@ -44,6 +46,7 @@ export const useI18nStore = create<I18nState>()(
       admin: getAdminTranslation(defaultLocale),
       profile: getProfileTranslation(defaultLocale),
       landing: getLandingTranslation(defaultLocale),
+      takabanhmi: getTakabanhmiTranslation(defaultLocale),
       setLocale: (locale: Locale) => {
         set({
           locale,
@@ -58,15 +61,16 @@ export const useI18nStore = create<I18nState>()(
           admin: getAdminTranslation(locale),
           profile: getProfileTranslation(locale),
           landing: getLandingTranslation(locale),
+          takabanhmi: getTakabanhmiTranslation(locale),
         });
       },
     }),
     {
       name: 'i18n-storage',
-      version: 5, // Increment version to force reload with slider translations
+      version: 7, // Increment version to include takabanhmi with slider and features
       migrate: (persistedState: any, version: number) => {
         // If old version, reset to defaults
-        if (version < 5) {
+        if (version < 7) {
           const locale = persistedState?.locale || defaultLocale;
           return {
             locale,
@@ -81,6 +85,7 @@ export const useI18nStore = create<I18nState>()(
             admin: getAdminTranslation(locale),
             profile: getProfileTranslation(locale),
             landing: getLandingTranslation(locale),
+            takabanhmi: getTakabanhmiTranslation(locale),
           };
         }
         return persistedState;
