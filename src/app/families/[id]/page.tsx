@@ -68,7 +68,7 @@ export default function FamilyDetailPage({ params }: { params: Promise<{ id: str
 
   useEffect(() => {
     if (!user) {
-      router.push('/login');
+      router.push('/auth/login');
       return;
     }
     loadFamily();

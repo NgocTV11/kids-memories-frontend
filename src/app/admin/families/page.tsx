@@ -41,7 +41,7 @@ export default function AdminFamiliesPage() {
 
   useEffect(() => {
     if (!user) {
-      router.push('/login');
+      router.push('/auth/login');
       return;
     }
     if (user.role !== 'admin') {

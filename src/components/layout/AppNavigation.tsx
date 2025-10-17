@@ -64,7 +64,7 @@ export function AppNavigation() {
 
   const handleLogout = () => {
     logout();
-    router.push('/login');
+    router.push('/auth/login');
     handleMenuClose();
     setDrawerOpen(false);
   };

@@ -84,7 +84,7 @@ export default function FamiliesPage() {
 
   useEffect(() => {
     if (!user) {
-      router.push('/login');
+      router.push('/auth/login');
       return;
     }
     loadData();
