@@ -93,6 +93,13 @@ export default function LandingPage() {
     return names[lang];
   };
 
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
   return (
     <Box sx={{ bgcolor: 'background.default', minHeight: '100vh' }}>
       {/* Header/Navbar */}
@@ -107,9 +114,9 @@ export default function LandingPage() {
 
           {!isMobile && (
             <Stack direction="row" spacing={3} sx={{ mr: 3 }}>
-              <Button color="inherit" sx={{ color: 'text.primary' }}>{t.nav.features}</Button>
-              <Button color="inherit" sx={{ color: 'text.primary' }}>{t.nav.howItWorks}</Button>
-              <Button color="inherit" sx={{ color: 'text.primary' }}>{t.nav.pricing}</Button>
+              <Button color="inherit" sx={{ color: 'text.primary' }} onClick={() => scrollToSection('features')}>{t.nav.features}</Button>
+              <Button color="inherit" sx={{ color: 'text.primary' }} onClick={() => scrollToSection('how-it-works')}>{t.nav.howItWorks}</Button>
+              <Button color="inherit" sx={{ color: 'text.primary' }} onClick={() => scrollToSection('pricing')}>{t.nav.pricing}</Button>
             </Stack>
           )}
 
@@ -217,7 +224,7 @@ export default function LandingPage() {
       </Box>
 
       {/* Features Section */}
-      <Container maxWidth="lg" sx={{ py: { xs: 8, md: 12 } }}>
+      <Container maxWidth="lg" sx={{ py: { xs: 8, md: 12 } }} id="features">
         <Typography variant="h3" align="center" sx={{ fontWeight: 'bold', mb: 2 }}>
           {t.features.title}
         </Typography>
@@ -249,8 +256,8 @@ export default function LandingPage() {
         </Box>
       </Container>
 
-      {/* How It Works */}
-      <Box sx={{ bgcolor: 'grey.50', py: { xs: 8, md: 12 } }}>
+      {/* How It Works Section */}
+      <Box sx={{ bgcolor: 'grey.50', py: { xs: 8, md: 12 } }} id="how-it-works">
         <Container maxWidth="lg">
           <Typography variant="h3" align="center" sx={{ fontWeight: 'bold', mb: 2 }}>
             {t.howItWorks.title}
@@ -328,7 +335,7 @@ export default function LandingPage() {
       </Container>
 
       {/* Pricing */}
-      <Box sx={{ bgcolor: 'grey.50', py: { xs: 8, md: 12 } }}>
+      <Box sx={{ bgcolor: 'grey.50', py: { xs: 8, md: 12 } }} id="pricing">
         <Container maxWidth="lg">
           <Typography variant="h3" align="center" sx={{ fontWeight: 'bold', mb: 2 }}>
             {t.pricing.title}

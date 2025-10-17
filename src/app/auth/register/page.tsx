@@ -60,7 +60,7 @@ export default function RegisterPage() {
   // Redirect if already authenticated
   useEffect(() => {
     if (isAuthenticated) {
-      router.push('/');
+      router.push('/dashboard');
     }
   }, [isAuthenticated, router]);
 
@@ -134,7 +134,7 @@ export default function RegisterPage() {
       });
       
       // Redirect after successful registration
-      router.push('/');
+      router.push('/dashboard');
     } catch (error) {
       // Error is handled by store
       console.error('Registration error:', error);

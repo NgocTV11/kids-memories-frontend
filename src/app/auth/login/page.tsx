@@ -73,7 +73,7 @@ function LoginContent() {
   // Redirect if already authenticated
   useEffect(() => {
     if (isAuthenticated) {
-      const redirect = searchParams.get('redirect') || '/';
+      const redirect = searchParams.get('redirect') || '/dashboard';
       router.push(redirect);
     }
   }, [isAuthenticated, router, searchParams]);
@@ -132,7 +132,7 @@ function LoginContent() {
       await login(formData);
       
       // Redirect after successful login
-      const redirect = searchParams.get('redirect') || '/';
+      const redirect = searchParams.get('redirect') || '/dashboard';
       router.push(redirect);
     } catch (error) {
       // Error is handled by store
