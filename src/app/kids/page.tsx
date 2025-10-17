@@ -290,7 +290,7 @@ export default function KidsPage() {
                     {kids.reduce((sum, kid) => sum + (kid.growth_data?.length || 0), 0)}
                   </Typography>
                   <Typography variant={isMobile ? "caption" : "body2"} color="text.secondary" sx={{ fontSize: { xs: '0.7rem', sm: '0.875rem' } }}>
-                    {isMobile ? 'Ghi chép' : 'Bản ghi'}
+                    {isMobile ? kidsT.stats.recordsShort : kidsT.stats.records}
                   </Typography>
                 </Paper>
               </Grid>
@@ -314,7 +314,7 @@ export default function KidsPage() {
                     }).length}
                   </Typography>
                   <Typography variant={isMobile ? "caption" : "body2"} color="text.secondary" sx={{ fontSize: { xs: '0.7rem', sm: '0.875rem' } }}>
-                    {isMobile ? 'Sinh nhật' : 'Sinh nhật tháng này'}
+                    {isMobile ? kidsT.stats.birthdayShort : kidsT.stats.birthday}
                   </Typography>
                 </Paper>
               </Grid>
@@ -334,7 +334,7 @@ export default function KidsPage() {
                     100%
                   </Typography>
                   <Typography variant={isMobile ? "caption" : "body2"} color="text.secondary" sx={{ fontSize: { xs: '0.7rem', sm: '0.875rem' } }}>
-                    Yêu thương
+                    {kidsT.stats.love}
                   </Typography>
                 </Paper>
               </Grid>
@@ -555,10 +555,10 @@ export default function KidsPage() {
                             <Height sx={{ fontSize: { xs: 18, sm: 20 }, mr: { xs: 1, sm: 1.5 }, color: '#2196F3' }} />
                             <Box>
                               <Typography variant="caption" color="text.secondary" display="block" sx={{ fontSize: { xs: '0.65rem', sm: '0.75rem' } }}>
-                                {isMobile ? 'Ghi chép' : 'Phát triển'}
+                                {isMobile ? kidsT.stats.recordsShort : kidsT.stats.growth}
                               </Typography>
                               <Typography variant="body2" fontWeight="bold" sx={{ fontSize: { xs: '0.8rem', sm: '0.875rem' } }}>
-                                {kid.growth_data.length} {isMobile ? '' : 'bản ghi'}
+                                {kid.growth_data.length} {isMobile ? '' : kidsT.stats.growthRecords}
                               </Typography>
                             </Box>
                           </Box>

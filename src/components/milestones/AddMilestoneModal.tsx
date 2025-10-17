@@ -30,6 +30,7 @@ import {
 } from '@/services/milestones.service';
 import { Kid } from '@/services/kids.service';
 import { photosService, Photo as PhotoType } from '@/services/photos.service';
+import { useI18nStore } from '@/store/i18n.store';
 import dayjs from 'dayjs';
 
 interface AddMilestoneModalProps {
@@ -40,19 +41,11 @@ interface AddMilestoneModalProps {
   onSuccess: () => void;
 }
 
-const MILESTONE_CATEGORIES = [
-  { value: 'first_word', label: 'Lần đầu nói' },
-  { value: 'first_step', label: 'Lần đầu đi' },
-  { value: 'birthday', label: 'Sinh nhật' },
-  { value: 'health', label: 'Sức khỏe' },
-  { value: 'education', label: 'Giáo dục' },
-  { value: 'other', label: 'Khác' },
-];
-
 export function AddMilestoneModal({ open, milestone, kids, onClose, onSuccess }: AddMilestoneModalProps) {
   const isEdit = !!milestone;
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const { milestones: milestonesT } = useI18nStore();
 
   const [formData, setFormData] = useState({
     title: '',
@@ -133,15 +126,15 @@ export function AddMilestoneModal({ open, milestone, kids, onClose, onSuccess }:
     const newErrors: Record<string, string> = {};
 
     if (!formData.title.trim()) {
-      newErrors.title = 'Tiêu đề là bắt buộc';
+      newErrors.title = milestonesT.form.titleRequired;
     }
 
     if (!formData.milestone_date) {
-      newErrors.milestone_date = 'Ngày milestone là bắt buộc';
+      newErrors.milestone_date = milestonesT.form.dateRequired;
     }
 
     if (!formData.kid_id) {
-      newErrors.kid_id = 'Vui lòng chọn bé';
+      newErrors.kid_id = milestonesT.form.selectKidRequired;
     }
 
     setErrors(newErrors);
@@ -197,7 +190,7 @@ export function AddMilestoneModal({ open, milestone, kids, onClose, onSuccess }:
       if (err.response?.data?.message && Array.isArray(err.response.data.message)) {
         setError(err.response.data.message.join(', '));
       } else {
-        setError(err.response?.data?.message || 'Failed to save milestone');
+        setError(err.response?.data?.message || milestonesT.createError);
       }
     } finally {
       setLoading(false);
@@ -211,6 +204,16 @@ export function AddMilestoneModal({ open, milestone, kids, onClose, onSuccess }:
     }
   };
 
+  // Generate category options from translations
+  const MILESTONE_CATEGORIES = [
+    { value: 'first_word', label: milestonesT.categoryOptions.first_word },
+    { value: 'first_step', label: milestonesT.categoryOptions.first_step },
+    { value: 'birthday', label: milestonesT.categoryOptions.birthday },
+    { value: 'health', label: milestonesT.categoryOptions.health },
+    { value: 'education', label: milestonesT.categoryOptions.education },
+    { value: 'other', label: milestonesT.categoryOptions.other },
+  ];
+
   return (
     <Dialog 
       open={open} 
@@ -220,7 +223,7 @@ export function AddMilestoneModal({ open, milestone, kids, onClose, onSuccess }:
       fullScreen={isMobile}
     >
       <DialogTitle sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        {isEdit ? 'Chỉnh sửa milestone' : 'Thêm milestone mới'}
+        {isEdit ? milestonesT.editMilestoneTitle : milestonesT.addMilestoneTitle}
         {isMobile && (
           <IconButton edge="end" onClick={onClose} disabled={loading}>
             <Close />

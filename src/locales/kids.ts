@@ -90,6 +90,17 @@ export const kidsTranslations = {
       noGrowthData: 'Chưa có dữ liệu phát triển',
       addFirstData: 'Thêm dữ liệu đầu tiên',
     },
+    
+    // Stats
+    stats: {
+      records: 'Bản ghi',
+      recordsShort: 'Ghi chép',
+      birthday: 'Sinh nhật tháng này',
+      birthdayShort: 'Sinh nhật',
+      love: 'Yêu thương',
+      growth: 'Phát triển',
+      growthRecords: 'bản ghi',
+    },
   },
   en: {
     // Page title
@@ -180,6 +191,17 @@ export const kidsTranslations = {
       noGrowthData: 'No growth data yet',
       addFirstData: 'Add first data',
     },
+    
+    // Stats
+    stats: {
+      records: 'Records',
+      recordsShort: 'Records',
+      birthday: 'Birthday this month',
+      birthdayShort: 'Birthday',
+      love: 'Love',
+      growth: 'Growth',
+      growthRecords: 'records',
+    },
   },
   ja: {
     // Page title
@@ -269,6 +291,17 @@ export const kidsTranslations = {
       addData: 'データを追加',
       noGrowthData: 'まだ成長データがありません',
       addFirstData: '最初のデータを追加',
+    },
+    
+    // Stats
+    stats: {
+      records: '記録',
+      recordsShort: '記録',
+      birthday: '今月の誕生日',
+      birthdayShort: '誕生日',
+      love: '愛',
+      growth: '成長',
+      growthRecords: '件',
     },
   },
 };
