@@ -12,7 +12,7 @@ import {
   TextField,
   Button,
   Typography,
-  Link,
+  Link as MuiLink,
   Alert,
   InputAdornment,
   IconButton,
@@ -23,6 +23,7 @@ import {
   useTheme,
   useMediaQuery,
 } from '@mui/material';
+import Link from 'next/link';
 import {
   Visibility,
   VisibilityOff,
@@ -495,23 +496,42 @@ function LoginContent() {
                   {isLoading ? auth.login.loggingIn : auth.login.loginButton}
                 </Button>
 
-                <Box sx={{ textAlign: 'center', mt: { xs: 2, md: 3 } }}>
-                  <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: '0.875rem', sm: '0.875rem' } }}>
-                    {auth.login.noAccount}{' '}
-                    <Link
-                      component={NextLink}
-                      href="/auth/register"
-                      underline="hover"
+                {/* Forgot Password Link */}
+                <Box sx={{ textAlign: 'center', mb: { xs: 2, md: 2 } }}>
+                  <Link href="/auth/forgot-password" passHref legacyBehavior>
+                    <MuiLink
                       sx={{
-                        fontWeight: 'bold',
                         color: 'primary.main',
-                        transition: 'color 0.3s ease',
+                        textDecoration: 'none',
+                        fontSize: { xs: '0.875rem', sm: '0.875rem' },
+                        cursor: 'pointer',
                         '&:hover': {
-                          color: 'secondary.main',
+                          textDecoration: 'underline',
                         },
                       }}
                     >
-                      {auth.login.signUp}
+                      Quên mật khẩu?
+                    </MuiLink>
+                  </Link>
+                </Box>
+
+                <Box sx={{ textAlign: 'center', mt: { xs: 2, md: 3 } }}>
+                  <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: '0.875rem', sm: '0.875rem' } }}>
+                    {auth.login.noAccount}{' '}
+                    <Link href="/auth/register" passHref legacyBehavior>
+                      <MuiLink
+                        sx={{
+                          fontWeight: 'bold',
+                          color: 'primary.main',
+                          cursor: 'pointer',
+                          transition: 'color 0.3s ease',
+                          '&:hover': {
+                            color: 'secondary.main',
+                          },
+                        }}
+                      >
+                        {auth.login.signUp}
+                      </MuiLink>
                     </Link>
                   </Typography>
                 </Box>
