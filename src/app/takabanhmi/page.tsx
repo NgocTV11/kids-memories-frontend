@@ -583,7 +583,7 @@ export default function TakaBanhmiPage() {
                     startIcon={<LocationOn />}
                     onClick={() =>
                       window.open(
-                        'https://www.google.com/maps/place/Taka+Banh+mi',
+                        'https://www.google.com/maps/search/?api=1&query=35.6936,139.8381&query_place_id=ChIJd7qX9xqLGGARKQZ_qJ0hXKg',
                         '_blank'
                       )
                     }
