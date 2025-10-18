@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   Box,
@@ -47,6 +47,63 @@ export default function DemoPage() {
   const { locale } = useI18nStore();
   const [activeStep, setActiveStep] = useState(0);
   const [showAnimation, setShowAnimation] = useState(true);
+  const [videoSlide, setVideoSlide] = useState(0);
+
+  const videoSlides = [
+    {
+      image: 'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=1200&q=80',
+      title: locale === 'ja' ? '写真をアップロード' : locale === 'vi' ? 'Tải ảnh lên' : 'Upload Photos',
+      description: locale === 'ja' 
+        ? 'ドラッグ&ドロップで簡単にお子様の写真をアップロード'
+        : locale === 'vi'
+        ? 'Kéo thả để tải ảnh của bé lên một cách dễ dàng'
+        : 'Drag & drop to easily upload your kids\' photos',
+    },
+    {
+      image: 'https://images.unsplash.com/photo-1476703993599-0035a21b17a9?w=1200&q=80',
+      title: locale === 'ja' ? 'マイルストーンを記録' : locale === 'vi' ? 'Ghi lại mốc phát triển' : 'Record Milestones',
+      description: locale === 'ja'
+        ? '初めての笑顔、初めての言葉、特別な瞬間を永遠に保存'
+        : locale === 'vi'
+        ? 'Nụ cười đầu tiên, từ đầu tiên, khoảnh khắc đặc biệt mãi mãi'
+        : 'First smile, first word, special moments preserved forever',
+    },
+    {
+      image: 'https://images.unsplash.com/photo-1544776193-352d25ca82cd?w=1200&q=80',
+      title: locale === 'ja' ? '成長チャートを作成' : locale === 'vi' ? 'Tạo biểu đồ tăng trưởng' : 'Create Growth Charts',
+      description: locale === 'ja'
+        ? '身長、体重、発達を美しいグラフで視覚化'
+        : locale === 'vi'
+        ? 'Trực quan hóa chiều cao, cân nặng, phát triển bằng biểu đồ đẹp'
+        : 'Visualize height, weight, development with beautiful charts',
+    },
+    {
+      image: 'https://images.unsplash.com/photo-1511895426328-dc8714191300?w=1200&q=80',
+      title: locale === 'ja' ? '家族と共有' : locale === 'vi' ? 'Chia sẻ với gia đình' : 'Share with Family',
+      description: locale === 'ja'
+        ? 'おじいちゃん、おばあちゃんと安全に思い出を共有'
+        : locale === 'vi'
+        ? 'Chia sẻ kỷ niệm an toàn với ông bà'
+        : 'Safely share memories with grandparents',
+    },
+    {
+      image: 'https://images.unsplash.com/photo-1516627145497-ae6968895b74?w=1200&q=80',
+      title: locale === 'ja' ? '美しいアルバム' : locale === 'vi' ? 'Album đẹp mắt' : 'Beautiful Albums',
+      description: locale === 'ja'
+        ? 'AI搭載の自動整理で美しいデジタルアルバムを作成'
+        : locale === 'vi'
+        ? 'Tạo album kỹ thuật số đẹp với AI tự động sắp xếp'
+        : 'Create stunning digital albums with AI auto-organization',
+    },
+  ];
+
+  // Auto-play video slides
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setVideoSlide((prev) => (prev + 1) % videoSlides.length);
+    }, 4000);
+    return () => clearInterval(timer);
+  }, [videoSlides.length]);
 
   const demoSteps = [
     {
@@ -376,7 +433,7 @@ export default function DemoPage() {
       {/* Video Demo Section */}
       <Container maxWidth="lg" sx={{ py: 8 }}>
         <Typography variant="h3" align="center" sx={{ fontWeight: 'bold', mb: 2 }}>
-          {locale === 'ja' ? 'ビデオデモ' : locale === 'vi' ? 'Video Demo' : 'Video Demo'}
+          {locale === 'ja' ? 'デモビデオ' : locale === 'vi' ? 'Video Demo' : 'Video Demo'}
         </Typography>
         <Typography variant="h6" align="center" color="text.secondary" sx={{ mb: 4 }}>
           {locale === 'ja' 
@@ -386,7 +443,7 @@ export default function DemoPage() {
             : 'Watch how it works in action'}
         </Typography>
 
-        <Card sx={{ overflow: 'hidden', borderRadius: 4 }}>
+        <Card sx={{ overflow: 'hidden', borderRadius: 4, boxShadow: 8 }}>
           <Box
             sx={{
               position: 'relative',
@@ -394,35 +451,125 @@ export default function DemoPage() {
               bgcolor: 'black',
             }}
           >
+            <Fade in key={videoSlide} timeout={800}>
+              <Box
+                sx={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  width: '100%',
+                  height: '100%',
+                  backgroundImage: `url(${videoSlides[videoSlide].image})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                }}
+              >
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    background: 'linear-gradient(transparent, rgba(0,0,0,0.9))',
+                    p: 4,
+                    color: 'white',
+                  }}
+                >
+                  <Stack spacing={1}>
+                    <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
+                      {videoSlides[videoSlide].title}
+                    </Typography>
+                    <Typography variant="h6" sx={{ opacity: 0.9 }}>
+                      {videoSlides[videoSlide].description}
+                    </Typography>
+                  </Stack>
+                </Box>
+              </Box>
+            </Fade>
+
+            {/* Navigation Dots */}
             <Box
               sx={{
                 position: 'absolute',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '100%',
+                top: 20,
+                right: 20,
                 display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                gap: 1,
+                zIndex: 10,
               }}
             >
-              <Stack alignItems="center" spacing={2}>
-                <VideoLibrary sx={{ fontSize: 100, color: 'white', opacity: 0.9 }} />
-                <Typography variant="h4" sx={{ color: 'white', fontWeight: 'bold' }}>
-                  {locale === 'ja' ? 'デモビデオ近日公開' : locale === 'vi' ? 'Video demo sẽ có sớm' : 'Demo Video Coming Soon'}
-                </Typography>
-                <Typography variant="body1" sx={{ color: 'white', opacity: 0.8 }}>
-                  {locale === 'ja' 
-                    ? '今すぐ無料トライアルを開始して、自分で体験してください！' 
-                    : locale === 'vi'
-                    ? 'Bắt đầu dùng thử miễn phí ngay để trải nghiệm!'
-                    : 'Start your free trial now to experience it yourself!'}
-                </Typography>
-              </Stack>
+              {videoSlides.map((_, index) => (
+                <Box
+                  key={index}
+                  onClick={() => setVideoSlide(index)}
+                  sx={{
+                    width: 12,
+                    height: 12,
+                    borderRadius: '50%',
+                    bgcolor: videoSlide === index ? 'white' : 'rgba(255,255,255,0.4)',
+                    cursor: 'pointer',
+                    transition: 'all 0.3s',
+                    '&:hover': {
+                      bgcolor: 'white',
+                      transform: 'scale(1.2)',
+                    },
+                  }}
+                />
+              ))}
+            </Box>
+
+            {/* Play Icon Overlay */}
+            <Box
+              sx={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                zIndex: 5,
+              }}
+            >
+              <IconButton
+                sx={{
+                  bgcolor: 'rgba(255,255,255,0.2)',
+                  backdropFilter: 'blur(10px)',
+                  width: 80,
+                  height: 80,
+                  '&:hover': {
+                    bgcolor: 'rgba(255,255,255,0.3)',
+                    transform: 'scale(1.1)',
+                  },
+                  transition: 'all 0.3s',
+                }}
+              >
+                <PlayCircle sx={{ fontSize: 60, color: 'white' }} />
+              </IconButton>
             </Box>
           </Box>
         </Card>
+
+        <Stack direction="row" justifyContent="center" spacing={2} sx={{ mt: 4 }}>
+          <Button
+            variant="outlined"
+            startIcon={<VideoLibrary />}
+            onClick={() => setVideoSlide((prev) => (prev - 1 + videoSlides.length) % videoSlides.length)}
+          >
+            {locale === 'ja' ? '前へ' : locale === 'vi' ? 'Trước' : 'Previous'}
+          </Button>
+          <Button
+            variant="contained"
+            onClick={() => router.push('/auth/register')}
+            sx={{ px: 4 }}
+          >
+            {locale === 'ja' ? '今すぐ始める' : locale === 'vi' ? 'Bắt đầu ngay' : 'Start Free Trial'}
+          </Button>
+          <Button
+            variant="outlined"
+            endIcon={<VideoLibrary />}
+            onClick={() => setVideoSlide((prev) => (prev + 1) % videoSlides.length)}
+          >
+            {locale === 'ja' ? '次へ' : locale === 'vi' ? 'Tiếp theo' : 'Next'}
+          </Button>
+        </Stack>
       </Container>
 
       {/* CTA Section */}
