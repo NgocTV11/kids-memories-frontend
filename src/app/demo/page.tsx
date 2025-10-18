@@ -18,7 +18,6 @@ import {
   StepLabel,
   StepContent,
   Paper,
-  Grid,
   Fade,
   Zoom,
   Avatar,
@@ -219,8 +218,8 @@ export default function DemoPage() {
             : 'Organize your memories in 5 simple steps'}
         </Typography>
 
-        <Grid container spacing={4}>
-          <Grid item xs={12} md={6}>
+        <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 4 }}>
+          <Box sx={{ flex: 1 }}>
             <Stepper activeStep={activeStep} orientation="vertical">
               {demoSteps.map((step, index) => (
                 <Step key={step.label}>
@@ -277,9 +276,9 @@ export default function DemoPage() {
                 </Button>
               </Paper>
             )}
-          </Grid>
+          </Box>
 
-          <Grid item xs={12} md={6}>
+          <Box sx={{ flex: 1 }}>
             <Zoom in key={activeStep} timeout={500}>
               <Card sx={{ height: '100%', position: 'relative', overflow: 'hidden' }}>
                 <Box
@@ -317,8 +316,8 @@ export default function DemoPage() {
                 </CardContent>
               </Card>
             </Zoom>
-          </Grid>
-        </Grid>
+          </Box>
+        </Box>
       </Container>
 
       {/* Features Grid */}
@@ -335,44 +334,42 @@ export default function DemoPage() {
               : 'Everything to manage your kids\' memories better'}
           </Typography>
 
-          <Grid container spacing={4}>
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }, gap: 4 }}>
             {features.map((feature, index) => (
-              <Grid item xs={12} sm={6} md={3} key={index}>
-                <Zoom in timeout={500 + index * 100}>
-                  <Card
+              <Zoom in timeout={500 + index * 100} key={index}>
+                <Card
+                  sx={{
+                    height: '100%',
+                    textAlign: 'center',
+                    p: 3,
+                    transition: 'all 0.3s',
+                    '&:hover': {
+                      transform: 'translateY(-10px)',
+                      boxShadow: 6,
+                    },
+                  }}
+                >
+                  <Avatar
                     sx={{
-                      height: '100%',
-                      textAlign: 'center',
-                      p: 3,
-                      transition: 'all 0.3s',
-                      '&:hover': {
-                        transform: 'translateY(-10px)',
-                        boxShadow: 6,
-                      },
+                      width: 80,
+                      height: 80,
+                      mx: 'auto',
+                      mb: 2,
+                      bgcolor: feature.color,
                     }}
                   >
-                    <Avatar
-                      sx={{
-                        width: 80,
-                        height: 80,
-                        mx: 'auto',
-                        mb: 2,
-                        bgcolor: feature.color,
-                      }}
-                    >
-                      {feature.icon}
-                    </Avatar>
-                    <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 1 }}>
-                      {feature.title}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {feature.description}
-                    </Typography>
-                  </Card>
-                </Zoom>
-              </Grid>
+                    {feature.icon}
+                  </Avatar>
+                  <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 1 }}>
+                    {feature.title}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {feature.description}
+                  </Typography>
+                </Card>
+              </Zoom>
             ))}
-          </Grid>
+          </Box>
         </Container>
       </Box>
 
