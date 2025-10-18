@@ -18,6 +18,8 @@ import {
   Paper,
   ImageList,
   ImageListItem,
+  ToggleButtonGroup,
+  ToggleButton,
 } from '@mui/material';
 import {
   ArrowBack,
@@ -28,13 +30,16 @@ import {
   Edit,
   Delete,
   Share,
+  VideoLibrary,
 } from '@mui/icons-material';
 import dayjs from 'dayjs';
 import { albumsService, Album } from '@/services/albums.service';
 import { photosService, Photo } from '@/services/photos.service';
+import { videosService, Video } from '@/services/videos.service';
 import { getImageUrl } from '@/utils/image';
 import { PhotoGallery } from '@/components/photos/PhotoGallery';
 import { PhotoDetailModal } from '@/components/photos/PhotoDetailModal';
+import { VideoGallery } from '@/components/videos';
 import { useI18nStore } from '@/store/i18n.store';
 
 export default function AlbumDetailPage() {
@@ -45,8 +50,11 @@ export default function AlbumDetailPage() {
 
   const [album, setAlbum] = useState<Album | null>(null);
   const [photos, setPhotos] = useState<Photo[]>([]);
+  const [videos, setVideos] = useState<Video[]>([]);
+  const [contentType, setContentType] = useState<'all' | 'photos' | 'videos'>('all');
   const [loading, setLoading] = useState(true);
   const [loadingPhotos, setLoadingPhotos] = useState(false);
+  const [loadingVideos, setLoadingVideos] = useState(false);
   const [error, setError] = useState<string | null>(null);
   
   // Photo detail modal state
@@ -56,6 +64,7 @@ export default function AlbumDetailPage() {
   useEffect(() => {
     loadAlbum();
     loadPhotos();
+    loadVideos();
   }, [albumId]);
 
   const loadAlbum = async () => {
@@ -81,6 +90,18 @@ export default function AlbumDetailPage() {
       console.error('Error loading photos:', err);
     } finally {
       setLoadingPhotos(false);
+    }
+  };
+
+  const loadVideos = async () => {
+    try {
+      setLoadingVideos(true);
+      const data = await videosService.getByAlbum(albumId);
+      setVideos(data);
+    } catch (err: any) {
+      console.error('Error loading videos:', err);
+    } finally {
+      setLoadingVideos(false);
     }
   };
 
@@ -234,6 +255,12 @@ export default function AlbumDetailPage() {
                   size="small"
                   variant="outlined"
                 />
+                <Chip
+                  icon={<VideoLibrary />}
+                  label={`${videos.length} video`}
+                  size="small"
+                  variant="outlined"
+                />
               </Box>
 
               {album.description && (
@@ -261,33 +288,106 @@ export default function AlbumDetailPage() {
           </Box>
         </Paper>
 
-        {/* Photos Grid */}
-        {loadingPhotos ? (
-          <Box sx={{ display: 'flex', justifyContent: 'center', py: 8 }}>
-            <CircularProgress size={60} sx={{ color: 'white' }} />
-          </Box>
-        ) : photos.length === 0 ? (
-          <Paper
-            elevation={0}
+        {/* Content Type Toggle */}
+        <Box sx={{ display: 'flex', justifyContent: 'center', mb: 4 }}>
+          <ToggleButtonGroup
+            value={contentType}
+            exclusive
+            onChange={(e, v) => v && setContentType(v)}
             sx={{
-              textAlign: 'center',
-              py: 8,
-              borderRadius: 4,
-              background: 'rgba(255, 255, 255, 0.95)',
+              bgcolor: 'rgba(255, 255, 255, 0.95)',
+              borderRadius: 2,
             }}
           >
-            <PhotoIcon sx={{ fontSize: 80, color: 'text.secondary', mb: 2 }} />
-            <Typography variant="h6" color="text.secondary">
-              Album này chưa có ảnh nào
-            </Typography>
-          </Paper>
-        ) : (
+            <ToggleButton value="all">
+              Tất cả ({photos.length + videos.length})
+            </ToggleButton>
+            <ToggleButton value="photos">
+              <PhotoIcon sx={{ mr: 1 }} />
+              Ảnh ({photos.length})
+            </ToggleButton>
+            <ToggleButton value="videos">
+              <VideoLibrary sx={{ mr: 1 }} />
+              Video ({videos.length})
+            </ToggleButton>
+          </ToggleButtonGroup>
+        </Box>
+
+        {/* Photos Grid */}
+        {(contentType === 'photos' || contentType === 'all') && (
+          <Box sx={{ mb: 4 }}>
+            {loadingPhotos ? (
+              <Box sx={{ display: 'flex', justifyContent: 'center', py: 8 }}>
+                <CircularProgress size={60} sx={{ color: 'white' }} />
+              </Box>
+            ) : photos.length === 0 ? (
+              <Paper
+                elevation={0}
+                sx={{
+                  textAlign: 'center',
+                  py: 8,
+                  borderRadius: 4,
+                  background: 'rgba(255, 255, 255, 0.95)',
+                }}
+              >
+                <PhotoIcon sx={{ fontSize: 80, color: 'text.secondary', mb: 2 }} />
+                <Typography variant="h6" color="text.secondary">
+                  Album này chưa có ảnh nào
+                </Typography>
+              </Paper>
+            ) : (
+              <Box>
+                {contentType === 'all' && (
+                  <Typography variant="h6" sx={{ color: 'white', mb: 3, fontWeight: 'bold' }}>
+                    📸 Ảnh trong album ({photos.length})
+                  </Typography>
+                )}
+                
+                <PhotoGallery photos={photos} onPhotoClick={handlePhotoClick} />
+              </Box>
+            )}
+          </Box>
+        )}
+
+        {/* Videos Grid */}
+        {(contentType === 'videos' || contentType === 'all') && (
           <Box>
-            <Typography variant="h6" sx={{ color: 'white', mb: 3, fontWeight: 'bold' }}>
-              📸 Ảnh trong album ({photos.length})
-            </Typography>
-            
-            <PhotoGallery photos={photos} onPhotoClick={handlePhotoClick} />
+            {loadingVideos ? (
+              <Box sx={{ display: 'flex', justifyContent: 'center', py: 8 }}>
+                <CircularProgress size={60} sx={{ color: 'white' }} />
+              </Box>
+            ) : videos.length === 0 ? (
+              contentType === 'videos' && (
+                <Paper
+                  elevation={0}
+                  sx={{
+                    textAlign: 'center',
+                    py: 8,
+                    borderRadius: 4,
+                    background: 'rgba(255, 255, 255, 0.95)',
+                  }}
+                >
+                  <VideoLibrary sx={{ fontSize: 80, color: 'text.secondary', mb: 2 }} />
+                  <Typography variant="h6" color="text.secondary">
+                    Album này chưa có video nào
+                  </Typography>
+                </Paper>
+              )
+            ) : (
+              <Box>
+                {contentType === 'all' && (
+                  <Typography variant="h6" sx={{ color: 'white', mb: 3, fontWeight: 'bold' }}>
+                    🎥 Video trong album ({videos.length})
+                  </Typography>
+                )}
+                
+                <VideoGallery 
+                  videos={videos} 
+                  onDelete={(id) => setVideos(prev => prev.filter(v => v.id !== id))}
+                  onRefresh={loadVideos}
+                />
+              </Box>
+            )}
           </Box>
         )}
       </Container>
