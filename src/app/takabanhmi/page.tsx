@@ -575,6 +575,19 @@ export default function TakaBanhmiPage() {
                     <Typography variant="body1">{t.orderAccess.storeInfo.phoneDetail}</Typography>
                   </Box>
 
+                  {/* Google Maps Embed */}
+                  <Box sx={{ mt: 3, borderRadius: 2, overflow: 'hidden', boxShadow: 2 }}>
+                    <iframe 
+                      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3240.8428655518046!2d139.82541697445234!3d35.68087092999594!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x60188932a4fdd735%3A0x8466ae326315b338!2zVGFrYSBCYW5oIG1pICjjgr_jgqvjg5DjgqTjg7Pjg5_jg7wpIOODmeODiOODiuODoOaWmeeQhg!5e0!3m2!1sja!2sjp!4v1760793178036!5m2!1sja!2sjp" 
+                      width="100%" 
+                      height="300" 
+                      style={{ border: 0, display: 'block' }}
+                      allowFullScreen
+                      loading="lazy" 
+                      referrerPolicy="no-referrer-when-downgrade"
+                    />
+                  </Box>
+
                   <Button
                     variant="contained"
                     fullWidth
