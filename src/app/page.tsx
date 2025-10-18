@@ -216,6 +216,7 @@ export default function LandingPage() {
                 <Button
                   variant="outlined"
                   size="large"
+                  onClick={() => router.push('/demo')}
                   sx={{ borderColor: 'white', color: 'white', '&:hover': { borderColor: 'white', bgcolor: 'rgba(255,255,255,0.1)' } }}
                 >
                   {t.hero.secondary}
