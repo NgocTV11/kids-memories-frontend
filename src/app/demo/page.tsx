@@ -41,6 +41,7 @@ import {
   VideoLibrary,
 } from '@mui/icons-material';
 import { useI18nStore } from '@/store/i18n.store';
+import ScrollToTop from '@/components/ScrollToTop';
 
 export default function DemoPage() {
   const router = useRouter();
@@ -607,6 +608,9 @@ export default function DemoPage() {
           </Stack>
         </Container>
       </Box>
+
+      {/* Scroll to Top Button */}
+      <ScrollToTop />
     </Box>
   );
 }

@@ -42,6 +42,8 @@ import {
 } from '@mui/icons-material';
 import { useI18nStore } from '@/store/i18n.store';
 import { Locale } from '@/config/i18n.config';
+import MobileAppSection from '@/components/MobileAppSection';
+import ScrollToTop from '@/components/ScrollToTop';
 
 export default function LandingPage() {
   const router = useRouter();
@@ -609,6 +611,9 @@ export default function LandingPage() {
         </Container>
       </Box>
 
+      {/* Mobile App Section */}
+      <MobileAppSection />
+
       {/* Footer */}
       <Box sx={{ bgcolor: 'grey.900', color: 'white', py: 6 }}>
         <Container maxWidth="lg">
@@ -682,6 +687,9 @@ export default function LandingPage() {
           </Typography>
         </Container>
       </Box>
+
+      {/* Scroll to Top Button */}
+      <ScrollToTop />
     </Box>
   );
 }
