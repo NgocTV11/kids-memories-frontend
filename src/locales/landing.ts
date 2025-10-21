@@ -134,6 +134,36 @@ export const landingTranslations = {
       ],
     },
 
+    // Mobile App Section
+    mobileApp: {
+      title: 'Ứng Dụng Di Động',
+      subtitle: 'Tải ngay Kids Memories trên iOS và Android để lưu giữ kỷ niệm mọi lúc, mọi nơi',
+      features: [
+        {
+          title: 'Trải nghiệm mượt mà',
+          description: 'Giao diện thân thiện, dễ sử dụng trên cả iOS và Android với hiệu suất tối ưu',
+        },
+        {
+          title: 'Đồng bộ tự động',
+          description: 'Dữ liệu được đồng bộ tự động giữa web và mobile, truy cập mọi lúc mọi nơi',
+        },
+        {
+          title: 'Tính năng đầy đủ',
+          description: 'Tất cả tính năng của web đều có sẵn trên mobile, không bị giới hạn',
+        },
+      ],
+      downloadTitle: 'Tải ngay',
+      appStore: 'App Store',
+      googlePlay: 'Google Play',
+      qrCode: 'Quét QR Code',
+      qrCodeDesc: 'Sử dụng camera điện thoại để tải app nhanh chóng',
+      requirements: {
+        ios: 'iOS 13.0+',
+        android: 'Android 6.0+',
+        free: 'Miễn phí 100%',
+      },
+    },
+
     // Pricing
     pricing: {
       title: 'Bảng giá đơn giản',
@@ -333,6 +363,36 @@ export const landingTranslations = {
           description: 'Upload photos, record moments, and track your child\'s development.',
         },
       ],
+    },
+
+    // Mobile App Section
+    mobileApp: {
+      title: 'Mobile Application',
+      subtitle: 'Download Kids Memories on iOS and Android to save memories anytime, anywhere',
+      features: [
+        {
+          title: 'Smooth Experience',
+          description: 'User-friendly interface, easy to use on both iOS and Android with optimal performance',
+        },
+        {
+          title: 'Auto Sync',
+          description: 'Data is automatically synced between web and mobile, access anytime, anywhere',
+        },
+        {
+          title: 'Full Features',
+          description: 'All web features are available on mobile, no limitations',
+        },
+      ],
+      downloadTitle: 'Download Now',
+      appStore: 'App Store',
+      googlePlay: 'Google Play',
+      qrCode: 'Scan QR Code',
+      qrCodeDesc: 'Use your phone camera to download the app quickly',
+      requirements: {
+        ios: 'iOS 13.0+',
+        android: 'Android 6.0+',
+        free: '100% Free',
+      },
     },
 
     // Testimonials
