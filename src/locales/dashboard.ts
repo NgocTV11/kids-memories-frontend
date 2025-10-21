@@ -28,6 +28,7 @@ export const dashboardTranslations = {
     recentKids: 'Bé Gần Đây',
     recentMilestones: 'Mốc Phát Triển Gần Đây',
     upcomingBirthdays: 'Sinh Nhật Sắp Tới',
+    calendar: 'Lịch',
     
     // Cards
     viewDetails: 'Xem Chi Tiết',
@@ -82,6 +83,7 @@ export const dashboardTranslations = {
     recentKids: 'Recent Kids',
     recentMilestones: 'Recent Milestones',
     upcomingBirthdays: 'Upcoming Birthdays',
+    calendar: 'Calendar',
     
     // Cards
     viewDetails: 'View Details',
@@ -136,6 +138,7 @@ export const dashboardTranslations = {
     recentKids: '最近の子供',
     recentMilestones: '最近のマイルストーン',
     upcomingBirthdays: '今後の誕生日',
+    calendar: 'カレンダー',
     
     // Cards
     viewDetails: '詳細を見る',

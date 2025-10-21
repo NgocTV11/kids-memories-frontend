@@ -38,6 +38,7 @@ import {
   FamilyRestroom,
 } from '@mui/icons-material';
 import dayjs from 'dayjs';
+import Calendar from '@/components/Calendar';
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -449,6 +450,32 @@ export default function DashboardPage() {
             </Box>
           </Paper>
         )}
+
+        {/* Calendar Section */}
+        <Box sx={{ mb: { xs: 2, sm: 3 } }}>
+          <Typography 
+            variant={isMobile ? "subtitle1" : "h5"} 
+            fontWeight="bold" 
+            sx={{ 
+              mb: 2,
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: 1,
+              px: 1,
+            }}
+          >
+            📅 {dashboardT.calendar || 'Calendar'}
+          </Typography>
+          <Calendar
+            onEventPress={(event) => {
+              if (event.type === 'milestone') {
+                router.push('/milestones');
+              } else if (event.type === 'birthday') {
+                router.push('/kids');
+              }
+            }}
+          />
+        </Box>
 
         {/* Recent Milestones Section */}
         {recentMilestones.length > 0 && (
