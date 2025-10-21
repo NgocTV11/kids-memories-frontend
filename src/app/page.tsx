@@ -611,8 +611,8 @@ export default function LandingPage() {
         </Container>
       </Box>
 
-      {/* Mobile App Section */}
-      <MobileAppSection />
+      {/* Mobile App Section - Temporarily disabled due to Tailwind CSS compatibility */}
+      {/* <MobileAppSection /> */}
 
       {/* Footer */}
       <Box sx={{ bgcolor: 'grey.900', color: 'white', py: 6 }}>
