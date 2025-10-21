@@ -73,13 +73,26 @@ export default function Calendar({ onEventPress }: CalendarProps) {
         });
       }
 
-      // Add birthdays
+      // Add birthdays - show birthday for current calendar year
       if (Array.isArray(kids)) {
+        const currentYear = currentDate.getFullYear();
+        
         kids.forEach((kid: Kid) => {
+          const birthDate = new Date(kid.date_of_birth);
+          const birthMonth = birthDate.getMonth();
+          const birthDay = birthDate.getDate();
+          
+          // Create birthday for the year being viewed on calendar
+          const birthdayThisYear = new Date(currentYear, birthMonth, birthDay);
+          const birthdayDateStr = `${currentYear}-${String(birthMonth + 1).padStart(2, '0')}-${String(birthDay).padStart(2, '0')}`;
+          
+          // Calculate age
+          const age = currentYear - birthDate.getFullYear();
+          
           calendarEvents.push({
             id: kid.id,
-            title: `${kid.name}'s Birthday`,
-            date: kid.date_of_birth,
+            title: age > 0 ? `${kid.name} turns ${age}` : `${kid.name}'s Birthday`,
+            date: birthdayDateStr,
             type: 'birthday',
             kidName: kid.name,
             icon: '🎂',
