@@ -1,18 +1,21 @@
 'use client';
 
 import Image from 'next/image';
+import { useI18nStore } from '@/store/i18n.store';
 
 export default function MobileAppSection() {
+  const { landing: t } = useI18nStore();
+
   return (
     <section className="py-20 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            📱 Ứng Dụng Di Động
+            📱 {t.mobileApp.title}
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Tải ngay Kids Memories trên iOS và Android để lưu giữ kỷ niệm mọi lúc, mọi nơi
+            {t.mobileApp.subtitle}
           </p>
         </div>
 
@@ -106,10 +109,10 @@ export default function MobileAppSection() {
                 </div>
                 <div>
                   <h3 className="text-xl font-bold text-gray-900 mb-2">
-                    Trải nghiệm mượt mà
+                    {t.mobileApp.features[0].title}
                   </h3>
                   <p className="text-gray-600">
-                    Giao diện thân thiện, dễ sử dụng trên cả iOS và Android với hiệu suất tối ưu
+                    {t.mobileApp.features[0].description}
                   </p>
                 </div>
               </div>
@@ -120,10 +123,10 @@ export default function MobileAppSection() {
                 </div>
                 <div>
                   <h3 className="text-xl font-bold text-gray-900 mb-2">
-                    Đồng bộ tự động
+                    {t.mobileApp.features[1].title}
                   </h3>
                   <p className="text-gray-600">
-                    Dữ liệu được đồng bộ tự động giữa web và mobile, truy cập mọi lúc mọi nơi
+                    {t.mobileApp.features[1].description}
                   </p>
                 </div>
               </div>
@@ -134,10 +137,10 @@ export default function MobileAppSection() {
                 </div>
                 <div>
                   <h3 className="text-xl font-bold text-gray-900 mb-2">
-                    Tính năng đầy đủ
+                    {t.mobileApp.features[2].title}
                   </h3>
                   <p className="text-gray-600">
-                    Tất cả tính năng của web đều có sẵn trên mobile, không bị giới hạn
+                    {t.mobileApp.features[2].description}
                   </p>
                 </div>
               </div>
@@ -145,7 +148,7 @@ export default function MobileAppSection() {
 
             {/* Download Buttons */}
             <div className="space-y-4">
-              <h3 className="text-2xl font-bold text-gray-900">Tải ngay</h3>
+              <h3 className="text-2xl font-bold text-gray-900">{t.mobileApp.downloadTitle}</h3>
               
               <div className="flex flex-col sm:flex-row gap-4">
                 {/* App Store */}
@@ -158,7 +161,7 @@ export default function MobileAppSection() {
                   </svg>
                   <div className="text-left">
                     <div className="text-xs opacity-80">Tải trên</div>
-                    <div className="text-lg font-semibold -mt-1">App Store</div>
+                    <div className="text-lg font-semibold -mt-1">{t.mobileApp.appStore}</div>
                   </div>
                 </a>
 
@@ -172,7 +175,7 @@ export default function MobileAppSection() {
                   </svg>
                   <div className="text-left">
                     <div className="text-xs opacity-80">Tải trên</div>
-                    <div className="text-lg font-semibold -mt-1">Google Play</div>
+                    <div className="text-lg font-semibold -mt-1">{t.mobileApp.googlePlay}</div>
                   </div>
                 </a>
               </div>
@@ -184,9 +187,9 @@ export default function MobileAppSection() {
                     <div className="text-4xl">📱</div>
                   </div>
                   <div className="flex-1">
-                    <div className="font-semibold text-gray-900">Quét QR Code</div>
+                    <div className="font-semibold text-gray-900">{t.mobileApp.qrCode}</div>
                     <div className="text-sm text-gray-500">
-                      Sử dụng camera điện thoại để tải app nhanh chóng
+                      {t.mobileApp.qrCodeDesc}
                     </div>
                   </div>
                 </div>
@@ -196,15 +199,15 @@ export default function MobileAppSection() {
               <div className="flex items-center gap-4 text-sm text-gray-500 pt-4 border-t border-gray-200">
                 <span className="flex items-center gap-2">
                   <span className="inline-block w-2 h-2 bg-green-500 rounded-full"></span>
-                  iOS 13.0+
+                  {t.mobileApp.requirements.ios}
                 </span>
                 <span className="flex items-center gap-2">
                   <span className="inline-block w-2 h-2 bg-green-500 rounded-full"></span>
-                  Android 6.0+
+                  {t.mobileApp.requirements.android}
                 </span>
                 <span className="flex items-center gap-2">
                   <span className="inline-block w-2 h-2 bg-blue-500 rounded-full"></span>
-                  Miễn phí 100%
+                  {t.mobileApp.requirements.free}
                 </span>
               </div>
             </div>

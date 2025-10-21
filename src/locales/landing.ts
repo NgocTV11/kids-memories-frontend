@@ -622,6 +622,36 @@ export const landingTranslations = {
       ],
     },
 
+    // Mobile App Section
+    mobileApp: {
+      title: 'モバイルアプリ',
+      subtitle: 'iOSとAndroidでKids Memoriesをダウンロードして、いつでもどこでも思い出を保存',
+      features: [
+        {
+          title: 'スムーズな体験',
+          description: 'iOSとAndroidの両方で使いやすいインターフェース、最適なパフォーマンス',
+        },
+        {
+          title: '自動同期',
+          description: 'ウェブとモバイル間でデータが自動同期、いつでもどこでもアクセス',
+        },
+        {
+          title: '完全な機能',
+          description: 'ウェブのすべての機能がモバイルで利用可能、制限なし',
+        },
+      ],
+      downloadTitle: '今すぐダウンロード',
+      appStore: 'App Store',
+      googlePlay: 'Google Play',
+      qrCode: 'QRコードをスキャン',
+      qrCodeDesc: 'スマートフォンのカメラを使用してアプリを素早くダウンロード',
+      requirements: {
+        ios: 'iOS 13.0+',
+        android: 'Android 6.0+',
+        free: '100%無料',
+      },
+    },
+
     // Testimonials
     testimonials: {
       title: '家族に信頼されています',
