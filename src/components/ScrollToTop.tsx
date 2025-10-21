@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { Fab, Zoom } from '@mui/material';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
 export default function ScrollToTop() {
   const [isVisible, setIsVisible] = useState(false);
@@ -29,18 +31,21 @@ export default function ScrollToTop() {
   };
 
   return (
-    <>
-      {isVisible && (
-        <button
-          onClick={scrollToTop}
-          className="fixed bottom-8 right-8 z-50 p-3 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-lg transition-all duration-300 hover:scale-110 group"
-          aria-label="Scroll to top"
-        >
-          <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
-          </svg>
-        </button>
-      )}
-    </>
+    <Zoom in={isVisible}>
+      <Fab
+        onClick={scrollToTop}
+        color="primary"
+        size="medium"
+        aria-label="scroll to top"
+        sx={{
+          position: 'fixed',
+          bottom: 32,
+          right: 32,
+          zIndex: 1000,
+        }}
+      >
+        <KeyboardArrowUpIcon />
+      </Fab>
+    </Zoom>
   );
 }
