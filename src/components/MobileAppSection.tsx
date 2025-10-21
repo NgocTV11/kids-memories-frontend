@@ -6,6 +6,11 @@ import { useI18nStore } from '@/store/i18n.store';
 export default function MobileAppSection() {
   const { landing: t } = useI18nStore();
 
+  // Safe check for mobileApp translations
+  if (!t?.mobileApp) {
+    return null;
+  }
+
   return (
     <section className="py-20 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
       <div className="container mx-auto px-4">
