@@ -44,7 +44,11 @@ class UsersService {
    * Change password
    */
   async changePassword(data: ChangePasswordDto): Promise<void> {
-    await apiClient.put('/users/me/password', data);
+    // Only send current_password and new_password to backend
+    await apiClient.put('/users/me/password', {
+      current_password: data.current_password,
+      new_password: data.new_password,
+    });
   }
 
   /**
