@@ -239,7 +239,7 @@ export default function XuxuMartPage() {
                   textShadow: '2px 2px 4px rgba(0,0,0,0.2)',
                 }}
               >
-                📅 Thứ Bảy, 09/11/2025
+                📅 Chủ Nhật, 09/11/2025
               </Typography>
               <Typography 
                 variant={isMobile ? 'h6' : 'h5'}
@@ -501,10 +501,15 @@ export default function XuxuMartPage() {
           {categories.map((cat, index) => (
             <Card
               key={index}
+              component="a"
+              href="https://xuxumart.com"
+              target="_blank"
+              rel="noopener noreferrer"
               sx={{
                 textAlign: 'center',
                 p: 3,
                 cursor: 'pointer',
+                textDecoration: 'none',
                 transition: 'all 0.3s',
                 '&:hover': {
                   transform: 'scale(1.05)',
