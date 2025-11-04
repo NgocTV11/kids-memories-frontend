@@ -749,8 +749,32 @@ export default function XuxuMartPage() {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
+              touchAction: 'pan-y',
+            }}
+            onTouchStart={(e) => {
+              const touch = e.touches[0];
+              (e.currentTarget as HTMLElement).dataset.touchStartX = touch.clientX.toString();
+            }}
+            onTouchEnd={(e) => {
+              const touchStartX = parseFloat((e.currentTarget as HTMLElement).dataset.touchStartX || '0');
+              const touchEndX = e.changedTouches[0].clientX;
+              const diff = touchStartX - touchEndX;
+              
+              // Swipe left = next image
+              if (diff > 50) {
+                const nextIndex = selectedImage === productImages.length - 1 ? 0 : selectedImage + 1;
+                setSelectedImage(nextIndex);
+                setCurrentGalleryIndex(nextIndex);
+              }
+              // Swipe right = previous image
+              else if (diff < -50) {
+                const prevIndex = selectedImage === 0 ? productImages.length - 1 : selectedImage - 1;
+                setSelectedImage(prevIndex);
+                setCurrentGalleryIndex(prevIndex);
+              }
             }}
           >
+            {/* Close Button */}
             <IconButton
               onClick={() => setSelectedImage(null)}
               sx={{
@@ -758,12 +782,73 @@ export default function XuxuMartPage() {
                 top: 16,
                 right: 16,
                 bgcolor: 'rgba(255,255,255,0.9)',
-                zIndex: 2,
+                zIndex: 3,
                 '&:hover': { bgcolor: 'white' },
               }}
             >
               <Close />
             </IconButton>
+
+            {/* Previous Button */}
+            <IconButton
+              onClick={() => {
+                const prevIndex = selectedImage === 0 ? productImages.length - 1 : selectedImage - 1;
+                setSelectedImage(prevIndex);
+                setCurrentGalleryIndex(prevIndex);
+              }}
+              sx={{
+                position: 'absolute',
+                left: 16,
+                top: '50%',
+                transform: 'translateY(-50%)',
+                bgcolor: 'rgba(255,255,255,0.9)',
+                zIndex: 2,
+                '&:hover': { bgcolor: 'white' },
+              }}
+            >
+              <NavigateBefore sx={{ fontSize: '2rem' }} />
+            </IconButton>
+
+            {/* Next Button */}
+            <IconButton
+              onClick={() => {
+                const nextIndex = selectedImage === productImages.length - 1 ? 0 : selectedImage + 1;
+                setSelectedImage(nextIndex);
+                setCurrentGalleryIndex(nextIndex);
+              }}
+              sx={{
+                position: 'absolute',
+                right: 16,
+                top: '50%',
+                transform: 'translateY(-50%)',
+                bgcolor: 'rgba(255,255,255,0.9)',
+                zIndex: 2,
+                '&:hover': { bgcolor: 'white' },
+              }}
+            >
+              <NavigateNext sx={{ fontSize: '2rem' }} />
+            </IconButton>
+
+            {/* Image Counter */}
+            <Box
+              sx={{
+                position: 'absolute',
+                bottom: 16,
+                left: '50%',
+                transform: 'translateX(-50%)',
+                bgcolor: 'rgba(0,0,0,0.7)',
+                color: 'white',
+                px: 2,
+                py: 1,
+                borderRadius: 2,
+                zIndex: 2,
+              }}
+            >
+              <Typography variant="body2">
+                {selectedImage + 1} / {productImages.length}
+              </Typography>
+            </Box>
+
             <Box 
               sx={{ 
                 position: 'relative',
