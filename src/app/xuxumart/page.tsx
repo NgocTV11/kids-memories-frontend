@@ -60,22 +60,22 @@ const productImages = [
 ];
 
 const hotDeals = [
-  { name: 'Ba Chỉ', price: '¥320/100g', image: 0 },
-  { name: 'Móng Giò', price: '¥258/100g', image: 1 },
-  { name: 'Vịt Quay', price: '¥248/100g', image: 2 },
-  { name: 'Gà Luộc', price: '¥178/100g', image: 3 },
-  { name: 'Giò Lụa', price: '¥298/100g', image: 4 },
-  { name: 'Chuối', price: '¥198/kg', image: 5 },
-  { name: 'Quýt', price: '¥258/kg', image: 6 },
-  { name: 'Dứa', price: '¥298/kg', image: 7 },
-  { name: 'Bắp Cải', price: '¥88/kg', image: 8 },
+  { name: 'Ba Chỉ Da Đông Lạnh', price: '¥890', image: 4 },
+  { name: 'Móng Giò', price: '¥195', image: 8 },
+  { name: 'Vịt Nguyên Con', price: '¥950', image: 10 },
+  { name: 'Gà Lộn', price: '¥790', image: 11 },
+  { name: 'Giò Lụa', price: '¥890', image: 12 },
+  { name: 'Chuối Chín', price: '¥99/túi', image: 14 },
+  { name: 'Quýt', price: '¥199/túi', image: 15 },
+  { name: 'Dứa', price: '¥199/quả', image: 16 },
+  { name: 'Bắp Cải', price: '¥99/quả', image: 17 },
 ];
 
 const desserts = [
-  { name: 'Chè Thập Cẩm', price: '¥200', image: 9 },
-  { name: 'Chè Dừa', price: '¥200', image: 10 },
-  { name: 'Chè Sầu Riêng', price: '¥250', image: 11 },
-  { name: 'Chè Khoai Môn', price: '¥200', image: 12 },
+  { name: 'Chè Thập Cẩm', price: '¥199', image: 18 },
+  { name: 'Chè Dừa', price: '¥299', image: 19 },
+  { name: 'Chè Sầu Riêng', price: '¥299', image: 20 },
+  { name: 'Chè Khoai Môn', price: '¥299', image: 21 },
 ];
 
 const categories = [
@@ -661,8 +661,9 @@ export default function XuxuMartPage() {
                 variant="contained"
                 size="large"
                 startIcon={<LocationOn />}
-                href="https://maps.app.goo.gl/kQBXcx8T5NqK9oQs9"
+                href="https://www.google.com/maps/place/%E3%80%92134-0083+%E6%9D%B1%E4%BA%AC%E9%83%BD%E6%B1%9F%E6%88%B8%E5%B7%9D%E5%8C%BA%E4%B8%AD%E8%91%9B%E8%A5%BF%EF%BC%93%E4%B8%81%E7%9B%AE%EF%BC%91%EF%BC%95%E2%88%92%EF%BC%91%EF%BC%96"
                 target="_blank"
+                rel="noopener noreferrer"
                 sx={{
                   bgcolor: '#DA291C',
                   '&:hover': { bgcolor: '#B71C1C' },
@@ -726,25 +727,48 @@ export default function XuxuMartPage() {
       <Dialog
         open={selectedImage !== null}
         onClose={() => setSelectedImage(null)}
-        maxWidth="md"
-        fullWidth
+        maxWidth={false}
+        fullScreen
+        PaperProps={{
+          sx: {
+            bgcolor: 'rgba(0, 0, 0, 0.95)',
+            m: 0,
+            maxHeight: '100vh',
+            overflow: 'hidden',
+          }
+        }}
       >
         {selectedImage !== null && (
-          <Box sx={{ position: 'relative', bgcolor: '#000' }}>
+          <Box 
+            sx={{ 
+              position: 'relative', 
+              width: '100vw',
+              height: '100vh',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
             <IconButton
               onClick={() => setSelectedImage(null)}
               sx={{
                 position: 'absolute',
-                top: 8,
-                right: 8,
+                top: 16,
+                right: 16,
                 bgcolor: 'rgba(255,255,255,0.9)',
-                zIndex: 1,
+                zIndex: 2,
                 '&:hover': { bgcolor: 'white' },
               }}
             >
               <Close />
             </IconButton>
-            <Box sx={{ position: 'relative', paddingTop: '100%' }}>
+            <Box 
+              sx={{ 
+                position: 'relative',
+                width: '90%',
+                height: '90%',
+              }}
+            >
               <Image
                 src={`/xuxumart/${productImages[selectedImage]}`}
                 alt="Product detail"
