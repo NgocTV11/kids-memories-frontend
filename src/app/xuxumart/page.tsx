@@ -598,7 +598,10 @@ export default function XuxuMartPage() {
             {productImages.map((img, index) => (
               <Box
                 key={index}
-                onClick={() => setCurrentGalleryIndex(index)}
+                onClick={() => {
+                  setCurrentGalleryIndex(index);
+                  setSelectedImage(index);
+                }}
                 sx={{
                   position: 'relative',
                   paddingTop: '100%',
