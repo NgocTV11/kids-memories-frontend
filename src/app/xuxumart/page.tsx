@@ -604,21 +604,6 @@ export default function XuxuMartPage() {
         </Container>
       </Box>
 
-      {/* Footer */}
-      <Box sx={{ bgcolor: '#DA291C', color: 'white', py: 4, textAlign: 'center' }}>
-        <Container maxWidth="lg">
-          <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 2 }}>
-            XUXU MART - CHI NHÁNH 6
-          </Typography>
-          <Typography variant="body1" sx={{ mb: 2 }}>
-            Siêu thị thực phẩm Việt Nam uy tín tại Nhật Bản
-          </Typography>
-          <Typography variant="body2" sx={{ opacity: 0.9 }}>
-            © 2025 Xuxu Mart. All rights reserved.
-          </Typography>
-        </Container>
-      </Box>
-
       {/* Image Modal */}
       <Dialog
         open={selectedImage !== null}
