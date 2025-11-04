@@ -124,18 +124,33 @@ export default function XuxuMartPage() {
   };
 
   return (
-    <Box sx={{ bgcolor: '#f5f5f5', minHeight: '100vh' }}>
-      {/* Hero Section */}
-      <Box
-        sx={{
-          background: 'linear-gradient(135deg, #DA291C 0%, #FF6B6B 100%)',
+    <>
+      <style jsx global>{`
+        @keyframes bounce {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-20px); }
+        }
+        @keyframes float {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-10px); }
+        }
+      `}</style>
+      <Box sx={{ bgcolor: '#f5f5f5', minHeight: '100vh' }}>
+        {/* Hero Section - Full Screen */}
+        <Box
+          sx={{
+          minHeight: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: 'linear-gradient(135deg, #DA291C 0%, #FF6B6B 50%, #FFB6C1 100%)',
           color: 'white',
-          pt: { xs: 8, md: 12 },
-          pb: { xs: 6, md: 10 },
           position: 'relative',
           overflow: 'hidden',
+          py: 4,
         }}
       >
+        {/* Animated Background Pattern */}
         <Box
           sx={{
             position: 'absolute',
@@ -145,92 +160,192 @@ export default function XuxuMartPage() {
             bottom: 0,
             opacity: 0.1,
             backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'1\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")',
+            animation: 'float 20s ease-in-out infinite',
           }}
         />
 
-        <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1 }}>
-          <Box sx={{ textAlign: 'center', mb: 4 }}>
-            <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, mb: 3 }}>
-              <Typography sx={{ fontSize: { xs: '3rem', md: '4rem' } }}>🇻🇳</Typography>
-              <Typography sx={{ fontSize: { xs: '3rem', md: '4rem' } }}>🇯🇵</Typography>
+        <Container maxWidth="md" sx={{ position: 'relative', zIndex: 1 }}>
+          <Box sx={{ textAlign: 'center' }}>
+            {/* Flags */}
+            <Box sx={{ display: 'flex', justifyContent: 'center', gap: 3, mb: 4 }}>
+              <Typography 
+                sx={{ 
+                  fontSize: { xs: '4rem', md: '6rem' },
+                  animation: 'bounce 2s ease-in-out infinite',
+                }}
+              >
+                🇻🇳
+              </Typography>
+              <Typography 
+                sx={{ 
+                  fontSize: { xs: '4rem', md: '6rem' },
+                  animation: 'bounce 2s ease-in-out infinite',
+                  animationDelay: '0.2s',
+                }}
+              >
+                🇯🇵
+              </Typography>
             </Box>
 
+            {/* Store Name */}
             <Typography
-              variant={isMobile ? 'h3' : 'h2'}
-              sx={{ fontWeight: 'bold', mb: 2, textShadow: '2px 2px 4px rgba(0,0,0,0.3)' }}
+              variant={isMobile ? 'h2' : 'h1'}
+              sx={{ 
+                fontWeight: 900, 
+                mb: 2, 
+                textShadow: '3px 3px 6px rgba(0,0,0,0.3)',
+                letterSpacing: { xs: '0.1em', md: '0.15em' },
+              }}
             >
               XUXU MART
             </Typography>
             
-            <Typography variant={isMobile ? 'h5' : 'h4'} sx={{ mb: 1 }}>
+            {/* Branch Info */}
+            <Typography 
+              variant={isMobile ? 'h5' : 'h4'} 
+              sx={{ 
+                mb: 3,
+                fontWeight: 600,
+                textShadow: '2px 2px 4px rgba(0,0,0,0.2)',
+              }}
+            >
               CHI NHÁNH 6 - KASAI
             </Typography>
 
+            {/* Grand Opening Badge */}
             <Chip
-              icon={<Storefront />}
+              icon={<Storefront sx={{ fontSize: { xs: '1.5rem', md: '2rem' } }} />}
               label="KHAI TRƯƠNG"
               sx={{
                 bgcolor: 'white',
                 color: '#DA291C',
                 fontWeight: 'bold',
-                fontSize: { xs: '1rem', md: '1.2rem' },
-                px: 2,
-                py: 3,
-                mb: 3,
+                fontSize: { xs: '1.2rem', md: '1.5rem' },
+                px: { xs: 2, md: 4 },
+                py: { xs: 3, md: 4 },
+                mb: 4,
+                '& .MuiChip-icon': {
+                  fontSize: { xs: '1.5rem', md: '2rem' },
+                },
               }}
             />
 
-            <Typography variant={isMobile ? 'h6' : 'h5'} sx={{ mb: 1 }}>
-              📅 Thứ Bảy, 09/11/2025
-            </Typography>
-            <Typography variant={isMobile ? 'body1' : 'h6'}>
-              ⏰ 9:00 Sáng
-            </Typography>
-          </Box>
-
-          {/* Countdown Timer */}
-          <Paper
-            elevation={6}
-            sx={{
-              maxWidth: 600,
-              mx: 'auto',
-              p: 3,
-              background: 'rgba(255, 255, 255, 0.95)',
-              backdropFilter: 'blur(10px)',
-              borderRadius: 3,
-            }}
-          >
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 2 }}>
-              <Schedule sx={{ mr: 1, color: '#DA291C' }} />
-              <Typography variant="h6" sx={{ color: '#DA291C', fontWeight: 'bold' }}>
-                Đếm Ngược Khai Trương
+            {/* Date & Time */}
+            <Box sx={{ mb: 4 }}>
+              <Typography 
+                variant={isMobile ? 'h6' : 'h5'} 
+                sx={{ 
+                  mb: 1,
+                  fontWeight: 500,
+                  textShadow: '2px 2px 4px rgba(0,0,0,0.2)',
+                }}
+              >
+                📅 Thứ Bảy, 09/11/2025
+              </Typography>
+              <Typography 
+                variant={isMobile ? 'h6' : 'h5'}
+                sx={{ 
+                  fontWeight: 500,
+                  textShadow: '2px 2px 4px rgba(0,0,0,0.2)',
+                }}
+              >
+                ⏰ 9:00 Sáng (JST)
               </Typography>
             </Box>
-            <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 2 }}>
-              {[
-                { label: 'Ngày', value: timeLeft.days },
-                { label: 'Giờ', value: timeLeft.hours },
-                { label: 'Phút', value: timeLeft.minutes },
-                { label: 'Giây', value: timeLeft.seconds },
-              ].map((item) => (
-                <Box
-                  key={item.label}
-                  sx={{
-                    bgcolor: '#DA291C',
-                    color: 'white',
-                    borderRadius: 2,
-                    p: 2,
-                    textAlign: 'center',
-                  }}
+
+            {/* Countdown Timer */}
+            <Paper
+              elevation={10}
+              sx={{
+                maxWidth: { xs: '100%', sm: 600 },
+                mx: 'auto',
+                p: { xs: 3, md: 4 },
+                background: 'rgba(255, 255, 255, 0.98)',
+                backdropFilter: 'blur(20px)',
+                borderRadius: 4,
+                border: '3px solid rgba(255,255,255,0.5)',
+              }}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 3 }}>
+                <Schedule sx={{ mr: 1.5, color: '#DA291C', fontSize: { xs: '1.5rem', md: '2rem' } }} />
+                <Typography 
+                  variant={isMobile ? 'h6' : 'h5'}
+                  sx={{ color: '#DA291C', fontWeight: 'bold' }}
                 >
-                  <Typography variant="h3" sx={{ fontWeight: 'bold', mb: 0.5 }}>
-                    {String(item.value).padStart(2, '0')}
-                  </Typography>
-                  <Typography variant="caption">{item.label}</Typography>
-                </Box>
-              ))}
+                  Đếm Ngược Khai Trương
+                </Typography>
+              </Box>
+              <Box 
+                sx={{ 
+                  display: 'grid', 
+                  gridTemplateColumns: 'repeat(4, 1fr)', 
+                  gap: { xs: 1.5, md: 2 },
+                }}
+              >
+                {[
+                  { label: 'Ngày', value: timeLeft.days },
+                  { label: 'Giờ', value: timeLeft.hours },
+                  { label: 'Phút', value: timeLeft.minutes },
+                  { label: 'Giây', value: timeLeft.seconds },
+                ].map((item) => (
+                  <Box
+                    key={item.label}
+                    sx={{
+                      background: 'linear-gradient(135deg, #DA291C 0%, #B71C1C 100%)',
+                      color: 'white',
+                      borderRadius: 3,
+                      p: { xs: 1.5, md: 2.5 },
+                      textAlign: 'center',
+                      boxShadow: '0 4px 15px rgba(218, 41, 28, 0.4)',
+                      transition: 'transform 0.3s',
+                      '&:hover': {
+                        transform: 'translateY(-5px)',
+                      },
+                    }}
+                  >
+                    <Typography 
+                      variant={isMobile ? 'h4' : 'h2'}
+                      sx={{ 
+                        fontWeight: 'bold', 
+                        mb: 0.5,
+                        textShadow: '2px 2px 4px rgba(0,0,0,0.3)',
+                      }}
+                    >
+                      {String(item.value).padStart(2, '0')}
+                    </Typography>
+                    <Typography 
+                      variant={isMobile ? 'caption' : 'body2'}
+                      sx={{ 
+                        fontWeight: 600,
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.05em',
+                      }}
+                    >
+                      {item.label}
+                    </Typography>
+                  </Box>
+                ))}
+              </Box>
+            </Paper>
+
+            {/* Scroll Down Indicator */}
+            <Box 
+              sx={{ 
+                mt: 6,
+                animation: 'bounce 2s ease-in-out infinite',
+              }}
+            >
+              <Typography 
+                variant="body2" 
+                sx={{ 
+                  opacity: 0.8,
+                  fontWeight: 500,
+                }}
+              >
+                ↓ Khám phá thêm ↓
+              </Typography>
             </Box>
-          </Paper>
+          </Box>
         </Container>
       </Box>
 
@@ -534,7 +649,10 @@ export default function XuxuMartPage() {
               </Typography>
               <Typography variant="h6" sx={{ mb: 2, display: 'flex', alignItems: 'center' }}>
                 <LocationOn sx={{ mr: 1, color: '#DA291C' }} />
-                1 Chome-1-6 Kasai, Edogawa City, Tokyo 134-0083, Japan
+                〒134-0083 東京都江戸川区中葛西３丁目１５−16
+              </Typography>
+              <Typography variant="body1" sx={{ mb: 1, color: 'text.secondary' }}>
+                3 Chome-15-16 Nakakazai, Edogawa City, Tokyo 134-0083
               </Typography>
               <Typography variant="body1" sx={{ mb: 3, color: 'text.secondary' }}>
                 Gần ga Kasai, dễ dàng di chuyển bằng tàu điện
@@ -543,7 +661,7 @@ export default function XuxuMartPage() {
                 variant="contained"
                 size="large"
                 startIcon={<LocationOn />}
-                href="https://maps.app.goo.gl/4FpCuQXDBJwG8JXW8"
+                href="https://maps.app.goo.gl/kQBXcx8T5NqK9oQs9"
                 target="_blank"
                 sx={{
                   bgcolor: '#DA291C',
@@ -565,7 +683,7 @@ export default function XuxuMartPage() {
               }}
             >
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3240.8266057876797!2d139.8595!3d35.6644!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x60188906d9e0d8db%3A0x3c0c0c0c0c0c0c0!2s1%20Chome-1-6%20Kasai%2C%20Edogawa%20City%2C%20Tokyo%20134-0083%2C%20Japan!5e0!3m2!1sen!2sus!4v1699000000000!5m2!1sen!2sus"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3241.5287766629845!2d139.8669563746692!3d35.66397987259276!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x601887ee0dec35a7%3A0x3275ca173f5825cc!2z44CSMTM0LTAwODMg5p2x5Lqs6YO95rGf5oi45bed5Yy65Lit6JGb6KW_77yT5LiB55uu77yR77yV4oiS77yR77yW!5e0!3m2!1sja!2sjp!4v1762242401387!5m2!1sja!2sjp"
                 style={{
                   position: 'absolute',
                   top: 0,
@@ -673,5 +791,6 @@ export default function XuxuMartPage() {
         </Paper>
       </Box>
     </Box>
+    </>
   );
 }
